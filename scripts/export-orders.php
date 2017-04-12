@@ -12,10 +12,10 @@ $header = array_shift($data);
 
 if (count($data) > 0){
 	$file = outputCSV($data);
-	echo $file."\n";
+	echo $_REQUEST['from']."\t".$file."\n";
 }
 else{
-	echo $_REQUEST['from'].": No orders to export\n";
+	echo $_REQUEST['from']."\tNo orders to export\n";
 }
 
 ?>
