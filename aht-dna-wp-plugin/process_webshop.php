@@ -5,7 +5,8 @@ $SPECIES = array('Canine Tests' => 'Canine');
 
 $mysqli = mysqli_connect("localhost", "root", "", "es_webshop_import");
 if (mysqli_connect_errno($mysqli)) {
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	echo "Failed to connect to MySQL: " . mysqli_connect_error()."\n";
+	exit(0);
 }
 
 //CLIENTS (people)
