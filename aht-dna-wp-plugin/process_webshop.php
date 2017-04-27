@@ -1,9 +1,12 @@
 <?php
 
+$MY_CNF = parse_ini_file($_SERVER['HOME']."/.my.cnf", true);
 $DEBUG = 1;
 $SPECIES = array('Canine Tests' => 'Canine');
 
-$mysqli = mysqli_connect("localhost", "root", "", "es_webshop_import");
+
+
+$mysqli = mysqli_connect("localhost", $MY_CNF['client']['user'], $MY_CNF['client']['password'], "es_webshop_import");
 if (mysqli_connect_errno($mysqli)) {
 	echo "Failed to connect to MySQL: " . mysqli_connect_error()."\n";
 	exit(0);
