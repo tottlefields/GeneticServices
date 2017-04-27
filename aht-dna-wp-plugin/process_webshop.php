@@ -65,7 +65,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 	}
 	else{
 		echo "Animal needs a record creating in the database\n";
-		$SQL3 = 'INSERT INTO animal(webshop_animal_ids, Species, Breed, RegisteredName, Registration, Sex, TatooOrChip, BirthDate, PetName, Colour)
+		$SQL3 = 'INSERT INTO animal(webshop_animal_ids, AnimalID, ClientID, Species, Breed, RegisteredName, Registration, Sex, TatooOrChip, BirthDate, PetName, Colour)
 				VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$SPECIES[$row['Species']].'", "'.$row['Breed'].'", "'.$row['RegisteredName'].'",
 						"'.$row['Registration'].'", "'.$row['Sex'].'",  "'.$row['TatooOrChip'].'", "'.$row['date_BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
 		if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
