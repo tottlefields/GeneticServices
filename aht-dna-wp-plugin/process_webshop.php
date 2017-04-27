@@ -1,7 +1,7 @@
 <?php
 
 $MY_CNF = parse_ini_file($_SERVER['HOME']."/.my.cnf", true);
-$DEBUG = 1;
+$DEBUG = 0;
 $SPECIES = array('Canine Tests' => 'Canine');
 
 
