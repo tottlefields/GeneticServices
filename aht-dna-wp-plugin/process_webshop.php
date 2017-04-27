@@ -43,7 +43,8 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 
 
 //ANIMALS
-$SQL = "SELECT GROUP_CONCAT(AnimalID) as animal_ids, min(AnimalID) as AnimalID, ClientID, Species, Breed, RegisteredName, Registration, Sex, date_BirthDate, TatooOrChip, Colour, PetName 
+$SQL = "SELECT GROUP_CONCAT(AnimalID) as animal_ids, min(AnimalID) as AnimalID, ClientID, Species, Breed, 
+		RegisteredName, Registration, Sex, date_BirthDate, TatooOrChip, Colour, PetName 
 		FROM webshop_import WHERE imported=0 GROUP BY RegisteredName, Registration, PetName, date_BirthDate, TatooOrChip";
 if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
 
@@ -65,8 +66,8 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 	else{
 		echo "Animal needs a record creating in the database\n";
 		$SQL3 = 'INSERT INTO animal(webshop_animal_ids, Species, Breed, RegisteredName, Registration, Sex, TatooOrChip, BirthDate, PetName, Colour)
-				VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$SPECIES[$row['Species']].'", "'.$row['Breed'].'", "'.$row['RegisteredName'].'", "'.$row['Registration'].'", "'.$row['Sex'].'", 
-						"'.$row['TatooOrChip'].'", "'.$row['BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
+				VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$SPECIES[$row['Species']].'", "'.$row['Breed'].'", "'.$row['RegisteredName'].'",
+						"'.$row['Registration'].'", "'.$row['Sex'].'",  "'.$row['TatooOrChip'].'", "'.$row['date_BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
 		if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
 	}
 }
