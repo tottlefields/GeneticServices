@@ -37,6 +37,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 				VALUES ("'.$row['client_id'].'", "'.$row['FullName'].'", "'.$row['Organisation'].'", "'.$row['Email'].'", "'.$row['Tel'].'", "'.$row['Fax'].'", "'.$row['Address'].'", "'.$row['Address2'].'", "'.$row['Address3'].'", "'.$row['Town'].'",
 						"'.$row['County'].'", "'.$row['Postcode'].'", "'.$row['Country'].'", "'.$row['ShippingName'].'", "'.$row['ShippingCompany'].'", "'.$row['ShippingAddress'].'", "'.$row['ShippingAddress2'].'", "'.$row['ShippingTown'].'", 
 						"'.$row['ShippingCounty'].'", "'.$row['ShippingPostcode'].'", "'.$row['ShippingCountry'].'")';
+		$RESULT3 = mysqli_query($mysqli, $SQL3);
 		if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
 	}
 }
@@ -68,6 +69,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 		$SQL3 = 'INSERT INTO animal(webshop_animal_ids, AnimalID, ClientID, Species, Breed, RegisteredName, Registration, Sex, TatooOrChip, BirthDate, PetName, Colour)
 				VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$SPECIES[$row['Species']].'", "'.$row['Breed'].'", "'.$row['RegisteredName'].'",
 						"'.$row['Registration'].'", "'.$row['Sex'].'",  "'.$row['TatooOrChip'].'", "'.$row['date_BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
+		$RESULT3 = mysqli_query($mysqli, $SQL3);
 		if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
 	}
 }
