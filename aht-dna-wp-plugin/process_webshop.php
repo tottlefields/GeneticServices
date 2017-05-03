@@ -55,6 +55,7 @@ if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
 $RESULT = mysqli_query($mysqli, $SQL);
 while ($row = mysqli_fetch_assoc($RESULT)){
 	//echo implode("\t", array($row['RegisteredName'], $row['Registration'], $row['date_BirthDate'], $row['TatooOrChip']))."\n";
+	$row['Species'] = $SPECIES[$row['Species']];
 	
 	$SQL2 = 'SELECT * FROM animal WHERE 
 			(RegisteredName = "'.$row['RegisteredName'].'") + 
@@ -72,6 +73,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 		print_r($animal);
 		print_r($row);
 		$diffs = array_diff($animal, $row);
+		unset($diffs['id']);
 		print_r($diffs);
 		exit(0);
 	}
