@@ -67,9 +67,9 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 	if (mysqli_num_rows($RESULT2) > 0){
 		$animal = mysqli_fetch_assoc($RESULT2);
 		$animal['date_BirthDate'] = $animal['BirthDate'];
-		$diffs = array_diff_assoc($animal, $row);
-		unset($diffs['id']);
-		unset($diffs['webshop_animal_ids']);
+		$diffs = array_diff_assoc($row, $animal);
+//		unset($diffs['id']);
+		unset($diffs['animal_ids']);
 		unset($diffs['BirthDate']);
 		if (count($diffs) > 0){ 
 			echo "Animal already found in the database - record needs updating\n";
