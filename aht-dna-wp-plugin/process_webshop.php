@@ -30,7 +30,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 	
 	if (mysqli_num_rows($RESULT2) > 0){
-		echo "Client already found in the database - record needs updating\n";
+		echo "Client already found in the database - record may need updating\n";
 	}
 	else{
 		echo "Client needs a record creating in the database\n";
@@ -67,7 +67,10 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 	
 	if (mysqli_num_rows($RESULT2) > 0){
-		echo "Animal already found in the database - record needs updating\n";
+		echo "Animal already found in the database - record  may need updating\n";
+		$animal = mysqli_fetch_assoc($RESULT2);
+		print_r($animal);
+		exit(0);
 	}
 	else{
 		echo "Animal needs a record creating in the database\n";
