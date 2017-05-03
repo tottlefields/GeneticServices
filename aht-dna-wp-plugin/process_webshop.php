@@ -32,7 +32,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 		echo "Client already found in the database - record may need updating\n";
 	}
 	else{
-		echo "Client needs a record creating in the database\n";
+		echo "Creating a new CLIENT record in the database\n";
 		$SQL3 = 'INSERT INTO client(ClientID, FullName, Organisation, Email, Tel, Fax, Address, Address2, Address3, Town, County, Postcode,
 				Country, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry)
 				VALUES ("'.$row['client_id'].'", "'.$row['FullName'].'", "'.$row['Organisation'].'", "'.$row['Email'].'", "'.$row['Tel'].'", "'.$row['Fax'].'",
@@ -74,7 +74,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 		}
 	}
 	else{
-		echo "Animal needs a record creating in the database\n";
+		echo "Creating a new ANIMAL record in the database\n";
 		$SQL3 = 'INSERT INTO animal(webshop_animal_ids, AnimalID, ClientID, Species, Breed, RegisteredName, Registration, Sex, TatooOrChip, BirthDate, PetName, Colour)
 				VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$row['Species'].'", "'.$row['Breed'].'", "'.$row['RegisteredName'].'",
 						"'.$row['Registration'].'", "'.$row['Sex'].'",  "'.$row['TatooOrChip'].'", "'.$row['date_BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
