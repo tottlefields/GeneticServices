@@ -79,7 +79,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 				array_push($updates, $col.' = "'.$val.'"');
 			}			
 			$A_SQL = "UPDATE animal SET ".implode(', ', $updates)." WHERE id=".$animal['id'];
-			echo $A_SQL."\n";
+			mysqli_query($mysqli, $A_SQL);
 		}
 	}
 	else{
