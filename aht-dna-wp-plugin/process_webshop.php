@@ -74,6 +74,12 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 		if (count($diffs) > 0){ 
 			echo "Animal already found in the database - record needs updating\n";
 			print_r($diffs);
+			$updates = array();
+			foreach ($diffs as $col => $val){
+				array_push($updates, $col.' = "'.$val.'"');
+			}			
+			$A_SQL = "UPDATE animal SET ".implode(', ', $updates)." WHERE id=".$animal['id'];
+			echo $A_SQL."\n";
 		}
 	}
 	else{
