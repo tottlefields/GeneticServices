@@ -66,7 +66,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 	
 	if (mysqli_num_rows($RESULT2) > 0){
 		$animal = mysqli_fetch_assoc($RESULT2);
-		$diffs = array_diff($animal, $row);
+		$diffs = array_diff_assoc($animal, $row);
 		unset($diffs['id']);
 		if (count($diffs) > 0){ 
 			echo "Animal already found in the database - record needs updating\n";
