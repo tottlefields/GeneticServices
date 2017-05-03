@@ -24,7 +24,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 	$SQL2 = 'SELECT * FROM client WHERE 
 			(FullName = "'.$row['FullName'].'") + 
 			(Email = "'.$row['Email'].'") + 
-			(ClientID = '.$row['client_id'].') > 2';
+			(ClientID = '.$row['client_id'].') >= 2';
 	if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
 	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 	
@@ -60,7 +60,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 			(PetName = "'.$row['PetName'].'") + 
 			(Registration = "'.$row['Registration'].'") + 
 			(BirthDate = "'.$row['date_BirthDate'].'") + 
-			(TatooOrChip = "'.$row['TatooOrChip'].'") > 3';
+			(TatooOrChip = "'.$row['TatooOrChip'].'") >= 3';
 	if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
 	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 	
