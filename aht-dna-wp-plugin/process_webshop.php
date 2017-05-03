@@ -26,7 +26,8 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 			(Email = "'.$row['Email'].'") + 
 			(ClientID = '.$row['client_id'].') > 2';
 	if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
-	if (!mysqli_query($mysqli, $SQL2)) { printf("Errormessage: %s\n", mysqli_error($mysqli)); }
+	//if (!mysqli_query($mysqli, $SQL2)) { printf("Errormessage: %s\n", mysqli_error($mysqli)); }
+	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("Errormessage: %s\n", mysqli_error($mysqli));
 	
 	if (mysqli_num_rows($RESULT2) > 0){
 		echo "Client already found in the database - record needs updating\n";
@@ -38,7 +39,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 				VALUES ("'.$row['client_id'].'", "'.$row['FullName'].'", "'.$row['Organisation'].'", "'.$row['Email'].'", "'.$row['Tel'].'", "'.$row['Fax'].'", "'.$row['Address'].'", "'.$row['Address2'].'", "'.$row['Address3'].'", "'.$row['Town'].'",
 						"'.$row['County'].'", "'.$row['Postcode'].'", "'.$row['Country'].'", "'.$row['ShippingName'].'", "'.$row['ShippingCompany'].'", "'.$row['ShippingAddress'].'", "'.$row['ShippingAddress2'].'", "'.$row['ShippingTown'].'", 
 						"'.$row['ShippingCounty'].'", "'.$row['ShippingPostcode'].'", "'.$row['ShippingCountry'].'")';
-		if (!mysqli_query($mysqli, $SQL3)) { printf("Errormessage: %s\n", mysqli_error($link)); }
+		if (!mysqli_query($mysqli, $SQL3)) { printf("Errormessage: %s\n", mysqli_error($mysqli)); }
 		if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
 	}
 }
@@ -61,7 +62,8 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 			(BirthDate = "'.$row['date_BirthDate'].'") + 
 			(TatooOrChip = "'.$row['TatooOrChip'].'") > 3';
 	if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
-	if (!mysqli_query($mysqli, $SQL2)) { printf("Errormessage: %s\n", mysqli_error($mysqli)); }
+	//if (!mysqli_query($mysqli, $SQL2)) { printf("Errormessage: %s\n", mysqli_error($mysqli)); }
+	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("Errormessage: %s\n", mysqli_error($mysqli));
 	
 	if (mysqli_num_rows($RESULT2) > 0){
 		echo "Animal already found in the database - record needs updating\n";
@@ -71,7 +73,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 		$SQL3 = 'INSERT INTO animal(webshop_animal_ids, AnimalID, ClientID, Species, Breed, RegisteredName, Registration, Sex, TatooOrChip, BirthDate, PetName, Colour)
 				VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$SPECIES[$row['Species']].'", "'.$row['Breed'].'", "'.$row['RegisteredName'].'",
 						"'.$row['Registration'].'", "'.$row['Sex'].'",  "'.$row['TatooOrChip'].'", "'.$row['date_BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
-		if (!mysqli_query($mysqli, $SQL3)) { printf("Errormessage: %s\n", mysqli_error($link)); }
+		if (!mysqli_query($mysqli, $SQL3)) { printf("Errormessage: %s\n", mysqli_error($mysqli)); }
 		if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
 	}
 }
