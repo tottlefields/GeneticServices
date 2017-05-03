@@ -26,7 +26,6 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 			(Email = "'.$row['Email'].'") + 
 			(ClientID = '.$row['client_id'].') > 2';
 	if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
-	//if (!mysqli_query($mysqli, $SQL2)) { printf("Errormessage: %s\n", mysqli_error($mysqli)); }
 	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 	
 	if (mysqli_num_rows($RESULT2) > 0){
@@ -54,7 +53,6 @@ if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
 
 $RESULT = mysqli_query($mysqli, $SQL);
 while ($row = mysqli_fetch_assoc($RESULT)){
-	//echo implode("\t", array($row['RegisteredName'], $row['Registration'], $row['date_BirthDate'], $row['TatooOrChip']))."\n";
 	$row['Species'] = $SPECIES[$row['Species']];
 	
 	$SQL2 = 'SELECT * FROM animal WHERE 
@@ -64,16 +62,15 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 			(BirthDate = "'.$row['date_BirthDate'].'") + 
 			(TatooOrChip = "'.$row['TatooOrChip'].'") > 3';
 	if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
-	//if (!mysqli_query($mysqli, $SQL2)) { printf("Errormessage: %s\n", mysqli_error($mysqli)); }
 	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 	
 	if (mysqli_num_rows($RESULT2) > 0){
 		$animal = mysqli_fetch_assoc($RESULT2);
 		$diffs = array_diff($animal, $row);
 		unset($diffs['id']);
-		print_r($diffs);
 		if (count($diffs) > 0){ 
 			echo "Animal already found in the database - record needs updating\n";
+			print_r($diffs);
 		}
 	}
 	else{
