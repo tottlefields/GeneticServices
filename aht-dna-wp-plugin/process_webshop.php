@@ -36,9 +36,10 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 		echo "Client needs a record creating in the database\n";
 		$SQL3 = 'INSERT INTO client(ClientID, FullName, Organisation, Email, Tel, Fax, Address, Address2, Address3, Town, County, Postcode,
 				Country, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry)
-				VALUES ("'.$row['client_id'].'", "'.$row['FullName'].'", "'.$row['Organisation'].'", "'.$row['Email'].'", "'.$row['Tel'].'", "'.$row['Fax'].'", "'.$row['Address'].'", "'.$row['Address2'].'", "'.$row['Address3'].'", "'.$row['Town'].'",
-						"'.$row['County'].'", "'.$row['Postcode'].'", "'.$row['Country'].'", "'.$row['ShippingName'].'", "'.$row['ShippingCompany'].'", "'.$row['ShippingAddress'].'", "'.$row['ShippingAddress2'].'", "'.$row['ShippingTown'].'", 
-						"'.$row['ShippingCounty'].'", "'.$row['ShippingPostcode'].'", "'.$row['ShippingCountry'].'")';
+				VALUES ("'.$row['client_id'].'", "'.$row['FullName'].'", "'.$row['Organisation'].'", "'.$row['Email'].'", "'.$row['Tel'].'", "'.$row['Fax'].'",
+						"'.$row['Address'].'", "'.$row['Address2'].'", "'.$row['Address3'].'", "'.$row['Town'].'",	"'.$row['County'].'", "'.$row['Postcode'].'",
+						"'.$row['Country'].'", "'.$row['ShippingName'].'", "'.$row['ShippingCompany'].'", "'.$row['ShippingAddress'].'", "'.$row['ShippingAddress2'].'",
+						"'.$row['ShippingAddress3'].'", "'.$row['ShippingTown'].'", "'.$row['ShippingCounty'].'", "'.$row['ShippingPostcode'].'", "'.$row['ShippingCountry'].'")';
 		if (!mysqli_query($mysqli, $SQL3)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
 		if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
 	}
