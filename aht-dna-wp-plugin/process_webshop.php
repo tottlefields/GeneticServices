@@ -93,4 +93,20 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 	}
 }
 
+
+
+$filename = $_SERVER['HOME'].'/projects/WebShop/wp_animals_updates.tsv';
+if (file_exists($filename) && filesize($filename) > 50) {
+	$fp = fopen($filename, 'r');	
+	while ( !feof($fp) ){
+		$line = fgets($fp, 2048);	
+		$data = str_getcsv($line, "\t");
+		print_r($data);
+	}
+	fclose($fp);
+}
+
+
+
+
 ?>
