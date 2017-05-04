@@ -60,7 +60,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 			(PetName = "'.$row['PetName'].'") + 
 			(Registration = "'.$row['Registration'].'") + 
 			(BirthDate = "'.$row['date_BirthDate'].'") + 
-			(TatooOrChip = "'.$row['TatooOrChip'].'") >= 3';
+			(TatooOrChip = "'.$row['TatooOrChip'].'") > 3';
 	if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
 	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 	
@@ -73,13 +73,13 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 		unset($diffs['BirthDate']);
 		if (count($diffs) > 0){ 
 			echo "Animal already found in the database - record needs updating\n";
-			print_r($diffs);
+			#print_r($diffs);
 			$updates = array();
 			foreach ($diffs as $col => $val){
 				array_push($updates, $col.' = "'.$val.'"');
 			}			
 			$A_SQL = "UPDATE animal SET ".implode(', ', $updates)." WHERE id=".$animal['id'];
-			echo $A_SQL."\n";
+			if ($DEBUG) { echo str_replace("\t", "", $A_SQL)."\n"; }
 			mysqli_query($mysqli, $A_SQL);
 		}
 	}
