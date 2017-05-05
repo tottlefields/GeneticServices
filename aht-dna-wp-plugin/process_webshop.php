@@ -104,6 +104,7 @@ if (file_exists($filename) && filesize($filename) > 50) {
 		$line = fgets($fp, 2048);	
 		$data = str_getcsv($line, "\t");
 		if (count($data) > 1){
+			$data[6] = substr($data[6], 0, 1);
 			$SQL4 = "SELECT AnimalID,ClientID,Breed,PetName,RegisteredName,BirthDate,Sex,Colour,TatooOrChip
 					FROM animal WHERE AnimalID=".$data[0]." OR webshop_animal_ids LIKE '%".$data[0]."%'";
 			$RESULT4 = mysqli_query($mysqli, $SQL4) or printf("ERROR: %s\n", mysqli_error($mysqli));
