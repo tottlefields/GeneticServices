@@ -102,7 +102,7 @@ if (file_exists($filename) && filesize($filename) > 50) {
 		# 0=>AnimalID	1=>ClientID	2=>Breed	3=>PetName	4=>RegisteredName	5=>BirthDate	6=>sex	7=>colour	8=>TattooChip
 		$line = fgets($fp, 2048);	
 		$data = str_getcsv($line, "\t");
-		if (count($data) > 0){
+		if (count($data) > 1){
 			print_r($data);
 		}
 	}
