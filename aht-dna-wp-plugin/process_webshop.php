@@ -95,7 +95,8 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 
 
 
-$filename = $_SERVER['HOME'].'/projects/WebShop/wp_animals_updates.tsv';
+#$filename = $_SERVER['HOME'].'/projects/WebShop/wp_animals_updates.tsv';
+$filename = $_SERVER['HOME'].'/projects/WebShop/tottlefields_updates.tsv';
 if (file_exists($filename) && filesize($filename) > 50) {
 	$fp = fopen($filename, 'r');	
 	while ( !feof($fp) ){
