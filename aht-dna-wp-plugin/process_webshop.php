@@ -112,7 +112,8 @@ if (file_exists($filename) && filesize($filename) > 50) {
 				$animal = mysqli_fetch_row($RESULT4);
 				print_r($data);
 				print_r($animal);
-				print_r(array_diff_assoc($row, $animal));
+				print_r(array_diff_assoc($data, $animal));
+				echo "\n\n";
 			}
 			else{
 				echo "ERROR - Dog does not exist in the database\n";
