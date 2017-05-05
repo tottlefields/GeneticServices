@@ -104,7 +104,18 @@ if (file_exists($filename) && filesize($filename) > 50) {
 		$line = fgets($fp, 2048);	
 		$data = str_getcsv($line, "\t");
 		if (count($data) > 1){
-			print_r($data);
+			$SQL4 = "SELECT AnimalID,ClientID,Breed,PetName,RegisteredName,BirthDate,Sex,Colour,TatooOrChip
+					FROM animal WHERE AnimalID=".$data[0]." OR webshop_animal_ids LIKE '%".$data[0]."%'";
+			$RESULT4 = mysqli_query($mysqli, $SQL4) or printf("ERROR: %s\n", mysqli_error($mysqli));
+			if (mysqli_num_rows($RESULT4) > 0){
+				$animal = mysqli_fetch_row($RESULT4);
+				print_r($data);
+				print_r($animal);
+				print_r(array_diff_assoc($row, $animal));
+			}
+			else{
+				echo "ERROR - Dog does not exist in the database\n";
+			}
 		}
 	}
 	fclose($fp);
