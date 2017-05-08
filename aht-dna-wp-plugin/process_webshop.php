@@ -121,7 +121,7 @@ if (file_exists($filename) && filesize($filename) > 50) {
 					}			
 					$A_SQL = "UPDATE animal SET ".implode(', ', $updates)." WHERE id=".$animal[9];
 					if ($DEBUG) { echo str_replace("\t", "", $A_SQL)."\n"; }
-					mysqli_query($mysqli, $A_SQL);
+					mysqli_query($mysqli, $A_SQL) or printf("ERROR: %s\n", mysqli_error($mysqli));;
 				}
 			}
 			else{
