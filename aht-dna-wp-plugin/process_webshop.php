@@ -106,19 +106,19 @@ if (file_exists($filename) && filesize($filename) > 50) {
 		$data = str_getcsv($line, "\t");
 		if (count($data) > 1){
 			$data[6] = substr($data[6], 0, 1);
-			$SQL4 = "SELECT id,AnimalID,ClientID,Breed,PetName,RegisteredName,BirthDate,Sex,Colour,TatooOrChip
+			$SQL4 = "SELECT AnimalID,ClientID,Breed,PetName,RegisteredName,BirthDate,Sex,Colour,TatooOrChip,id
 					FROM animal WHERE AnimalID=".$data[0]." OR webshop_animal_ids LIKE '%".$data[0]."%'";
 			$RESULT4 = mysqli_query($mysqli, $SQL4) or printf("ERROR: %s\n", mysqli_error($mysqli));
 			if (mysqli_num_rows($RESULT4) > 0){
 				$animal = mysqli_fetch_row($RESULT4);
 				$diffs = array_diff_assoc($data, $animal);
-				unset($diffs['id']);
+				unset($diffs[9]);
 				if (count($diffs) > 0){ 
 					$updates = array();
 					foreach ($diffs as $num => $val){
 						array_push($updates, $mapping_array[$num].' = "'.$val.'"');
 					}			
-					$A_SQL = "UPDATE animal SET ".implode(', ', $updates)." WHERE id=".$animal['id'];
+					$A_SQL = "UPDATE animal SET ".implode(', ', $updates)." WHERE id=".$animal[9];
 					echo $A_SQL."\n";
 					if ($DEBUG) { echo str_replace("\t", "", $A_SQL)."\n"; }
 					#mysqli_query($mysqli, $A_SQL);
