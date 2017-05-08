@@ -101,6 +101,7 @@ if (file_exists($filename) && filesize($filename) > 50) {
 	$fp = fopen($filename, 'r');	
 	while ( !feof($fp) ){
 		# 0=>AnimalID	1=>ClientID	2=>Breed	3=>PetName	4=>RegisteredName	5=>BirthDate	6=>sex	7=>colour	8=>TattooChip
+		$mapping_array = array(0=>'AnimalID', 1=>'ClientID', 2=>'Breed', 3=>'PetName', 4=>'RegisteredName', 5=>'BirthDate', 6=>'sex', 7=>'colour', 8=>'TattooChip');
 		$line = fgets($fp, 2048);	
 		$data = str_getcsv($line, "\t");
 		if (count($data) > 1){
@@ -110,10 +111,15 @@ if (file_exists($filename) && filesize($filename) > 50) {
 			$RESULT4 = mysqli_query($mysqli, $SQL4) or printf("ERROR: %s\n", mysqli_error($mysqli));
 			if (mysqli_num_rows($RESULT4) > 0){
 				$animal = mysqli_fetch_row($RESULT4);
-				print_r($data);
-				print_r($animal);
-				print_r(array_diff_assoc($data, $animal));
-				echo "\n\n";
+				$diffs = array_diff_assoc($data, $animal);
+				$updates = array();
+				foreach ($diffs as $num => $val){
+					array_push($updates, $mapping_array[$num].' = "'.$val.'"');
+				}			
+				$A_SQL = "UPDATE animal SET ".implode(', ', $updates)." WHERE id=".$animal['id'];
+				echo $A_SQL."\n";
+				if ($DEBUG) { echo str_replace("\t", "", $A_SQL)."\n"; }
+				#mysqli_query($mysqli, $A_SQL);
 			}
 			else{
 				echo "ERROR - Dog does not exist in the database\n";
