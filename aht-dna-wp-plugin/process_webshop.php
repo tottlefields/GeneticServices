@@ -60,7 +60,8 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 			(PetName = "'.$row['PetName'].'") + 
 			(Registration = "'.$row['Registration'].'") + 
 			(BirthDate = "'.$row['date_BirthDate'].'") + 
-			(TattooOrChip = "'.$row['TattooOrChip'].'") > 3';
+			(TattooOrChip = "'.$row['TattooOrChip'].'") +
+			(AnimalID = '.$row['AnimalID'].') > 3';
 	if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
 	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 	
