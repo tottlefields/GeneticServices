@@ -47,8 +47,8 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 
 //ANIMALS
 $SQL = "SELECT GROUP_CONCAT(AnimalID) as animal_ids, min(AnimalID) as AnimalID, ClientID, Species, Breed, 
-		RegisteredName, Registration, Sex, date_BirthDate, TatooOrChip, Colour, PetName 
-		FROM webshop_import WHERE imported=0 GROUP BY RegisteredName, Registration, PetName, date_BirthDate, TatooOrChip";
+		RegisteredName, Registration, Sex, date_BirthDate, TattooOrChip, Colour, PetName 
+		FROM webshop_import WHERE imported=0 GROUP BY RegisteredName, Registration, PetName, date_BirthDate, TattooOrChip";
 if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
 
 $RESULT = mysqli_query($mysqli, $SQL);
@@ -60,7 +60,7 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 			(PetName = "'.$row['PetName'].'") + 
 			(Registration = "'.$row['Registration'].'") + 
 			(BirthDate = "'.$row['date_BirthDate'].'") + 
-			(TatooOrChip = "'.$row['TatooOrChip'].'") > 3';
+			(TattooOrChip = "'.$row['TattooOrChip'].'") > 3';
 	if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
 	$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 	
@@ -85,9 +85,9 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 	}
 	else{
 		echo "Creating a new ANIMAL record in the database\n";
-		$SQL3 = 'INSERT INTO animal(webshop_animal_ids, AnimalID, ClientID, Species, Breed, RegisteredName, Registration, Sex, TatooOrChip, BirthDate, PetName, Colour)
+		$SQL3 = 'INSERT INTO animal(webshop_animal_ids, AnimalID, ClientID, Species, Breed, RegisteredName, Registration, Sex, TattooOrChip, BirthDate, PetName, Colour)
 				VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$row['Species'].'", "'.$row['Breed'].'", "'.$row['RegisteredName'].'",
-						"'.$row['Registration'].'", "'.$row['Sex'].'",  "'.$row['TatooOrChip'].'", "'.$row['date_BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
+						"'.$row['Registration'].'", "'.$row['Sex'].'",  "'.$row['TattooOrChip'].'", "'.$row['date_BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
 		if (!mysqli_query($mysqli, $SQL3)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
 		if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
 	}
@@ -101,12 +101,12 @@ if (file_exists($filename) && filesize($filename) > 50) {
 	$fp = fopen($filename, 'r');	
 	while ( !feof($fp) ){
 		# 0=>AnimalID	1=>ClientID	2=>Breed	3=>PetName	4=>RegisteredName	5=>BirthDate	6=>sex	7=>colour	8=>TattooChip
-		$mapping_array = array(0=>'AnimalID', 1=>'ClientID', 2=>'Breed', 3=>'PetName', 4=>'RegisteredName', 5=>'BirthDate', 6=>'sex', 7=>'colour', 8=>'TattooChip');
+		$mapping_array = array(0=>'AnimalID', 1=>'ClientID', 2=>'Breed', 3=>'PetName', 4=>'RegisteredName', 5=>'BirthDate', 6=>'sex', 7=>'colour', 8=>'TattooOrChip');
 		$line = fgets($fp, 2048);	
 		$data = str_getcsv($line, "\t");
 		if (count($data) > 1){
 			$data[6] = substr($data[6], 0, 1);
-			$SQL4 = "SELECT AnimalID,ClientID,Breed,PetName,RegisteredName,BirthDate,Sex,Colour,TatooOrChip,id
+			$SQL4 = "SELECT AnimalID,ClientID,Breed,PetName,RegisteredName,BirthDate,Sex,Colour,TattooOrChip,id
 					FROM animal WHERE AnimalID=".$data[0]." OR webshop_animal_ids LIKE '%".$data[0]."%'";
 			$RESULT4 = mysqli_query($mysqli, $SQL4) or printf("ERROR: %s\n", mysqli_error($mysqli));
 			if (mysqli_num_rows($RESULT4) > 0){
