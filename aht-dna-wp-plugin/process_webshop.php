@@ -115,9 +115,9 @@ else {
 	
 	
 	
-	$SQL_IMPORT = "UPDATE webshop_import SET imported=1 WHERE imported=0";
-	if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
-	$RESULT = mysqli_query($mysqli, $SQL);
+	$UPDATE = "UPDATE webshop_import SET imported=1 WHERE imported=0";
+	if ($DEBUG) { echo str_replace("\t", "", $UPDATE)."\n"; }
+	$RESULT = mysqli_query($mysqli, $UPDATE);
 }
 
 
