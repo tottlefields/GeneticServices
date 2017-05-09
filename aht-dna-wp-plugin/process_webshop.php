@@ -6,7 +6,7 @@ $SPECIES = array('Canine Tests' => 'Canine');
 
 
 
-$mysqli = mysqli_connect("localhost", $MY_CNF['client']['user'], $MY_CNF['client']['password'], "es_webshop_import");
+$mysqli = mysqli_connect("localhost", $MY_CNF['client']['user'], $MY_CNF['client']['password'], "es_webshop_test");
 if (mysqli_connect_errno($mysqli)) {
 	echo "Failed to connect to MySQL: " . mysqli_connect_error()."\n";
 	exit(0);
