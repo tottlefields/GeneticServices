@@ -36,7 +36,8 @@ else {
 		$SQL2 = 'SELECT * FROM client WHERE 
 				(FullName = "'.$row['FullName'].'") + 
 				(Email = "'.$row['Email'].'") + 
-				(ClientID = '.$row['client_id'].') >= 2';
+				(ClientID = '.$row['client_id'].') >= 2
+				OR ClientID = '.$row['client_id'];
 		if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
 		$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 		
@@ -68,7 +69,7 @@ else {
 		$row['Species'] = $SPECIES[$row['Species']];
 		
 		$SQL2 = 'SELECT * FROM animal WHERE 
-				(RegisteredName = "'.$row['RegisteredName'].'") + 
+				(RegisteredName = "'.mysqli_real_escape_string($mysqli, $row['RegisteredName']).'") + 
 				(PetName = "'.$row['PetName'].'") + 
 				(Registration = "'.$row['Registration'].'") + 
 				(BirthDate = "'.$row['date_BirthDate'].'") + 
@@ -89,7 +90,7 @@ else {
 				#print_r($diffs);
 				$updates = array();
 				foreach ($diffs as $col => $val){
-					array_push($updates, $col.' = "'.$val.'"');
+					array_push($updates, $col.' = "'.mysqli_real_escape_string($mysqli, $val).'"');
 				}			
 				$A_SQL = "UPDATE animal SET ".implode(', ', $updates)." WHERE id=".$animal['id'];
 				if ($DEBUG) { echo str_replace("\t", "", $A_SQL)."\n"; }
@@ -99,7 +100,7 @@ else {
 		else{
 			echo "Creating a new ANIMAL record in the database\n";
 			$SQL3 = 'INSERT INTO animal(webshop_animal_ids, AnimalID, ClientID, Species, Breed, RegisteredName, Registration, Sex, TattooOrChip, BirthDate, PetName, Colour)
-					VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$row['Species'].'", "'.$row['Breed'].'", "'.$row['RegisteredName'].'",
+					VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$row['Species'].'", "'.$row['Breed'].'", "'.mysqli_real_escape_string($mysqli, $row['RegisteredName']).'",
 							"'.$row['Registration'].'", "'.$row['Sex'].'",  "'.$row['TattooOrChip'].'", "'.$row['date_BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
 			if (!mysqli_query($mysqli, $SQL3)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
 			if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
