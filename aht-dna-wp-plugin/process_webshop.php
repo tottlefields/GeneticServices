@@ -94,8 +94,18 @@ while ($row = mysqli_fetch_assoc($RESULT)){
 	}
 }
 
+//ORDERS
+$SQL = "INSERT INTO orders SELECT DISTINCT NULL,OrderID,ClientID,date_OrderDate,ReportFormat,VetReportFormat FROM webshop_import WHERE imported=0;";
+if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
+if (!mysqli_query($mysqli, $SQL)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
+
+$SQL = "INSERT IGNORE INTO order_tests (OrderID,AnimalID,TestCode,SampleType) SELECT OrderID, t2.AnimalID, TestCode,  'Swab' as SampleType
+		FROM webshop_import t1 INNER JOIN animal t2 ON t2.webshop_animal_ids LIKE CONCAT('%', t1.AnimalID ,'%') WHERE imported=0;";
+if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
+if (!mysqli_query($mysqli, $SQL)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
 
 
+//ANIMAL UPDATES
 #$filename = $_SERVER['HOME'].'/projects/WebShop/wp_animals_updates.tsv';
 $filename = $_SERVER['HOME'].'/projects/WebShop/tottlefields_updates.tsv';
 if (file_exists($filename) && filesize($filename) > 50) {
