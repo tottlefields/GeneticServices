@@ -70,7 +70,7 @@ else {
 		
 		$SQL2 = 'SELECT * FROM animal WHERE 
 				(RegisteredName = "'.mysqli_real_escape_string($mysqli, $row['RegisteredName']).'") + 
-				(PetName = "'.$row['PetName'].'") + 
+				(PetName = "'.mysqli_real_escape_string($mysqli, $row['PetName']).'") + 
 				(Registration = "'.$row['Registration'].'") + 
 				(BirthDate = "'.$row['date_BirthDate'].'") + 
 				(TattooOrChip = "'.$row['TattooOrChip'].'") +
