@@ -14,10 +14,10 @@ if (mysqli_connect_errno($mysqli)) {
 
 
 $SQL_IMPORT = "SELECT distinct OrderID FROM webshop_import WHERE imported=0";
-if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
-$RESULT = mysqli_query($mysqli, $SQL);
+if ($DEBUG) { echo str_replace("\t", "", $SQL_IMPORT)."\n"; }
+$RESULT = mysqli_query($mysqli, $SQL_IMPORT);
 
-if (mysqli_num_rows($RESULT) = 0){
+if (mysqli_num_rows($RESULT) == 0){
 	echo "No new orders to import at this time\n";
 }
 else {
