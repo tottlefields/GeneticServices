@@ -48,8 +48,8 @@ else {
 			$SQL3 = 'INSERT INTO client(ClientID, FullName, Organisation, Email, Tel, Fax, Address, Address2, Address3, Town, County, Postcode,
 					Country, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry)
 					VALUES ("'.$row['client_id'].'", "'.$row['FullName'].'", "'.$row['Organisation'].'", "'.$row['Email'].'", "'.$row['Tel'].'", "'.$row['Fax'].'",
-							"'.$row['Address'].'", "'.$row['Address2'].'", "'.$row['Address3'].'", "'.$row['Town'].'",	"'.$row['County'].'", "'.$row['Postcode'].'",
-							"'.$row['Country'].'", "'.$row['ShippingName'].'", "'.$row['ShippingCompany'].'", "'.$row['ShippingAddress'].'", "'.$row['ShippingAddress2'].'",
+							"'.mysqli_real_escape_string($mysqli, $row['Address']).'", "'.$row['Address2'].'", "'.$row['Address3'].'", "'.$row['Town'].'",	"'.$row['County'].'", "'.$row['Postcode'].'",
+							"'.$row['Country'].'", "'.$row['ShippingName'].'", "'.$row['ShippingCompany'].'", "'.mysqli_real_escape_string($mysqli, $row['ShippingAddress']).'", "'.$row['ShippingAddress2'].'",
 							"'.$row['ShippingAddress3'].'", "'.$row['ShippingTown'].'", "'.$row['ShippingCounty'].'", "'.$row['ShippingPostcode'].'", "'.$row['ShippingCountry'].'")';
 			if (!mysqli_query($mysqli, $SQL3)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
 			if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
@@ -174,9 +174,9 @@ function add_audit_trail($process, $table, $row_id, $desc){
 	global $DEBUG, $mysqli;
 	
 	$LOG_SQL = "INSERT INTO audit_trail (`user`, `process`, `table`, `row_id`, `description`)
-			VALUES ('".gethostname()."', '".$process."', '".$table."', ".$row_id.", ".$desc."');";
+			VALUES ('".gethostname()."', '".$process."', '".$table."', ".$row_id.", '".$desc."');";
 	if ($DEBUG) { echo str_replace("\t", "", $LOG_SQL)."\n"; }
-	$RESULT = mysqli_query($mysqli, $LOG_SQL);
+	if (!mysqli_query($mysqli, $LOG_SQL)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
 	
 }
 
