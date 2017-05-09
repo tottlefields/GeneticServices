@@ -172,7 +172,7 @@ if (file_exists($filename) && filesize($filename) > 50) {
 function add_audit_trail($process, $table, $row_id, $desc){
 	
 	$LOG_SQL = "INSERT INTO audit_trail (`user`, `process`, `table`, `row_id`, `description`)
-			VALUES ('".gethomstname()."', '".$process."', '".$table."', ".$row_id.", ".$desc."');";
+			VALUES ('".gethostname()."', '".$process."', '".$table."', ".$row_id.", ".$desc."');";
 	if ($DEBUG) { echo str_replace("\t", "", $LOG_SQL)."\n"; }
 	$RESULT = mysqli_query($mysqli, $LOG_SQL);
 	
