@@ -1,6 +1,7 @@
 <?php
 
-$MY_CNF = parse_ini_file($_SERVER['HOME']."/.my.cnf", true);
+//$MY_CNF = parse_ini_file($_SERVER['HOME']."/.my.cnf", true);
+$MY_CNF = parse_ini_file("my.cnf", true);
 $DEBUG = 0;
 $SPECIES = array('Canine Tests' => 'Canine');
 
@@ -21,6 +22,8 @@ if (mysqli_num_rows($RESULT) == 0){
 	echo "No new orders to import at this time\n";
 }
 else {
+	$NEW_ORDERS = mysqli_num_rows($RESULT);
+	
 	//CLIENTS (people)
 	$SQL = "SELECT GROUP_CONCAT(distinct ClientID) as client_id, FullName, Organisation, Email, Tel, Fax, Address, Address2, Address3, Town, County, Postcode,
 			Country, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry
@@ -118,6 +121,8 @@ else {
 	$UPDATE = "UPDATE webshop_import SET imported=1 WHERE imported=0";
 	if ($DEBUG) { echo str_replace("\t", "", $UPDATE)."\n"; }
 	$RESULT = mysqli_query($mysqli, $UPDATE);
+	
+	add_audit_trail('import', 'NULL', 'NULL', $NEW_ORDERS." new orders added.");
 }
 
 
@@ -142,12 +147,16 @@ if (file_exists($filename) && filesize($filename) > 50) {
 				unset($diffs[9]);
 				if (count($diffs) > 0){ 
 					$updates = array();
+					$cols_altered = array();
 					foreach ($diffs as $num => $val){
 						array_push($updates, $mapping_array[$num].' = "'.$val.'"');
+						array_push($cols_altered, $mapping_array[$num]);
 					}			
 					$A_SQL = "UPDATE animal SET ".implode(', ', $updates)." WHERE id=".$animal[9];
 					if ($DEBUG) { echo str_replace("\t", "", $A_SQL)."\n"; }
-					mysqli_query($mysqli, $A_SQL) or printf("ERROR: %s\n", mysqli_error($mysqli));;
+					mysqli_query($mysqli, $A_SQL) or printf("ERROR: %s\n", mysqli_error($mysqli));
+					
+					add_audit_trail('update', 'animal', $animal[9], "Details have been updated for AnimalID ".$animal[0]." - ".implode(', ', $cols_altered));
 				}
 			}
 			else{
@@ -159,6 +168,15 @@ if (file_exists($filename) && filesize($filename) > 50) {
 }
 
 
+
+function add_audit_trail($process, $table, $row_id, $desc){
+	
+	$LOG_SQL = "INSERT INTO audit_trail (`user`, `process`, `table`, `row_id`, `description`)
+			VALUES ('".gethomstname()."', '".$process."', '".$table."', ".$row_id.", ".$desc."');";
+	if ($DEBUG) { echo str_replace("\t", "", $LOG_SQL)."\n"; }
+	$RESULT = mysqli_query($mysqli, $LOG_SQL);
+	
+}
 
 
 ?>
