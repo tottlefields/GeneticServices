@@ -25,7 +25,7 @@ else {
 	$NEW_ORDERS = mysqli_num_rows($RESULT);
 	
 	//CLIENTS (people)
-	$SQL = "SELECT GROUP_CONCAT(distinct ClientID) as client_id, FullName, Organisation, Email, Tel, Fax, Address, Address2, Address3, Town, County, Postcode,
+	$SQL = "SELECT GROUP_CONCAT(distinct ClientID) as client_ids, max(ClientID) as ClientID, FullName, Organisation, Email, Tel, Fax, Address, Address2, Address3, Town, County, Postcode,
 			Country, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry
 			FROM webshop_import WHERE imported=0 GROUP BY FullName, Email";
 	if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
@@ -36,8 +36,8 @@ else {
 		$SQL2 = 'SELECT * FROM client WHERE 
 				(FullName = "'.$row['FullName'].'") + 
 				(Email = "'.$row['Email'].'") + 
-				(ClientID = '.$row['client_id'].') >= 2
-				OR ClientID = '.$row['client_id'];
+				(ClientID = '.$row['ClientID'].') >= 2
+				OR webshop_client_ids LIKE CONCAT("%", ClientID ,"%")';
 		if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
 		$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 		
@@ -46,9 +46,9 @@ else {
 		}
 		else{
 			echo "Creating a new CLIENT record in the database\n";
-			$SQL3 = 'INSERT INTO client(ClientID, FullName, Organisation, Email, Tel, Fax, Address, Address2, Address3, Town, County, Postcode,
+			$SQL3 = 'INSERT INTO client(webshop_client_ids, ClientID, FullName, Organisation, Email, Tel, Fax, Address, Address2, Address3, Town, County, Postcode,
 					Country, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry)
-					VALUES ("'.$row['client_id'].'", "'.$row['FullName'].'", "'.$row['Organisation'].'", "'.$row['Email'].'", "'.$row['Tel'].'", "'.$row['Fax'].'",
+					VALUES ("'.$row['client_ids'].'", '.$row['client_id'].'", "'.$row['FullName'].'", "'.$row['Organisation'].'", "'.$row['Email'].'", "'.$row['Tel'].'", "'.$row['Fax'].'",
 							"'.mysqli_real_escape_string($mysqli, $row['Address']).'", "'.$row['Address2'].'", "'.$row['Address3'].'", "'.$row['Town'].'",	"'.$row['County'].'", "'.$row['Postcode'].'",
 							"'.$row['Country'].'", "'.$row['ShippingName'].'", "'.$row['ShippingCompany'].'", "'.mysqli_real_escape_string($mysqli, $row['ShippingAddress']).'", "'.$row['ShippingAddress2'].'",
 							"'.$row['ShippingAddress3'].'", "'.$row['ShippingTown'].'", "'.$row['ShippingCounty'].'", "'.$row['ShippingPostcode'].'", "'.$row['ShippingCountry'].'")';
