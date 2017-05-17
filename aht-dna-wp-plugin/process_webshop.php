@@ -26,32 +26,32 @@ else {
 	
 	//CLIENTS (people)
 	$SQL = "SELECT GROUP_CONCAT(distinct ClientID) as client_ids, max(ClientID) as ClientID, FullName, Organisation, Email, Tel, Fax, Address, Address2, Address3, Town, County, Postcode,
-			Country, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry
-			FROM webshop_import WHERE imported=0 GROUP BY FullName, Email";
+		Country, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry
+		FROM webshop_import WHERE imported=0 GROUP BY FullName, Email";
 	if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
 	
 	$RESULT = mysqli_query($mysqli, $SQL);
 	while ($row = mysqli_fetch_assoc($RESULT)){
 		
 		$SQL2 = 'SELECT * FROM client WHERE 
-				(FullName = "'.$row['FullName'].'") + 
-				(Email = "'.$row['Email'].'") + 
-				(ClientID = '.$row['ClientID'].') >= 2
-				OR webshop_client_ids LIKE CONCAT("%", ClientID ,"%")';
+			(FullName = "'.$row['FullName'].'") + 
+			(Email = "'.$row['Email'].'") + 
+			(ClientID = '.$row['ClientID'].') >= 2
+			OR webshop_client_ids LIKE CONCAT("%", ClientID ,"%")';
 		if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
-		$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
+		$RESULT2 = mysqli_query($mysqli, $SQL2) or (printf("ERROR: %s\nSQL: %s", mysqli_error($mysqli), str_replace("\t", "", $SQL2)) && exit(0));
 		
 		if (mysqli_num_rows($RESULT2) > 0){
-			echo "Client already found in the database - record may need updating\n";
+#			echo "Client already found in the database - record may need updating\n";
 		}
 		else{
-			echo "Creating a new CLIENT record in the database\n";
+#			echo "Creating a new CLIENT record in the database\n";
 			$SQL3 = 'INSERT INTO client(webshop_client_ids, ClientID, FullName, Organisation, Email, Tel, Fax, Address, Address2, Address3, Town, County, Postcode,
-					Country, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry)
-					VALUES ("'.$row['client_ids'].'", '.$row['client_id'].'", "'.$row['FullName'].'", "'.$row['Organisation'].'", "'.$row['Email'].'", "'.$row['Tel'].'", "'.$row['Fax'].'",
-							"'.mysqli_real_escape_string($mysqli, $row['Address']).'", "'.$row['Address2'].'", "'.$row['Address3'].'", "'.$row['Town'].'",	"'.$row['County'].'", "'.$row['Postcode'].'",
-							"'.$row['Country'].'", "'.$row['ShippingName'].'", "'.$row['ShippingCompany'].'", "'.mysqli_real_escape_string($mysqli, $row['ShippingAddress']).'", "'.$row['ShippingAddress2'].'",
-							"'.$row['ShippingAddress3'].'", "'.$row['ShippingTown'].'", "'.$row['ShippingCounty'].'", "'.$row['ShippingPostcode'].'", "'.$row['ShippingCountry'].'")';
+				Country, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry)
+				VALUES ("'.$row['client_ids'].'", "'.$row['client_id'].'", "'.$row['FullName'].'", "'.$row['Organisation'].'", "'.$row['Email'].'", "'.$row['Tel'].'", "'.$row['Fax'].'",
+				"'.mysqli_real_escape_string($mysqli, $row['Address']).'", "'.$row['Address2'].'", "'.$row['Address3'].'", "'.$row['Town'].'",	"'.$row['County'].'", "'.$row['Postcode'].'",
+				"'.$row['Country'].'", "'.$row['ShippingName'].'", "'.$row['ShippingCompany'].'", "'.mysqli_real_escape_string($mysqli, $row['ShippingAddress']).'", "'.$row['ShippingAddress2'].'",
+				"'.$row['ShippingAddress3'].'", "'.$row['ShippingTown'].'", "'.$row['ShippingCounty'].'", "'.$row['ShippingPostcode'].'", "'.$row['ShippingCountry'].'")';
 			if (!mysqli_query($mysqli, $SQL3)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
 			if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
 		}
@@ -60,8 +60,8 @@ else {
 	
 	//ANIMALS
 	$SQL = "SELECT GROUP_CONCAT(AnimalID) as animal_ids, min(AnimalID) as AnimalID, ClientID, Species, Breed, 
-			RegisteredName, Registration, Sex, date_BirthDate, TattooOrChip, Colour, PetName 
-			FROM webshop_import WHERE imported=0 GROUP BY RegisteredName, Registration, PetName, date_BirthDate, TattooOrChip";
+		RegisteredName, Registration, Sex, date_BirthDate, TattooOrChip, Colour, PetName 
+		FROM webshop_import WHERE imported=0 GROUP BY RegisteredName, Registration, PetName, date_BirthDate, TattooOrChip";
 	if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
 	
 	$RESULT = mysqli_query($mysqli, $SQL);
@@ -69,12 +69,12 @@ else {
 		$row['Species'] = $SPECIES[$row['Species']];
 		
 		$SQL2 = 'SELECT * FROM animal WHERE 
-				(RegisteredName = "'.mysqli_real_escape_string($mysqli, $row['RegisteredName']).'") + 
-				(PetName = "'.mysqli_real_escape_string($mysqli, $row['PetName']).'") + 
-				(Registration = "'.$row['Registration'].'") + 
-				(BirthDate = "'.$row['date_BirthDate'].'") + 
-				(TattooOrChip = "'.$row['TattooOrChip'].'") +
-				(AnimalID = '.$row['AnimalID'].') > 3';
+			(RegisteredName = "'.mysqli_real_escape_string($mysqli, $row['RegisteredName']).'") + 
+			(PetName = "'.mysqli_real_escape_string($mysqli, $row['PetName']).'") + 
+			(Registration = "'.$row['Registration'].'") + 
+			(BirthDate = "'.$row['date_BirthDate'].'") + 
+			(TattooOrChip = "'.$row['TattooOrChip'].'") +
+			(AnimalID = '.$row['AnimalID'].') > 3';
 		if ($DEBUG) { echo str_replace("\t", "", $SQL2)."\n"; }
 		$RESULT2 = mysqli_query($mysqli, $SQL2) or printf("ERROR: %s\n", mysqli_error($mysqli));
 		
@@ -100,8 +100,8 @@ else {
 		else{
 			echo "Creating a new ANIMAL record in the database\n";
 			$SQL3 = 'INSERT INTO animal(webshop_animal_ids, AnimalID, ClientID, Species, Breed, RegisteredName, Registration, Sex, TattooOrChip, BirthDate, PetName, Colour)
-					VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$row['Species'].'", "'.$row['Breed'].'", "'.mysqli_real_escape_string($mysqli, $row['RegisteredName']).'",
-							"'.$row['Registration'].'", "'.$row['Sex'].'",  "'.$row['TattooOrChip'].'", "'.$row['date_BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
+				VALUES ("'.$row['animal_ids'].'", '.$row['AnimalID'].', '.$row['ClientID'].', "'.$row['Species'].'", "'.$row['Breed'].'", "'.mysqli_real_escape_string($mysqli, $row['RegisteredName']).'",
+				"'.$row['Registration'].'", "'.$row['Sex'].'",  "'.$row['TattooOrChip'].'", "'.$row['date_BirthDate'].'", "'.$row['PetName'].'", "'.$row['Colour'].'")';
 			if (!mysqli_query($mysqli, $SQL3)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
 			if ($DEBUG) { echo str_replace("\t", "", $SQL3)."\n"; }
 		}
@@ -113,7 +113,7 @@ else {
 	if (!mysqli_query($mysqli, $SQL)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
 	
 	$SQL = "INSERT IGNORE INTO order_tests (OrderID,AnimalID,TestCode,SampleType) SELECT OrderID, t2.AnimalID, TestCode,  'Swab' as SampleType
-			FROM webshop_import t1 INNER JOIN animal t2 ON t2.webshop_animal_ids LIKE CONCAT('%', t1.AnimalID ,'%') WHERE imported=0;";
+		FROM webshop_import t1 INNER JOIN animal t2 ON t2.webshop_animal_ids LIKE CONCAT('%', t1.AnimalID ,'%') WHERE imported=0;";
 	if ($DEBUG) { echo str_replace("\t", "", $SQL)."\n"; }
 	if (!mysqli_query($mysqli, $SQL)) { printf("ERROR: %s\n", mysqli_error($mysqli)); }
 	
@@ -140,7 +140,7 @@ if (file_exists($filename) && filesize($filename) > 50) {
 		if (count($data) > 1){
 			$data[6] = substr($data[6], 0, 1);
 			$SQL4 = "SELECT AnimalID,ClientID,Breed,PetName,RegisteredName,BirthDate,Sex,Colour,TattooOrChip,id
-					FROM animal WHERE AnimalID=".$data[0]." OR webshop_animal_ids LIKE '%".$data[0]."%'";
+				FROM animal WHERE AnimalID=".$data[0]." OR webshop_animal_ids LIKE '%".$data[0]."%'";
 			$RESULT4 = mysqli_query($mysqli, $SQL4) or printf("ERROR: %s\n", mysqli_error($mysqli));
 			if (mysqli_num_rows($RESULT4) > 0){
 				$animal = mysqli_fetch_row($RESULT4);
