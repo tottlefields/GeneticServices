@@ -3,7 +3,7 @@ global $wpdb;
 
 $MAX_ID = trim(fgets(STDIN)); // reads one line from STDIN;
 if(!isset($MAX_ID) || $MAX_ID == 'NULL'){ $MAX_ID = 0; }
-$post_ids = [];
+$post_ids = array();
 
 // Get all the IDs you want to choose from
 $sql = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE ID > %d", $MAX_ID );
