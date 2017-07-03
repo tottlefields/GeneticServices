@@ -3,7 +3,7 @@ global $wpdb;
 
 $MAX_ID = trim(fgets(STDIN)); // reads one line from STDIN;
 if(!isset($MAX_ID) || $MAX_ID == 'NULL'){ $MAX_ID = 0; }
-$post_ids = [];
+$post_ids = array();
 
 //echo "MAX ID = ".$MAX_ID."\n";
 
