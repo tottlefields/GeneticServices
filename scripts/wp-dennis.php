@@ -17,7 +17,6 @@ if (count($post_ids) == 0){ exit; }
 $args = array(
 		'post_type'		=> 'orders',
 		'post_status'	=> array('publish'),
-		'author'		=> '16213',
 		'order'			=> 'ASC',
 		'numberposts'	=> -1,
 		'post__in' 		=> $post_ids
