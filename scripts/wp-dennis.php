@@ -17,6 +17,7 @@ if (count($post_ids) == 0){ exit; }
 $args = array(
 		'post_type'		=> 'orders',
 		'post_status'	=> array('publish'),
+//		'author'		=> '16213',
 		'order'			=> 'ASC',
 		'numberposts'	=> -1,
 		'post__in' 		=> $post_ids
@@ -32,6 +33,10 @@ global $post;
 foreach( $posts as $post ) {
 	$postMeta = get_post_custom($post->ID);
 	$MAX_ID = $post->ID;
+	
+	if(!get_field('paid-pm')){
+		continue;
+	}
 	
 	$orderId = str_replace('Order #', '', get_the_title());
 	$a = explode(' &#8211;', $orderId);
