@@ -98,7 +98,7 @@ var ddLetter = {
 					widths : [ 'auto', '*' ],
 					body : [ [ {
 						image : 'ahtLogo',
-						fit : [ 80, 80 ]
+						fit : [ 100, 100 ]
 					}, {
 						width : '*',
 						alignment : 'center',
@@ -282,7 +282,7 @@ var ddLetter = {
 	},
 	styles : {
 		h1 : {
-			margin : [ 0, 20, 0, 0 ],
+			margin : [ 0, 30, 0, 0 ],
 			fontSize : 18,
 			bold : true
 		},
