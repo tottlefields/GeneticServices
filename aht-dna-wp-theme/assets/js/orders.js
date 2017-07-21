@@ -124,16 +124,18 @@ var ddLetter = {
 				}
 			},
 			{
-				text : "Breed: ",
-				margin : [ 0, 5, 0, 0 ]
+				text : [ {
+					text : "Test(s) Ordered: ",
+					style : 'strong'
+				}, 'Canine DNA Profiles' ],
+				margin : [ 0, 5, 0, 5 ]
 			},
 			{
-				text : "Test(s) Ordered: ",
-				margin : [ 0, 5, 0, 0 ]
-			},
-			{
-				text : "Order No.: ",
-				margin : [ 0, 5, 0, 0 ]
+				text : [ {
+					text : "Order No.: ",
+					style : 'strong'
+				}, '1235' ],
+				margin : [ 0, 5, 0, 5 ]
 			},
 			{
 				table : {
@@ -142,25 +144,36 @@ var ddLetter = {
 						text : 'Registered Name',
 						style : 'strong'
 					}, {
-						text : ''
-					}, {
+						text : 'TOTTLEFIELDS BIZZY BEE',
+						style : 'pre',
+						colSpan : 3
+					}, '', '' ], [ {
 						text : 'Pet Name',
 						style : 'strong'
 					}, {
-						text : ''
-					} ], [ {
-						text : 'Registration Number',
+						text : 'Bella',
+						style : 'pre'
+					}, {
+						text : 'Breed',
 						style : 'strong'
 					}, {
-						text : ''
-					}, {
+						text : 'English Cocker Spaniel',
+						style : 'pre'
+					} ], [ {
 						text : 'Microchip/Tattoo No.',
 						style : 'strong'
 					}, {
-						text : ''
+						text : '941000019644648',
+						style : 'pre'
+					}, {
+						text : 'Reg. No.',
+						style : 'strong'
+					}, {
+						text : 'AU01578303',
+						style : 'pre'
 					} ] ]
 				},
-				margin : [ 0, 10, 0, 10 ]
+				margin : [ 0, 5, 0, 5 ]
 			},
 			{
 				text : 'Please Read:',
@@ -182,24 +195,29 @@ var ddLetter = {
 					widths : [ '*' ],
 					body : [ [ {
 						text : 'Vet Verification',
-						style : 'strong',
+						style : 'vetStrong',
 						margin : [ 0, 5, 0, 0 ]
 					} ], [ {
 						text : 'This section is optional and should be completed by a Vet only if vet verification is required',
 						style : 'small'
 					} ], [ {
-						text : 'I confirm that the sample supplied here was taken from the dog detailed above'
+						text : 'I confirm that the sample supplied here was taken from the dog detailed above',
+						style : 'vet'
 					} ], [ {
 						table : {
 							widths : [ 'auto', '*', 'auto', 'auto' ],
 							body : [ [ {
-								text : 'Signed'
+								text : 'Signed',
+								style : 'vet'
 							}, {
-								text : '....................................................................................................'
+								text : '....................................................................................................',
+								style : 'vet'
 							}, {
-								text : 'Date'
+								text : 'Date',
+								style : 'vet'
 							}, {
-								text : '........../........../..........'
+								text : '........../........../..........',
+								style : 'vet'
 							} ] ]
 						},
 						margin : [ 0, 10, 0, 0 ],
@@ -260,7 +278,7 @@ var ddLetter = {
 	defaultStyle : {
 		font : 'Tahoma',
 		fontSize : 11,
-		margin : [ 0, 5, 0, 0 ]
+		margin : [ 0, 5, 0, 5 ]
 	},
 	styles : {
 		h1 : {
@@ -276,16 +294,29 @@ var ddLetter = {
 			margin : [ 0, 5, 0, 5 ],
 			bold : true
 		},
+		pre : {
+			font : 'Courier',
+			margin : [ 5, 7, 0, 5 ],
+			color: 'red'
+		},
+		vet : {
+			fontSize : 9
+		},
+		vetStrong : {
+			fontSize : 9,
+			bold : true
+		},
 		small : {
 			margin : [ 0, 0, 0, 0 ],
-			fontSize : 8
+			fontSize : 6
 		},
 		vetTable : {
 			fillColor : '#eeeeee',
-			margin : [ 0, 10, 0, 10 ],
+			margin : [ 0, 5, 0, 5 ],
 		},
 		vetHeader : {
-			margin : [ 0, 10, 10, 0 ],
+			fontSize : 9,
+			margin : [ 0, 5, 10, 0 ],
 			alignment : 'right'
 		}
 	},
