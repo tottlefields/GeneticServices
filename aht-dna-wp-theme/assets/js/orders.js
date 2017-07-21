@@ -98,7 +98,7 @@ var ddLetter = {
 					widths : [ 'auto', '*' ],
 					body : [ [ {
 						image : 'ahtLogo',
-						fit : [ 100, 100 ]
+						fit : [ 80, 80 ]
 					}, {
 						width : '*',
 						alignment : 'center',
@@ -127,19 +127,25 @@ var ddLetter = {
 				text : [ {
 					text : "Test(s) Ordered: ",
 					style : 'strong'
-				}, 'Canine DNA Profiles' ],
+				}, {
+					text : 'Canine DNA Profiles',
+					style : 'pre'
+				} ],
 				margin : [ 0, 5, 0, 5 ]
 			},
 			{
 				text : [ {
 					text : "Order No.: ",
 					style : 'strong'
-				}, '1235' ],
+				}, {
+					text : '1235',
+					style : 'pre'
+				} ],
 				margin : [ 0, 5, 0, 5 ]
 			},
 			{
 				table : {
-					widths : [ 'auto', '*', 'auto', '*' ],
+					widths : [ 'auto', 'auto', 'auto', '*' ],
 					body : [ [ {
 						text : 'Registered Name',
 						style : 'strong'
@@ -158,16 +164,19 @@ var ddLetter = {
 						style : 'strong'
 					}, {
 						text : 'English Cocker Spaniel',
-						style : 'pre'
+						style : 'pre',
+						noWrap: true
 					} ], [ {
 						text : 'Microchip/Tattoo No.',
-						style : 'strong'
+						style : 'strong',
+						noWrap: true
 					}, {
 						text : '941000019644648',
 						style : 'pre'
 					}, {
 						text : 'Reg. No.',
-						style : 'strong'
+						style : 'strong',
+						noWrap: true
 					}, {
 						text : 'AU01578303',
 						style : 'pre'
@@ -282,7 +291,7 @@ var ddLetter = {
 	},
 	styles : {
 		h1 : {
-			margin : [ 0, 30, 0, 0 ],
+			margin : [ 0, 20, 0, 0 ],
 			fontSize : 18,
 			bold : true
 		},
@@ -296,8 +305,10 @@ var ddLetter = {
 		},
 		pre : {
 			font : 'Courier',
-			margin : [ 5, 7, 0, 5 ],
-			color: 'red'
+			fontSize: 12,
+			margin : [ 5, 5, 5, 5 ],
+			color : '#FF8200',
+			bold : true
 		},
 		vet : {
 			fontSize : 9
