@@ -128,7 +128,17 @@ var ddLetter = {
 					text : "Test(s) Ordered: ",
 					style : 'strong'
 				}, {
-					text : 'Canine DNA Profiles',
+					text : 'CANINE DNA PROFILES',
+					style : 'pre'
+				} ],
+				margin : [ 0, 5, 0, 5 ]
+			},
+			{
+				text : [ {
+					text : "Breed: ",
+					style : 'strong'
+				}, {
+					text : 'MINIATURE SMOOTH-HAIRED DACHSHUND',
 					style : 'pre'
 				} ],
 				margin : [ 0, 5, 0, 5 ]
@@ -145,42 +155,29 @@ var ddLetter = {
 			},
 			{
 				table : {
-					widths : [ 'auto', 'auto', 'auto', '*' ],
+					widths : [ 'auto', '*', 'auto', '*' ],
 					body : [ [ {
 						text : 'Registered Name',
 						style : 'strong'
 					}, {
-						text : 'TOTTLEFIELDS BIZZY BEE',
+						text : 'TOTTLEFIELDS BIZZY BEE (Bella)',
 						style : 'pre',
 						colSpan : 3
 					}, '', '' ], [ {
-						text : 'Pet Name',
-						style : 'strong'
-					}, {
-						text : 'Bella',
-						style : 'pre'
-					}, {
-						text : 'Breed',
-						style : 'strong'
-					}, {
-						text : 'English Cocker Spaniel',
-						style : 'pre',
-						noWrap: true
-					} ], [ {
-						text : 'Microchip/Tattoo No.',
+						text : 'Registration No.',
 						style : 'strong',
-						noWrap: true
-					}, {
-						text : '941000019644648',
-						style : 'pre'
-					}, {
-						text : 'Reg. No.',
-						style : 'strong',
-						noWrap: true
+						noWrap : true
 					}, {
 						text : 'AU01578303',
 						style : 'pre'
-					} ] ]
+					}, {
+						text : 'Microchip/Tattoo No.',
+						style : 'strong',
+						noWrap : true
+					}, {
+						text : '941000019644648',
+						style : 'pre'
+					}, ] ]
 				},
 				margin : [ 0, 5, 0, 5 ]
 			},
@@ -305,7 +302,7 @@ var ddLetter = {
 		},
 		pre : {
 			font : 'Courier',
-			fontSize: 12,
+			fontSize : 12,
 			margin : [ 5, 5, 5, 5 ],
 			color : '#FF8200',
 			bold : true
