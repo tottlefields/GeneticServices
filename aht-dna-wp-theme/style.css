@@ -260,8 +260,11 @@ h1 {
 }
 
 h2 {
-	font-size: 16px;
-	line-height: 16px;
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-align: center;
 }
 
 h3 {
@@ -1152,3 +1155,8 @@ footer {
 	   -moz-border-radius: 0px;
 	      	border-radius: 0px;
 }
+
+/* Font Awesome
+=================================================================== */
+.fa { padding: 0px 5px 0px 0px; }
+.fa-file-pdf-o { color:darkred; }

@@ -53,6 +53,18 @@
 					</button>
 					<a href="<?php echo site_url('/'); ?>"><img src="<?php echo get_template_directory_uri() . '/assets/img/logo.png'; ?>" alt="" class="navbar-brand top-logo" /></a>
 				</div>
+				
+				<div class="navbar-right">
+				<?php if(is_user_logged_in()) { 
+					global $current_user;
+					get_currentuserinfo();
+					?>
+					<a href="/account/"><span class="hidden-xs">Hi, <?php echo $current_user->user_firstname; ?></a>
+					<a href="<?php echo wp_logout_url(); ?>">Log Out</a>
+				<?php } else { ?>
+					<a href="<?php echo wp_login_url(); ?>">Log In</a>
+					<?php } ?>
+				</div>
 					
 					<!-- start: Header Menu -->
 <!--					<div class="nav-no-collapse header-nav">

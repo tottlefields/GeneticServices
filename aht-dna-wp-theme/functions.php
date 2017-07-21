@@ -89,6 +89,8 @@ function custom_breadcrumbs(){
     $separator          = '&gt;';
     $home_title         = 'Home';
     
+    $slug_fa_lookup = array('orders' => 'fa-shopping-basket');
+    
     // Get the query & post information
     global $post,$wp_query;
        
@@ -98,8 +100,20 @@ function custom_breadcrumbs(){
 							<li>
 								<i class="fa fa-home"></i>
 								<a href="/">'.$home_title.'</a> 
-							</li>
-							<li><a href="#">Orders</a></li>
+							</li>';
+    	if(is_page()){
+    		if($post->post_parent){
+    			$anc = get_post_ancestors($post->ID);
+    			$anc_link = get_page_link($post->post_parent);
+    			
+    			foreach ($anc as $ancestor){
+    				$output .= '<li><a href="'.$anc_link.'">'.get_the_title($ancestor).'</a></li>';
+    			}
+    			echo $output;
+    		}
+    		echo '<li>'.the_title('', '', false).'</li>';
+    	}
+		echo '
 						</ul>';
 	}
 }
