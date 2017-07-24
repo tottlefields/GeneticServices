@@ -41,7 +41,7 @@
 				<td>'.$order->ReportFormat.'</td>
 				<td>'.$client.'</td>
 				<td class="text-center">'.$order->TestCount.'</td>
-				<td class="text-center"><i class="fa fa-file-pdf-o link" id="pdf_'.$order->ID.'"></i></td>
+				<td class="text-center"><a href="javascript:console.log(\''.$order->ID.'\')"><i class="fa fa-file-pdf-o link" id="pdf_'.$order->ID.'"></i></a></td>
 			</tr>';
 		}
 		?>
