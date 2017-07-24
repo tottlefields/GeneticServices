@@ -7,7 +7,7 @@ jQuery(document).ready(function($) {
 			targets : [ 3, 5, 6 ],
 			orderable : false
 		}, {
-			targets : [0],
+			targets : [1],
 			visible : false
 		} ]
 	});

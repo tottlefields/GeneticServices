@@ -17,8 +17,8 @@
 	?>
 		<table id="orders" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
 			<thead>
-				<th class="text-center">Webshop</th>
 				<th class="text-center">OrderID</th>
+				<th class="text-center">Webshop</th>
 				<th class="text-center">Date</th>
 				<th>Report Format</th>
 				<th>Client</th>
@@ -35,8 +35,8 @@
 			}
 			echo '
 			<tr>
-				<td class="text-center">'.$order->webshop_id.'</td>
 				<td class="text-center">'.$order->ID.'</td>
+				<td class="text-center">'.$order->webshop_id.'</td>
 				<td class="text-center">'.$order->OrderDate.'</td>
 				<td>'.$order->ReportFormat.'</td>
 				<td>'.$client.'</td>
