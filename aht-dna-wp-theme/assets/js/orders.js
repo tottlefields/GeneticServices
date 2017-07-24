@@ -7,7 +7,7 @@ jQuery(document).ready(function($) {
 			targets : [ 3, 5, 6 ],
 			orderable : false
 		}, {
-			targets : [1],
+			targets : [ 1 ],
 			visible : false
 		} ]
 	});
@@ -16,7 +16,8 @@ jQuery(document).ready(function($) {
 		if (table.rows('.selected').data().length === 1) {
 			var rowData = table.rows(indexes).data().toArray();
 			getOrders(rowData[0][0], details);
-			// details.prepend( '<div><b>'+type+' selection</b> -
+			// details.prepend( '<div><b>'+type+' selection</b>
+			// -
 			// '+JSON.stringify( rowData )+'</div>' );
 		} else {
 			details.empty();
@@ -24,23 +25,23 @@ jQuery(document).ready(function($) {
 	}).on('deselect', function(e, dt, type, indexes) {
 		details.empty();
 		// var rowData = table.rows( indexes ).data().toArray();
-		// details.prepend( '<div><b>'+type+' <i>de</i>selection</b> -
+		// details.prepend( '<div><b>'+type+'
+		// <i>de</i>selection</b> -
 		// '+JSON.stringify( rowData )+'</div>' );
 	});
 
 	$(".fa-file-pdf-o").on('click', function(e) {
 		e.preventDefault();
-		pdfMake.createPdf(ddLetter).open();
+		generatePDFs($(this).attr('id').substring(4));
 	});
 
-	pdfMake.createPdf(ddLetter).open();
 });
 
-function getOrders(orderId, div) {
+function generatePDFs(order_ids) {
 
 	var data = {
 		'action' : 'order_details',
-		'orderId' : orderId
+		'orderId' : order_ids
 	};
 
 	jQuery
@@ -52,55 +53,75 @@ function getOrders(orderId, div) {
 				success : function(details) {
 					OrderDetails = details.order;
 					ClientDetails = details.client;
-					order_panel = '';
-					for (i in OrderDetails.test_details) {
-						test = OrderDetails.test_details[i];
-						if (test.RegisteredName !== ""){
-							order_panel += '<strong><a href="/animals/view?id='
-									+ test.animal_id + '">' + test.RegisteredName
-									+ '</a></strong> - ' + test.test_name
-									+ '<br />';
-						}
-						else{
-							order_panel += '<em><a href="/animals/view?id='
-									+ test.animal_id + '">' + test.PetName
-									+ '</a></em> - ' + test.test_name
-									+ '<br />';
+					
+					ddLetter.content = [];
+					
+					for (i = 0; i < OrderDetails.test_details.length; i++) {
+						var test = OrderDetails.test_details[i];
+						for (j = 0; j < test.no_swabs; j++) {
+							ddLetter.content.push(letterHeader(), testDetails(test), instructionsSection(), vetSection());
+							if (i === (OrderDetails.test_details.length - 1) && j === (test.no_swabs - 1)) {
+								ddLetter.content.push({
+									text : '',
+									style : 'small'
+								});
+							} else {
+								ddLetter.content.push({
+									text : '',
+									style : 'small',
+									pageBreak : 'after'
+								});
+							}
 						}
 					}
-					client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id='
-							+ ClientDetails.id
-							+ '"><i class="fa fa-user" aria-hidden="true"></i>'
-							+ ClientDetails.FullName + '</a></div></div>';
-					client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8"><a href="mailto:'
-							+ ClientDetails.Email
-							+ '"><i class="fa fa-envelope-o" aria-hidden="true"></i>'
-							+ ClientDetails.Email + '</a></div></div>';
-					client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">'
-							+ ClientDetails.Tel + '</div></div>';
-					client_panel += '<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">'
-							+ ClientDetails.Address
-							+ '<br />'
-							+ ClientDetails.Address2
-							+ '<br />'
-							+ ClientDetails.Address3 + '</div></div>';
-					client_panel += '<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">'
-							+ ClientDetails.County + '</div></div>';
-					client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">'
-							+ ClientDetails.Postcode + '</div></div>';
-					client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">'
-							+ ClientDetails.Country + '</div></div>';
-					div.append('<h2><a href="/orders/view?id='
-							+ OrderDetails.id + '">Order #' + OrderDetails.id
-							+ '</a></h2>');
-					div
-							.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Order Details</h3></div><div class="panel-body">'
-									+ order_panel + '</div></div>');
-					div
-							.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Client Details</h3></div><div class="panel-body">'
-									+ client_panel + '</div></div>');
+					pdfMake.createPdf(ddLetter).open();
 				}
 			});
+
+}
+
+function getOrders(orderId, div) {
+
+	var data = {
+		'action' : 'order_details',
+		'orderId' : orderId
+	};
+
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(details) {
+			OrderDetails = details.order;
+			ClientDetails = details.client;
+			order_panel = '';
+			for (i in OrderDetails.test_details) {
+				test = OrderDetails.test_details[i];
+				if (test.RegisteredName !== "") {
+					order_panel += '<strong><a href="/animals/view?id=' + test.animal_id + '">' + test.RegisteredName + '</a></strong> - ' + test.test_name
+							+ '<br />';
+				} else {
+					order_panel += '<em><a href="/animals/view?id=' + test.animal_id + '">' + test.PetName + '</a></em> - ' + test.test_name + '<br />';
+				}
+			}
+			client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id=' + ClientDetails.id
+					+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a></div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8"><a href="mailto:' + ClientDetails.Email
+					+ '"><i class="fa fa-envelope-o" aria-hidden="true"></i>' + ClientDetails.Email + '</a></div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">' + ClientDetails.Tel + '</div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">' + ClientDetails.Address + '<br />'
+					+ ClientDetails.Address2 + '<br />' + ClientDetails.Address3 + '</div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">' + ClientDetails.County + '</div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
+			div.append('<h2><a href="/orders/view?id=' + OrderDetails.id + '">Order #' + OrderDetails.id + '</a></h2>');
+			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Order Details</h3></div><div class="panel-body">'
+					+ order_panel + '</div></div>');
+			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Client Details</h3></div><div class="panel-body">'
+					+ client_panel + '</div></div>');
+		}
+	});
 }
 
 pdfMake.fonts = {
@@ -118,99 +139,41 @@ pdfMake.fonts = {
 	}
 }
 
-var ddLetter = {
-	pageSize : 'A4',
-	pageOrientation : 'portrait',
-	pageMargins : [ 30, 30, 30, 30 ],
-	content : [
-			{
-				table : {
-					widths : [ 'auto', '*' ],
-					body : [ [ {
-						image : 'ahtLogo',
-						fit : [ 80, 80 ]
-					}, {
-						width : '*',
-						alignment : 'center',
-						stack : [ {
-							style : 'h1',
-							text : 'AHT DNA TESTING'
-						}, {
-							style : 'h2',
-							text : 'Registered Charity No. 209642'
-						} ]
-					} ] ]
-				},
-				layout : {
-					hLineWidth : function(line) {
-						return line === 1
-					},
-					vLineWidth : function() {
-						return 0;
-					},
-					paddingBottom : function() {
-						return 5;
-					}
-				}
-			},
-			{
-				text : [ {
-					text : "Test(s) Ordered: ",
-					style : 'strong'
+function letterHeader() {
+	return {
+		table : {
+			widths : [ 'auto', '*' ],
+			body : [ [ {
+				image : 'ahtLogo',
+				fit : [ 80, 80 ]
+			}, {
+				width : '*',
+				alignment : 'center',
+				stack : [ {
+					style : 'h1',
+					text : 'AHT DNA TESTING'
 				}, {
-					text : 'CANINE DNA PROFILES',
-					style : 'pre'
-				} ],
-				margin : [ 0, 5, 0, 5 ]
+					style : 'h2',
+					text : 'Registered Charity No. 209642'
+				} ]
+			} ] ]
+		},
+		layout : {
+			hLineWidth : function(line) {
+				return line === 1
 			},
-			{
-				text : [ {
-					text : "Breed: ",
-					style : 'strong'
-				}, {
-					text : 'MINIATURE SMOOTH-HAIRED DACHSHUND',
-					style : 'pre'
-				} ],
-				margin : [ 0, 5, 0, 5 ]
+			vLineWidth : function() {
+				return 0;
 			},
-			{
-				text : [ {
-					text : "Order No.: ",
-					style : 'strong'
-				}, {
-					text : '1235',
-					style : 'pre'
-				} ],
-				margin : [ 0, 5, 0, 5 ]
-			},
-			{
-				table : {
-					widths : [ 'auto', '*', 'auto', '*' ],
-					body : [ [ {
-						text : 'Registered Name',
-						style : 'strong'
-					}, {
-						text : 'TOTTLEFIELDS BIZZY BEE (Bella)',
-						style : 'pre',
-						colSpan : 3
-					}, '', '' ], [ {
-						text : 'Registration No.',
-						style : 'strong',
-						noWrap : true
-					}, {
-						text : 'AU01578303',
-						style : 'pre'
-					}, {
-						text : 'Microchip/Tattoo No.',
-						style : 'strong',
-						noWrap : true
-					}, {
-						text : '941000019644648',
-						style : 'pre'
-					}, ] ]
-				},
-				margin : [ 0, 5, 0, 5 ]
-			},
+			paddingBottom : function() {
+				return 5;
+			}
+		}
+	};
+}
+
+function instructionsSection() {
+	return [
 			{
 				text : 'Please Read:',
 				style : 'strong'
@@ -225,103 +188,161 @@ var ddLetter = {
 			},
 			{
 				text : 'Please note that any changes to any of the details on this form should be submitted via Email, using the address registered to this order. We are unable to accept handmade alterations.'
-			},
-			{
-				style : 'vetTable',
+			} ];
+}
+
+function vetSection() {
+	return {
+		style : 'vetTable',
+		table : {
+			widths : [ '*' ],
+			body : [ [ {
+				text : 'Vet Verification',
+				style : 'vetStrong',
+				margin : [ 0, 5, 0, 0 ]
+			} ], [ {
+				text : 'This section is optional and should be completed by a Vet only if vet verification is required',
+				style : 'small'
+			} ], [ {
+				text : 'I confirm that the sample supplied here was taken from the dog detailed above',
+				style : 'vet'
+			} ], [ {
 				table : {
-					widths : [ '*' ],
-					body : [
-							[ {
-								text : 'Vet Verification',
-								style : 'vetStrong',
-								margin : [ 0, 5, 0, 0 ]
-							} ],
-							[ {
-								text : 'This section is optional and should be completed by a Vet only if vet verification is required',
-								style : 'small'
-							} ],
-							[ {
-								text : 'I confirm that the sample supplied here was taken from the dog detailed above',
-								style : 'vet'
-							} ],
-							[ {
-								table : {
-									widths : [ 'auto', '*', 'auto', 'auto' ],
-									body : [ [
-											{
-												text : 'Signed',
-												style : 'vet'
-											},
-											{
-												text : '....................................................................................................',
-												style : 'vet'
-											},
-											{
-												text : 'Date',
-												style : 'vet'
-											},
-											{
-												text : '........../........../..........',
-												style : 'vet'
-											} ] ]
-								},
-								margin : [ 0, 10, 0, 0 ],
-								layout : 'noBorders'
-							} ], [ {
-								table : {
-									widths : [ 'auto', 350 ],
-									body : [ [ {
-										text : 'Print Name',
-										style : 'vetHeader',
-									}, {
-										text : '',
-										border : [ 0, 0, 0, 1 ]
-									} ], [ {
-										text : 'Practice Address',
-										style : 'vetHeader',
-									}, {
-										text : '',
-										border : [ 0, 0, 0, 1 ]
-									} ], [ {
-										text : ' ',
-										style : 'vetHeader',
-									}, {
-										text : '',
-										border : [ 0, 0, 0, 1 ]
-									} ], [ {
-										text : 'Practice Email',
-										style : 'vetHeader',
-									}, {
-										text : '',
-										border : [ 0, 0, 0, 1 ]
-									} ], [ {
-										text : 'Practice Phone',
-										style : 'vetHeader',
-									}, {
-										text : '',
-										border : [ 0, 0, 0, 1 ]
-									} ] ]
-								},
-								layout : {
-									defaultBorder : false,
-									hLineColor : function(i, node) {
-										return '#999999';
-									}
-								},
-								margin : [ 20, 0, 0, 10 ]
-							} ] ]
+					widths : [ 'auto', '*', 'auto', 'auto' ],
+					body : [ [ {
+						text : 'Signed',
+						style : 'vet'
+					}, {
+						text : '....................................................................................................',
+						style : 'vet'
+					}, {
+						text : 'Date',
+						style : 'vet'
+					}, {
+						text : '........../........../..........',
+						style : 'vet'
+					} ] ]
+				},
+				margin : [ 0, 10, 0, 0 ],
+				layout : 'noBorders'
+			} ], [ {
+				table : {
+					widths : [ 'auto', 350 ],
+					body : [ [ {
+						text : 'Print Name',
+						style : 'vetHeader',
+					}, {
+						text : '',
+						border : [ 0, 0, 0, 1 ]
+					} ], [ {
+						text : 'Practice Address',
+						style : 'vetHeader',
+					}, {
+						text : '',
+						border : [ 0, 0, 0, 1 ]
+					} ], [ {
+						text : ' ',
+						style : 'vetHeader',
+					}, {
+						text : '',
+						border : [ 0, 0, 0, 1 ]
+					} ], [ {
+						text : 'Practice Email',
+						style : 'vetHeader',
+					}, {
+						text : '',
+						border : [ 0, 0, 0, 1 ]
+					} ], [ {
+						text : 'Practice Phone',
+						style : 'vetHeader',
+					}, {
+						text : '',
+						border : [ 0, 0, 0, 1 ]
+					} ] ]
 				},
 				layout : {
-					hLineWidth : function(i, node) {
-						return (i === 0 || i === node.table.body.length) ? 1
-								: 0;
-					},
-					vLineWidth : function(i, node) {
-						return (i === 0 || i === node.table.widths.length) ? 1
-								: 0;
-					},
-				}
-			} ],
+					defaultBorder : false,
+					hLineColor : function(i, node) {
+						return '#999999';
+					}
+				},
+				margin : [ 20, 0, 0, 10 ]
+			} ] ]
+		},
+		layout : {
+			hLineWidth : function(i, node) {
+				return (i === 0 || i === node.table.body.length) ? 1 : 0;
+			},
+			vLineWidth : function(i, node) {
+				return (i === 0 || i === node.table.widths.length) ? 1 : 0;
+			},
+		}
+	};
+}
+
+function testDetails(test) {
+	return [ {
+		text : [ {
+			text : "Test(s) Ordered: ",
+			style : 'strong'
+		}, {
+			text : test.test_name.toUpperCase(),
+			style : 'pre'
+		} ],
+		margin : [ 0, 5, 0, 5 ]
+	}, {
+		text : [ {
+			text : "Breed: ",
+			style : 'strong'
+		}, {
+			text : test.Breed.toUpperCase(),
+			style : 'pre'
+		} ],
+		margin : [ 0, 5, 0, 5 ]
+	}, {
+		text : [ {
+			text : "Order No.: ",
+			style : 'strong'
+		}, {
+			text : test.order_id,
+			style : 'pre'
+		} ],
+		margin : [ 0, 5, 0, 5 ]
+	}, {
+		table : {
+			widths : [ 'auto', '*', 'auto', '*' ],
+			body : [ [ {
+				text : 'Registered Name',
+				style : 'strong'
+			}, {
+				text : test.RegisteredName.toUpperCase() + ' (' + test.PetName + ')',
+				style : 'pre',
+				colSpan : 3
+			}, '', '' ], [ {
+				text : 'Registration No.',
+				style : 'strong',
+				noWrap : true
+			}, {
+				text : test.RegistrationNo,
+				style : 'pre'
+			}, {
+				text : 'Microchip/Tattoo No.',
+				style : 'strong',
+				noWrap : true
+			}, {
+				text : test.TattooOrChip,
+				style : 'pre'
+			}, ] ]
+		},
+		margin : [ 0, 5, 0, 5 ]
+	} ];
+}
+
+var ddLetter = {
+	pageSize : 'A4',
+	pageOrientation : 'portrait',
+	pageMargins : [ 30, 30, 30, 30 ],
+	content : [],
 	defaultStyle : {
 		font : 'Tahoma',
 		fontSize : 11,
