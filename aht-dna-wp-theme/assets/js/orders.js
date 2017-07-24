@@ -4,8 +4,11 @@ jQuery(document).ready(function($) {
 		select : true,
 		order : [ [ 0, 'desc' ] ],
 		columnDefs : [ {
-			targets : [ 2, 4, 5 ],
+			targets : [ 3, 5, 6 ],
 			orderable : false
+		}, {
+			targets : [1],
+			visible : false
 		} ]
 	});
 
@@ -40,37 +43,56 @@ function getOrders(orderId, div) {
 		'orderId' : orderId
 	};
 
-	jQuery.ajax({
-		type : "post",
-		dataType : "json",
-		url : DennisAjax.ajax_url,
-		data : data,
-		success : function(details) {
-			OrderDetails = details.order;
-			ClientDetails = details.client;
-			order_panel = '';
-			for (i in OrderDetails.test_details) {
-				test = OrderDetails.test_details[i];
-				order_panel += '<strong><a href="/animals/view?id=' + test.animal_id + '">' + test.RegisteredName + '</a></strong> - ' + test.test_name
-						+ '<br />';
-			}
-			client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id=' + ClientDetails.id
-					+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a></div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8"><a href="mailto:' + ClientDetails.Email
-					+ '"><i class="fa fa-envelope-o" aria-hidden="true"></i>' + ClientDetails.Email + '</a></div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">' + ClientDetails.Tel + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">' + ClientDetails.Address + '<br />'
-					+ ClientDetails.Address2 + '<br />' + ClientDetails.Address3 + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">' + ClientDetails.County + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
-			div.append('<h2><a href="/orders/view?id=' + OrderDetails.id + '">Order #' + OrderDetails.id + '</a></h2>');
-			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Order Details</h3></div><div class="panel-body">'
-					+ order_panel + '</div></div>');
-			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Client Details</h3></div><div class="panel-body">'
-					+ client_panel + '</div></div>');
-		}
-	});
+	jQuery
+			.ajax({
+				type : "post",
+				dataType : "json",
+				url : DennisAjax.ajax_url,
+				data : data,
+				success : function(details) {
+					OrderDetails = details.order;
+					ClientDetails = details.client;
+					order_panel = '';
+					for (i in OrderDetails.test_details) {
+						test = OrderDetails.test_details[i];
+						order_panel += '<strong><a href="/animals/view?id='
+								+ test.animal_id + '">' + test.RegisteredName
+								+ '</a></strong> - ' + test.test_name
+								+ '<br />';
+					}
+					client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id='
+							+ ClientDetails.id
+							+ '"><i class="fa fa-user" aria-hidden="true"></i>'
+							+ ClientDetails.FullName + '</a></div></div>';
+					client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8"><a href="mailto:'
+							+ ClientDetails.Email
+							+ '"><i class="fa fa-envelope-o" aria-hidden="true"></i>'
+							+ ClientDetails.Email + '</a></div></div>';
+					client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">'
+							+ ClientDetails.Tel + '</div></div>';
+					client_panel += '<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">'
+							+ ClientDetails.Address
+							+ '<br />'
+							+ ClientDetails.Address2
+							+ '<br />'
+							+ ClientDetails.Address3 + '</div></div>';
+					client_panel += '<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">'
+							+ ClientDetails.County + '</div></div>';
+					client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">'
+							+ ClientDetails.Postcode + '</div></div>';
+					client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">'
+							+ ClientDetails.Country + '</div></div>';
+					div.append('<h2><a href="/orders/view?id='
+							+ OrderDetails.id + '">Order #' + OrderDetails.id
+							+ '</a></h2>');
+					div
+							.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Order Details</h3></div><div class="panel-body">'
+									+ order_panel + '</div></div>');
+					div
+							.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Client Details</h3></div><div class="panel-body">'
+									+ client_panel + '</div></div>');
+				}
+			});
 }
 
 pdfMake.fonts = {
@@ -195,89 +217,100 @@ var ddLetter = {
 			},
 			{
 				text : 'Please note that any changes to any of the details on this form should be submitted via Email, using the address registered to this order. We are unable to accept handmade alterations.'
-			}, {
+			},
+			{
 				style : 'vetTable',
 				table : {
 					widths : [ '*' ],
-					body : [ [ {
-						text : 'Vet Verification',
-						style : 'vetStrong',
-						margin : [ 0, 5, 0, 0 ]
-					} ], [ {
-						text : 'This section is optional and should be completed by a Vet only if vet verification is required',
-						style : 'small'
-					} ], [ {
-						text : 'I confirm that the sample supplied here was taken from the dog detailed above',
-						style : 'vet'
-					} ], [ {
-						table : {
-							widths : [ 'auto', '*', 'auto', 'auto' ],
-							body : [ [ {
-								text : 'Signed',
+					body : [
+							[ {
+								text : 'Vet Verification',
+								style : 'vetStrong',
+								margin : [ 0, 5, 0, 0 ]
+							} ],
+							[ {
+								text : 'This section is optional and should be completed by a Vet only if vet verification is required',
+								style : 'small'
+							} ],
+							[ {
+								text : 'I confirm that the sample supplied here was taken from the dog detailed above',
 								style : 'vet'
-							}, {
-								text : '....................................................................................................',
-								style : 'vet'
-							}, {
-								text : 'Date',
-								style : 'vet'
-							}, {
-								text : '........../........../..........',
-								style : 'vet'
+							} ],
+							[ {
+								table : {
+									widths : [ 'auto', '*', 'auto', 'auto' ],
+									body : [ [
+											{
+												text : 'Signed',
+												style : 'vet'
+											},
+											{
+												text : '....................................................................................................',
+												style : 'vet'
+											},
+											{
+												text : 'Date',
+												style : 'vet'
+											},
+											{
+												text : '........../........../..........',
+												style : 'vet'
+											} ] ]
+								},
+								margin : [ 0, 10, 0, 0 ],
+								layout : 'noBorders'
+							} ], [ {
+								table : {
+									widths : [ 'auto', 350 ],
+									body : [ [ {
+										text : 'Print Name',
+										style : 'vetHeader',
+									}, {
+										text : '',
+										border : [ 0, 0, 0, 1 ]
+									} ], [ {
+										text : 'Practice Address',
+										style : 'vetHeader',
+									}, {
+										text : '',
+										border : [ 0, 0, 0, 1 ]
+									} ], [ {
+										text : ' ',
+										style : 'vetHeader',
+									}, {
+										text : '',
+										border : [ 0, 0, 0, 1 ]
+									} ], [ {
+										text : 'Practice Email',
+										style : 'vetHeader',
+									}, {
+										text : '',
+										border : [ 0, 0, 0, 1 ]
+									} ], [ {
+										text : 'Practice Phone',
+										style : 'vetHeader',
+									}, {
+										text : '',
+										border : [ 0, 0, 0, 1 ]
+									} ] ]
+								},
+								layout : {
+									defaultBorder : false,
+									hLineColor : function(i, node) {
+										return '#999999';
+									}
+								},
+								margin : [ 20, 0, 0, 10 ]
 							} ] ]
-						},
-						margin : [ 0, 10, 0, 0 ],
-						layout : 'noBorders'
-					} ], [ {
-						table : {
-							widths : [ 'auto', 350 ],
-							body : [ [ {
-								text : 'Print Name',
-								style : 'vetHeader',
-							}, {
-								text : '',
-								border : [ 0, 0, 0, 1 ]
-							} ], [ {
-								text : 'Practice Address',
-								style : 'vetHeader',
-							}, {
-								text : '',
-								border : [ 0, 0, 0, 1 ]
-							} ], [ {
-								text : ' ',
-								style : 'vetHeader',
-							}, {
-								text : '',
-								border : [ 0, 0, 0, 1 ]
-							} ], [ {
-								text : 'Practice Email',
-								style : 'vetHeader',
-							}, {
-								text : '',
-								border : [ 0, 0, 0, 1 ]
-							} ], [ {
-								text : 'Practice Phone',
-								style : 'vetHeader',
-							}, {
-								text : '',
-								border : [ 0, 0, 0, 1 ]
-							} ] ]
-						},
-						layout : {
-							defaultBorder : false,
-							hLineColor : function(i, node) {
-								return '#999999';
-							}
-						},
-						margin : [ 20, 0, 0, 10 ]
-					} ] ]
 				},
 				layout : {
 					hLineWidth : function(i, node) {
-						return (i === 0 || i === node.table.body.length) ? 1 : 0;
+						return (i === 0 || i === node.table.body.length) ? 1
+								: 0;
 					},
 					vLineWidth : function(i, node) {
-						return (i === 0 || i === node.table.widths.length) ? 1 : 0;
+						return (i === 0 || i === node.table.widths.length) ? 1
+								: 0;
 					},
 				}
 			} ],
