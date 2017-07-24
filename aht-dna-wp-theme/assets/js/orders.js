@@ -55,10 +55,18 @@ function getOrders(orderId, div) {
 					order_panel = '';
 					for (i in OrderDetails.test_details) {
 						test = OrderDetails.test_details[i];
-						order_panel += '<strong><a href="/animals/view?id='
-								+ test.animal_id + '">' + test.RegisteredName
-								+ '</a></strong> - ' + test.test_name
-								+ '<br />';
+						if (test.RegisteredName !== ""){
+							order_panel += '<strong><a href="/animals/view?id='
+									+ test.animal_id + '">' + test.RegisteredName
+									+ '</a></strong> - ' + test.test_name
+									+ '<br />';
+						}
+						else{
+							order_panel += '<em><a href="/animals/view?id='
+									+ test.animal_id + '">' + test.PetName
+									+ '</a></em> - ' + test.test_name
+									+ '<br />';
+						}
 					}
 					client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id='
 							+ ClientDetails.id
