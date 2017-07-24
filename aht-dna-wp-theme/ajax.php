@@ -12,7 +12,7 @@ add_action( 'wp_ajax_nopriv_order_details', 'get_order_details' );
 	
 	 $order_details = $wpdb->get_row("select o.* from orders o where o.id=".$orderId);
 	 $client_details = $wpdb->get_row("select c.* from orders o left outer join client c on client_id=c.id where o.id=".$orderId);
-	 $test_details = $wpdb->get_results("select a.*, t.*, test_name from orders o inner join order_tests t on o.id=order_id left outer join animal a on animal_id=a.id left outer join test_codes using(test_code) where o.id=".$orderId);
+	 $test_details = $wpdb->get_results("select a.*, t.*, test_name, no_results, no_swabs from orders o inner join order_tests t on o.id=order_id left outer join animal a on animal_id=a.id left outer join test_codes using(test_code) where o.id=".$orderId);
 	 
 	 $order_details->test_details = $test_details;
 	
