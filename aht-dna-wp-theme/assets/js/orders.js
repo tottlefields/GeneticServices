@@ -30,10 +30,10 @@ jQuery(document).ready(function($) {
 		// '+JSON.stringify( rowData )+'</div>' );
 	});
 
-/*	$(".fa-file-pdf-o").on('click', function(e) {
-		e.preventDefault();
-		generatePDFs($(this).attr('id').substring(4));
-	});*/
+	/*
+	 * $(".fa-file-pdf-o").on('click', function(e) { e.preventDefault();
+	 * generatePDFs($(this).attr('id').substring(4)); });
+	 */
 
 });
 
@@ -44,39 +44,38 @@ function generatePDFs(order_ids) {
 		'orderId' : order_ids
 	};
 
-	jQuery
-			.ajax({
-				type : "post",
-				dataType : "json",
-				url : DennisAjax.ajax_url,
-				data : data,
-				success : function(details) {
-					OrderDetails = details.order;
-					ClientDetails = details.client;
-					
-					ddLetter.content = [];
-					
-					for (i = 0; i < OrderDetails.test_details.length; i++) {
-						var test = OrderDetails.test_details[i];
-						for (j = 0; j < test.no_swabs; j++) {
-							ddLetter.content.push(letterHeader(), testDetails(test), instructionsSection(), vetSection());
-							if (i === (OrderDetails.test_details.length - 1) && j === (test.no_swabs - 1)) {
-								ddLetter.content.push({
-									text : '',
-									style : 'small'
-								});
-							} else {
-								ddLetter.content.push({
-									text : '',
-									style : 'small',
-									pageBreak : 'after'
-								});
-							}
-						}
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(details) {
+			OrderDetails = details.order;
+			ClientDetails = details.client;
+
+			ddLetter.content = [];
+
+			for (i = 0; i < OrderDetails.test_details.length; i++) {
+				var test = OrderDetails.test_details[i];
+				for (j = 0; j < test.no_swabs; j++) {
+					ddLetter.content.push(letterHeader(), testDetails(test), instructionsSection(), vetSection(), labelsSection(ClientDetails));
+					if (i === (OrderDetails.test_details.length - 1) && j === (test.no_swabs - 1)) {
+						ddLetter.content.push({
+							text : '',
+							style : 'small'
+						});
+					} else {
+						ddLetter.content.push({
+							text : '',
+							style : 'small',
+							pageBreak : 'after'
+						});
 					}
-					pdfMake.createPdf(ddLetter).open();
 				}
-			});
+			}
+			pdfMake.createPdf(ddLetter).open();
+		}
+	});
 
 }
 
@@ -336,6 +335,38 @@ function testDetails(test) {
 		},
 		margin : [ 0, 5, 0, 5 ]
 	} ];
+}
+
+function labelsSection(client) {
+	console.log(client);
+	return [ {
+		absolutePosition : {
+			x : 28.35,
+			y : 635
+		},
+//		layout: 'noBorders',
+		table : {
+			widths : [ '50%', '50%' ],
+			height: 184,
+			body : [ [ {
+				stack: [
+					client.ShippingName,
+					client.ShippingCompany,
+					client.ShippingAddress,
+					client.ShippingAddress2,
+					client.ShippingAddress3,
+					client.ShippingTown,
+					client.ShippingPostcode,
+					client.ShippingCounty,
+					client.ShippingCountry
+				],
+				margin : [ 50, 20, 20, 50 ]
+			}, {
+				text : ''
+			} ] ]
+		}
+	} ];
+
 }
 
 var ddLetter = {
