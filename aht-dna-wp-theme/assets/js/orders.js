@@ -30,10 +30,10 @@ jQuery(document).ready(function($) {
 		// '+JSON.stringify( rowData )+'</div>' );
 	});
 
-	$(".fa-file-pdf-o").on('click', function(e) {
+/*	$(".fa-file-pdf-o").on('click', function(e) {
 		e.preventDefault();
 		generatePDFs($(this).attr('id').substring(4));
-	});
+	});*/
 
 });
 
