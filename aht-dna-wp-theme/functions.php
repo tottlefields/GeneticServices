@@ -32,7 +32,7 @@ function mytheme_enqueue_scripts() {
 	wp_register_script('jquery', ("//code.jquery.com/jquery-2.2.4.min.js"), false, '2.2.4', true);
 	wp_enqueue_script('jquery');
 	
-	//Bootstarp JS
+	//Bootstrap JS
 	wp_register_script('bootstrap-js', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js', '', '3.3.7', true);
 	wp_enqueue_script('bootstrap-js');
 	
@@ -41,8 +41,9 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script('datepicker-js');
 	
 	//PDF Make
-	wp_register_script('pdfmake-js', get_template_directory_uri().'/assets/js/pdfmake.min.js', false, '', true);
-	wp_register_script('pdfmake-fonts-js', get_template_directory_uri().'/assets/js/vfs_fonts.js', array('pdfmake-js'), '', true);
+	wp_register_script('pdfmake-js', get_template_directory_uri().'/assets/js/pdfmake.min.js', false, '0.1.31', true);
+	//wp_register_script('pdfmake-js', get_template_directory_uri().'/assets/js/pdfmake2.js', false, '0.1.31', true);
+	wp_register_script('pdfmake-fonts-js', get_template_directory_uri().'/assets/js/vfs_fonts.js', array('pdfmake-js'), '0.1.31', true);
 	wp_enqueue_script('pdfmake-js');
 	wp_enqueue_script('pdfmake-fonts-js');
 	
@@ -50,6 +51,10 @@ function mytheme_enqueue_scripts() {
 	//wp_register_script('datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.js', array('jquery', 'bootstrap-js', 'pdfmake-js'), '1.10.15', true);
 	wp_register_script('datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.min.js', array('jquery', 'bootstrap-js', 'pdfmake-js'), '1.10.15', true);
 	wp_enqueue_script('datatables-js');
+	
+	//Barcode JS
+	wp_register_script('jquery-barcode-js', get_template_directory_uri().'/assets/js/jquery-barcode.min.js', array('jquery'), '2.0.3', true);
+	wp_enqueue_script('jquery-barcode-js');
 	
 	// register template-specific scripts
     wp_register_script('js-orders', get_template_directory_uri().'/assets/js/orders.js', array('jquery', 'datatables-js'), '0.1', true); 

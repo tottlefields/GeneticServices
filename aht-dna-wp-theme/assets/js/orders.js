@@ -58,7 +58,7 @@ function generatePDFs(order_ids) {
 			for (i = 0; i < OrderDetails.test_details.length; i++) {
 				var test = OrderDetails.test_details[i];
 				for (j = 0; j < test.no_swabs; j++) {
-					ddLetter.content.push(letterHeader(), testDetails(test), instructionsSection(), vetSection(), labelsSection(ClientDetails));
+					ddLetter.content.push(letterHeader(), testDetails(test), instructionsSection(), vetSection(), labelsSection(ClientDetails, test));
 					if (i === (OrderDetails.test_details.length - 1) && j === (test.no_swabs - 1)) {
 						ddLetter.content.push({
 							text : '',
@@ -337,33 +337,104 @@ function testDetails(test) {
 	} ];
 }
 
-function labelsSection(client) {
-	console.log(client);
+function generateBarcode(value) {
+	var canvas = document.createElement('canvas');
+	canvas.setAttribute("id", "canvasBarcode");
+	document.body.appendChild(canvas);
+
+	console.log(canvas);
+	var settings = {
+		output : 'canvas',
+		bgColor : '#FFFFFF',
+		color : '#000000',
+		barWidth : 2,
+		barHeight : 40,
+		posX : 0,
+		posY : 0,
+		fontSize: 16,
+		showHRI : 1
+	};
+	$("#canvasBarcode").show().barcode(value, "code39", settings);
+	imgData = document.getElementById("canvasBarcode").toDataURL("image/png");
+	document.body.removeChild(canvas);
+
+	return imgData;
+}
+
+function labelsSection(client, test) {
+	dogName = test.RegisteredName.toUpperCase();
+	if (dogName === '') {
+		dogName = test.PetName;
+	} else {
+		dogName += ' (' + test.PetName + ')';
+	}
+	if (test.TattooOrChip !== '') {
+		dogName += "\n" + test.TattooOrChip;
+	}
+
+	var barcodeImg = generateBarcode(test.order_id + '/' + test.id);
+	console.log(barcodeImg);
+
 	return [ {
 		absolutePosition : {
-			x : 28.35,
+			x : 30,
 			y : 635
 		},
-//		layout: 'noBorders',
+		layout : 'noBorders',
 		table : {
 			widths : [ '50%', '50%' ],
-			height: 184,
-			body : [ [ {
-				stack: [
-					client.ShippingName,
-					client.ShippingCompany,
-					client.ShippingAddress,
-					client.ShippingAddress2,
-					client.ShippingAddress3,
-					client.ShippingTown,
-					client.ShippingPostcode,
-					client.ShippingCounty,
-					client.ShippingCountry
-				],
-				margin : [ 50, 20, 20, 50 ]
-			}, {
-				text : ''
-			} ] ]
+			body : [ [
+					{
+						stack : [ client.ShippingName, client.ShippingCompany, client.ShippingAddress, client.ShippingAddress2, client.ShippingAddress3,
+								client.ShippingTown, client.ShippingPostcode, client.ShippingCounty, client.ShippingCountry ],
+						margin : [ 40, 30, 40, 30 ]
+					}, {
+						stack : [ {
+							image : 'ahtLogo',
+							fit : [ 50, 50 ],
+							absolutePosition : {
+								x : 320,
+								y : 660
+							}
+						}, {
+							image : barcodeImg,
+							width: 150,
+							absolutePosition : {
+								x : 400,
+								y : 675
+							}
+						}, {
+							table : {
+								body : [ [ {
+									text : 'Test',
+									style : 'vetStrong'
+								}, {
+									text : test.test_name.toUpperCase(),
+									style : 'vet',
+									color : 'black'
+								} ], [ {
+									text : 'Dog',
+									style : 'vetStrong'
+								}, {
+									text : dogName,
+									style : 'vet',
+									color : 'black'
+								} ], [ {
+									text : 'Contact',
+									style : 'vetStrong'
+								}, {
+									text : client.FullName.toUpperCase() + "\n" + client.Email,
+									style : 'vet',
+									color : 'black'
+								} ] ]
+							},
+							layout : 'noBorders',
+							absolutePosition : {
+								x : 320,
+								y : 730
+							}
+						} ]
+					} ] ]
 		}
 	} ];
 
@@ -372,7 +443,7 @@ function labelsSection(client) {
 var ddLetter = {
 	pageSize : 'A4',
 	pageOrientation : 'portrait',
-	pageMargins : [ 30, 30, 30, 30 ],
+	pageMargins : [ 30, 30, 30, 20 ],
 	content : [],
 	defaultStyle : {
 		font : 'Tahoma',
