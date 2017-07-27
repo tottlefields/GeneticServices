@@ -4,6 +4,21 @@
 							<?php custom_breadcrumbs(); ?>
 						</span>
 					</h1>
+					
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="well well-lg">
+								<form id="search-form" class="form-inline" role="form" method="post" action="/search/"">
+									<div class="input-group">
+										<input type="text" class="form-control search-form" placeholder="Search">
+										<span class="input-group-btn">
+											<button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q"><i class="fa fa-search"></i></button>
+										</span>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
 
 					<section class="row text-center placeholders">
 						<div class="col-6 col-sm-3 placeholder"> <img src="https://i0.wp.com/afterimagedesigns.com/wp-bootstrap-starter/wp-content/uploads/2017/06/blue.jpg?resize=200%2C200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail" data-recalc-dims="1"> </p>
