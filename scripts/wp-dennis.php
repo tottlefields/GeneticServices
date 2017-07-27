@@ -82,7 +82,9 @@ foreach( $posts as $post ) {
 	
 	if(!isset($clients[$clientId])){
 		$address = explode("\n", str_replace("\r", '', $postMeta['address-pm'][0]));
+		$address = array_pad($address, 3, "");
 		$shipping_address = explode("\n", str_replace("\r", '', $postMeta['shipping-address-pm'][0]));
+		$shipping_address = array_pad($shipping_address, 3, "");
 		$client = array(
 				'ClientID' => $clientId,
 				'Tel' => $postMeta['tel-pm'][0],

@@ -9,6 +9,22 @@ register_nav_menu(
 	'Main Menu'
 );
 
+// Function to change email address
+
+function wpb_sender_email( $original_email_address ) {
+	return 'dennis@aht.org.uk';
+}
+
+// Function to change sender name
+function wpb_sender_name( $original_email_from ) {
+	return 'DENNIS';
+}
+
+// Hooking up our functions to WordPress filters
+add_filter( 'wp_mail_from', 'wpb_sender_email' );
+add_filter( 'wp_mail_from_name', 'wpb_sender_name' );
+
+
 
 
 function mytheme_enqueue_scripts() {
@@ -16,7 +32,7 @@ function mytheme_enqueue_scripts() {
 	wp_register_script('jquery', ("//code.jquery.com/jquery-2.2.4.min.js"), false, '2.2.4', true);
 	wp_enqueue_script('jquery');
 	
-	//Bootstarp JS
+	//Bootstrap JS
 	wp_register_script('bootstrap-js', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js', '', '3.3.7', true);
 	wp_enqueue_script('bootstrap-js');
 	
@@ -25,8 +41,9 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script('datepicker-js');
 	
 	//PDF Make
-	wp_register_script('pdfmake-js', get_template_directory_uri().'/assets/js/pdfmake.min.js', false, '', true);
-	wp_register_script('pdfmake-fonts-js', get_template_directory_uri().'/assets/js/vfs_fonts.js', array('pdfmake-js'), '', true);
+	wp_register_script('pdfmake-js', get_template_directory_uri().'/assets/js/pdfmake.min.js', false, '0.1.31', true);
+	//wp_register_script('pdfmake-js', get_template_directory_uri().'/assets/js/pdfmake2.js', false, '0.1.31', true);
+	wp_register_script('pdfmake-fonts-js', get_template_directory_uri().'/assets/js/vfs_fonts.js', array('pdfmake-js'), '0.1.31', true);
 	wp_enqueue_script('pdfmake-js');
 	wp_enqueue_script('pdfmake-fonts-js');
 	
@@ -34,6 +51,10 @@ function mytheme_enqueue_scripts() {
 	//wp_register_script('datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.js', array('jquery', 'bootstrap-js', 'pdfmake-js'), '1.10.15', true);
 	wp_register_script('datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.min.js', array('jquery', 'bootstrap-js', 'pdfmake-js'), '1.10.15', true);
 	wp_enqueue_script('datatables-js');
+	
+	//Barcode JS
+	wp_register_script('jquery-barcode-js', get_template_directory_uri().'/assets/js/jquery-barcode.min.js', array('jquery'), '2.0.3', true);
+	wp_enqueue_script('jquery-barcode-js');
 	
 	// register template-specific scripts
     wp_register_script('js-orders', get_template_directory_uri().'/assets/js/orders.js', array('jquery', 'datatables-js'), '0.1', true); 
@@ -89,6 +110,8 @@ function custom_breadcrumbs(){
     $separator          = '&gt;';
     $home_title         = 'Home';
     
+    $slug_fa_lookup = array('orders' => 'fa-shopping-basket');
+    
     // Get the query & post information
     global $post,$wp_query;
        
@@ -98,8 +121,20 @@ function custom_breadcrumbs(){
 							<li>
 								<i class="fa fa-home"></i>
 								<a href="/">'.$home_title.'</a> 
-							</li>
-							<li><a href="#">Orders</a></li>
+							</li>';
+    	if(is_page()){
+    		if($post->post_parent){
+    			$anc = get_post_ancestors($post->ID);
+    			$anc_link = get_page_link($post->post_parent);
+    			
+    			foreach ($anc as $ancestor){
+    				$output .= '<li><a href="'.$anc_link.'">'.get_the_title($ancestor).'</a></li>';
+    			}
+    			echo $output;
+    		}
+    		echo '<li>'.the_title('', '', false).'</li>';
+    	}
+		echo '
 						</ul>';
 	}
 }
