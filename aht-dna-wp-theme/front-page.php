@@ -7,13 +7,15 @@
 					
 					<div class="row">
 						<div class="col-sm-12">
-							<div class="well well-lg">
-								<form id="search-form" class="form-inline" role="form" method="post" action="/search/"">
-									<div class="input-group">
-										<input type="text" class="form-control search-form" placeholder="Search">
-										<span class="input-group-btn">
-											<button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q"><i class="fa fa-search"></i></button>
-										</span>
+    						<div class="jumbotron text-center">
+								<form id="search-form" class="form-inline" role="form" method="post" action="/search/">
+									<div class="col-md-6 col-offset-3">
+										<div class="input-group input-rgoup-lg">
+											<input type="text" class="form-control search-form" placeholder="Search">
+											<span class="input-group-btn">
+												<button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q"><i class="fa fa-search"></i></button>
+											</span>
+										</div>
 									</div>
 								</form>
 							</div>
