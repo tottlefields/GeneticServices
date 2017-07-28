@@ -23,7 +23,6 @@
 		<link rel="icon" type="image/png" sizes="32x32" href="<?php echo get_template_directory_uri() . '/assets/ico/favicon-32x32.png'; ?>">
 		<link rel="icon" type="image/png" sizes="96x96" href="<?php echo get_template_directory_uri() . '/assets/ico/favicon-96x96.png'; ?>">
 		<link rel="icon" type="image/png" sizes="16x16" href="<?php echo get_template_directory_uri() . '/assets/ico/favicon-16x16.png'; ?>">
-		<link rel="manifest" href="<?php echo get_template_directory_uri() . '/assets/ico/manifest.json'; ?>">
 		<meta name="msapplication-TileColor" content="#FF850D">
 		<meta name="msapplication-TileImage" content="<?php echo get_template_directory_uri() . '/assets/ico/ms-icon-144x144.png'; ?>">
 		<meta name="theme-color" content="#FF850D">
