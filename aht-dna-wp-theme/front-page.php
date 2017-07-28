@@ -25,32 +25,32 @@
 					</div>
 
 					<section class="row text-center placeholders">
-						<div class="col-6 col-sm-3 placeholder">
+						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-purple.png'; ?>);">
 								<div style="line-height:200px;">108</div>
 							</div>
-							<h4>This Year</h4>
+							<h4>This Month</h4>
 							<div class="text-muted">Tests ordered this year.</div>
 						</div>
-						<div class="col-6 col-sm-3 placeholder">
+						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-green.png'; ?>);">
 								<div style="line-height:200px;">2303</div>						
 							</div>
-							<h4>This Month</h4>
+							<h4>This Year</h4>
 							<div class="text-muted">Tests ordered this month.</div>
 						</div>
-						<div class="col-6 col-sm-3 placeholder">
+						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-purple.png'; ?>);">
 								<div style="line-height:200px;">108</div>	
 							</div>
-							<h4>This Year</h4>
+							<h4>This Month</h4>
 							<div class="text-muted">Tests ordered this year.</div>
 						</div>
-						<div class="col-6 col-sm-3 placeholder">
+						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-green.png'; ?>);">
 								<div style="line-height:200px;">2303</div>	
 							</div>
-							<h4>This Month</h4>
+							<h4>This Year</h4>
 							<div class="text-muted">Tests ordered this month.</div>
 						</div>
 					</section>
