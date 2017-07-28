@@ -421,6 +421,8 @@ h1{margin-bottom: 20px; padding-bottom: 9px; border-bottom: 1px solid #eee;}
 /* Placeholders */
 .placeholders{padding-bottom: 3rem;}
 .placeholder img{padding-top: 1.5rem; padding-bottom: 1.5rem;}
+/*.circle{background-repeat:no-repeat; background-position:center; font-size:3em; color:white; font-weight:bold;height:200px;display:table; width:200px; overflow:hidden;}*/
+.circle{background-repeat:no-repeat; background-position:center; font-size:3em; color:white; font-weight:bold;height:200px;width:200px;}
 
 .sidebar-nav > ul{
 	margin: 0px;
