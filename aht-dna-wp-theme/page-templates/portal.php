@@ -17,9 +17,13 @@
 	$results = $wpdb->get_results($sql, OBJECT );
 	
 	if ( $results ){
+		echo '<pre>
+			var breedTests = {
+			"all": {"CP":"Canine DNA profiles (ISAG 2006)"},';
 		foreach ( $results as $row ){
-			
+			echo $row.",\n";
 		}
+		echo '};<pre>';
 	}
 ?>
 		</div>
