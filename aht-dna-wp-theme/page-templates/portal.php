@@ -20,11 +20,10 @@
 		echo '<pre>
 var breedTests = {
 	"all": {"CP":"Canine DNA profiles (ISAG 2006)"},';
-		print_r($results);
 		foreach ( $results as $row ){
-			echo $row.",\n";
+			echo "\t".$row->row.",\n";
 		}
-		echo '};<pre>';
+		echo '};</pre>';
 	}
 ?>
 		</div>
