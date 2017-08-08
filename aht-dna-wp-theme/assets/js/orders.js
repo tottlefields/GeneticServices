@@ -342,7 +342,6 @@ function generateBarcode(value) {
 	canvas.setAttribute("id", "canvasBarcode");
 	document.body.appendChild(canvas);
 
-	console.log(canvas);
 	var settings = {
 		output : 'canvas',
 		bgColor : '#FFFFFF',
@@ -373,7 +372,6 @@ function labelsSection(client, test) {
 	}
 
 	var barcodeImg = generateBarcode(test.order_id + '/' + test.id);
-	console.log(barcodeImg);
 
 	return [ {
 		absolutePosition : {
