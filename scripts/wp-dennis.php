@@ -53,7 +53,10 @@ foreach( $posts as $post ) {
 		$vetReport = NULL;
 		if (get_field('vet-report-by-email-pm') != 'FALSE') { $vetReport = 'EMAIL';}
 		elseif (get_field('vet-report-by-post-pm') != 'FALSE') { $vetReport = 'POST';}
-		elseif (get_field('vet-report-by-fax-pm') != 'FALSE') { $vetReport = 'FAX';}		
+		elseif (get_field('vet-report-by-fax-pm') != 'FALSE') { $vetReport = 'FAX';}
+		
+		$research = 0;
+		if (get_field('agree-to-research-pm') == 'TRUE') { $research = 1; }
 		
 		$orders[$orderId] = array(
 				'ClientID' => $clientId,
@@ -61,7 +64,7 @@ foreach( $posts as $post ) {
 				'ReportFormat' => $reportFormat,
 				'VetReportFormat' => $vetReport,
 				'Paid' => get_field('paid-pm'),
-				'AgreeResearch' => get_field('agree-to-research-pm'),
+				'AgreeResearch' => $research,
 				'tests' => array()
 		);
 	}
