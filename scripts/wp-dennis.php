@@ -56,7 +56,7 @@ foreach( $posts as $post ) {
 		elseif (get_field('vet-report-by-fax-pm') != 'FALSE') { $vetReport = 'FAX';}
 		
 		$research = 0;
-		if (get_field('agree-to-research-pm') == 'TRUE') { $research = 1; }
+		if (get_field('agree-to-research-pm') != 'FALSE') { $research = 1; }
 		
 		$orders[$orderId] = array(
 				'ClientID' => $clientId,
