@@ -52,16 +52,35 @@ function mytheme_enqueue_scripts() {
 	wp_register_script('datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.min.js', array('jquery', 'bootstrap-js', 'pdfmake-js'), '1.10.15', true);
 	wp_enqueue_script('datatables-js');
 	
+	//Bootstrap Toggle
+	wp_register_script('bs-toggle-js', '//cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js', array('jquery'), '2.2.2', true);
+	wp_enqueue_script('bs-toggle-js');
+	
 	//Barcode JS
 	wp_register_script('jquery-barcode-js', get_template_directory_uri().'/assets/js/jquery-barcode.min.js', array('jquery'), '2.0.3', true);
 	wp_enqueue_script('jquery-barcode-js');
 	
-	// register template-specific scripts
+	//jQuery Validate
+	wp_register_script('jquery-validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js', array('jquery'), '1.17.0', true);
+	wp_enqueue_script('jquery-validate');
+	
+	//Main functions js file
+    wp_register_script('js-functions', get_template_directory_uri().'/assets/js/functions.js', array('jquery', 'datatables-js'), '0.1', true); 
+    wp_enqueue_script('js-functions');
+
+
+    // register template-specific scripts
     wp_register_script('js-orders', get_template_directory_uri().'/assets/js/orders.js', array('jquery', 'datatables-js'), '0.1', true); 
+    wp_register_script('js-new-order', get_template_directory_uri().'/assets/js/new-order.js', array('jquery'), '0.1', true); 
+    
     // conditional load
     if (is_page(array('orders'))){
     	wp_enqueue_script('js-orders');
     	wp_localize_script('js-orders', 'DennisAjax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+    }
+    if (is_page(array('add-manual-order'))){
+    	wp_enqueue_script('js-new-order');
+    	wp_localize_script('js-new-order', 'DennisAjax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
     }
 
 }
@@ -141,5 +160,6 @@ function custom_breadcrumbs(){
 
 
 require_once 'ajax.php';
+require_once 'general.php';
 
 ?>

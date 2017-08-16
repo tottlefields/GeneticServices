@@ -12,6 +12,13 @@
 		<?php wp_footer(); ?>
 		
 		<!-- start: JavaScript-->
+		<script>
+		$(document).ready(function() {
+			$('.datepick').datepicker({
+				format: 'dd/mm/yyyy'
+			});
+		});
+		</script>
 		<!-- <script src="<?php echo get_template_directory_uri() . '/assets/js/custom.js';?>"></script> -->
 		<!-- end: JavaScript-->
 
