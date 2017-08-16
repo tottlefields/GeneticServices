@@ -90,8 +90,34 @@ function addOrderTest($order_test){
 
 
 
+//test/order statistics
+function countTests($year=null, $month=0){
+	global $wpdb;
+	
+	if(!isset($year))
+		$year = date('Y');
+	
+	$sql = "SELECT COUNT(*) FROM order_tests t INNER JOIN orders o ON t.order_id=o.id WHERE YEAR(OrderDate)='".$year."'";
+	if (isset($month) && $month > 0){
+		$sql .= " AND MONTH(OrderDate)='".$month."'";
+	}
+	$test_count = $wpdb->get_var($sql);
+	return $test_count;
+}
 
-
+function countOrders($year=null, $month=0){
+	global $wpdb;
+	
+	if(!isset($year))
+		$year = date('Y');
+	
+	$sql = "SELECT COUNT(*) FROM orders WHERE YEAR(OrderDate)='".$year."'";
+	if (isset($month) && $month > 0){
+		$sql .= " AND MONTH(OrderDate)='".$month."'";
+	}
+	$test_count = $wpdb->get_var($sql);
+	return $test_count;
+}
 
 
 
