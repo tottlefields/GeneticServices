@@ -146,7 +146,7 @@ foreach ($orders as $orderId => $order){
 			'ReportFormat' => $order['ReportFormat'],
 			'VetReportFormat' => $order['VetReportFormat'],
 			'Paid' => $order['Paid'],
-			
+			'AgreeResearch' => $order['AgreeResearch']
 	));
 	foreach ($order['tests'] as $test){
 		$wpdb->insert('order_tests', $test);
