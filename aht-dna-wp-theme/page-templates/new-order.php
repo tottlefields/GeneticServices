@@ -50,7 +50,7 @@ if (isset($_POST['new-order-submitted'])) {
 		));
 	}
 	
-	wp_redirect('/orders/');
+	wp_redirect(get_site_url().'/orders/');
 	exit;
 }?>
 <?php get_header(); ?>
