@@ -15,6 +15,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 @import url('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
 @import url('//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css');
 @import url('//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.min.css');
+@import url('//cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css');
 
 
 /* Main Colors
@@ -500,7 +501,7 @@ h1{margin-bottom: 20px; padding-bottom: 9px; border-bottom: 1px solid #eee;}
 .header-nav .nav li:hover{
 background: #3A3A3A;
 }
-.dropdown:hover .dropdown-menu {
+.dropdown:hover .dropdown {
     display: block;
  }
 .nav-tabs.nav-stacked>li>a:hover, .nav-tabs.nav-stacked>li>a:focus {
@@ -537,8 +538,8 @@ border-bottom: 1px solid transparent;
             box-shadow: none;
 }
 
-.dropdown-menu:after,
-.dropdown-menu:before {
+.dropdown:after,
+.dropdown:before {
 	top: -1px;
 	left: 10px;
 	border-right: 9px solid transparent;
@@ -547,7 +548,7 @@ border-bottom: 1px solid transparent;
 	content: '';
 }
 
-.dropdown-menu {
+.dropdown {
 	border-top: 5px solid transparent;
   	position: absolute;
   	top: 100%;
@@ -569,12 +570,12 @@ border-bottom: 1px solid transparent;
             box-shadow: none;	
 }
 
-.dropdown-menu.pull-right {
+.dropdown.pull-right {
   	right: 0;
   	left: auto;
 }
 
-.dropdown-menu .divider {
+.dropdown .divider {
   	*width: 100%;
   	height: 1px;
   	margin: 0px 1px;
@@ -584,7 +585,7 @@ border-bottom: 1px solid transparent;
   	border-bottom: 1px solid #ffffff;
 }
 
-.dropdown-menu li a {
+.dropdown li a {
   	display: block;
   	padding: 7px 10px !important;
   	clear: both;
@@ -595,80 +596,80 @@ border-bottom: 1px solid transparent;
   	white-space: normal !important;
 }
 
-.dropdown-menu li {
+.dropdown li {
 	border-bottom: 1px solid #eee;
 }
 
-.dropdown-menu li:first-child {
+.dropdown li:first-child {
 	border-top: 0px !important;
 }
 
-.dropdown-menu li:last-child {
+.dropdown li:last-child {
 	border-bottom: 0px !important;
 }
 
-.dropdown-menu li > a:hover,
-.dropdown-menu li > a:focus,
+.dropdown li > a:hover,
+.dropdown li > a:focus,
 .dropdown-submenu:hover > a {
   	color: #ffffff;
   	text-decoration: none;
   	background: #578EBE;
 }
 
-.dropdown-menu .active > a,
-.dropdown-menu .active > a:hover {
+.dropdown .active > a,
+.dropdown .active > a:hover {
   	color: #ffffff;
   	text-decoration: none;
   	background: #578EBE;
 }
 
-.dropdown-menu .disabled > a,
-.dropdown-menu .disabled > a:hover {
+.dropdown .disabled > a,
+.dropdown .disabled > a:hover {
   	color: #999999;
 }
 
-.dropdown-menu .disabled > a:hover {
+.dropdown .disabled > a:hover {
   	text-decoration: none;
   	cursor: default;
   	background-color: transparent;
 }
 
-.dropdown-menu-title {
+.dropdown-title {
 	background: #222;
 	color: #fff;
 	padding: 8px 0px;
 	position: relative;
 }
 
-.dropdown-menu-title span {
+.dropdown-title span {
 	margin-left: 15px;
 }
 
-.dropdown-menu-title a:link {
+.dropdown-title a:link {
 	position: absolute;
 	right: 4px;
 	top: 4px;
 	padding: 4px 6px !important;
 }
 
-.dropdown-menu-title a i {
+.dropdown-title a i {
 	color: #fff;
 }
 
-.dropdown-menu-title a:hover {
+.dropdown-title a:hover {
 	background: #fff !important;
 }
 
-.dropdown-menu-title a:hover i {
+.dropdown-title a:hover i {
 	color: #222 !important;
 }
 
-.dropdown-menu-sub-footer {
+.dropdown-sub-footer {
 	background: #eee;
 }
 
-.dropdown-menu ul,
-.dropdown-menu ul li  {
+.dropdown ul,
+.dropdown ul li  {
 	padding: 0px !important;
 	margin: 0px !important;
 }
@@ -1163,3 +1164,22 @@ footer {
 .fa { padding: 0px 5px 0px 0px; }
 .fa-file-pdf-o { color:darkred; }
 .link { cursor: pointer; }
+
+
+
+
+.sub-menu>li>a{
+	position: relative;
+	display: block;
+	padding: 10px 15px
+}
+.sub-menu>li>a:focus, .sub-menu>li>a:hover {
+	text-decoration: none;
+	background-color: #eee;
+}
+.sub-menu>li.active>a, .sub-menu>li.active>a:focus, .sub-menu>li.active>a:hover {
+	color: #fff;
+	background-color: #337ab7;
+}
+.error, .required { border-color: #a94442; }
+.valid { border-color: #3c763d; }
