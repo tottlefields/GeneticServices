@@ -1,8 +1,4 @@
 
-
-
-
-
 function addVetDetails() {
 	var vetDetails;
 	try {
@@ -80,7 +76,7 @@ function generatePDFs(order_ids) {
 			for (i = 0; i < OrderDetails.test_details.length; i++) {
 				var test = OrderDetails.test_details[i];
 				for (j = 0; j < test.no_swabs; j++) {
-					ddLetter.content.push(letterHeader(), testDetails(test), instructionsSection(), vetSection(), labelsSection(ClientDetails, test));
+					ddLetter.content.push(letterHeader(), testDetails(test, j), instructionsSection(), vetSection(), labelsSection(ClientDetails, test));
 					if (i === (OrderDetails.test_details.length - 1) && j === (test.no_swabs - 1)) {
 						ddLetter.content.push({
 							text : '',
@@ -301,13 +297,20 @@ function vetSection() {
 	};
 }
 
-function testDetails(test) {
+function testDetails(test, swab_no) {
+	testName = test.test_name.toUpperCase();
+/*	if (test.no_swabs > 1 && test.sub_tests !== ""){
+		subTests = test.sub_tests.split(":");
+		subTest = subTests[swab_no];
+		testName += " - "+subTest;
+	}*/
+	
 	return [ {
 		text : [ {
 			text : "Test(s) Ordered: ",
 			style : 'strong'
 		}, {
-			text : test.test_name.toUpperCase(),
+			text : testName,
 			style : 'pre'
 		} ],
 		margin : [ 0, 5, 0, 5 ]

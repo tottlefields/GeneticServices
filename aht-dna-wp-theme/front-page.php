@@ -9,12 +9,12 @@
 						<div class="col-sm-12">
     						<div class="jumbotron text-center">
     							<div class="container">
-									<form id="search-form" role="form" method="post" action="/search/">
+									<form id="search-form" role="form" method="post" action="<?php echo get_site_url(); ?>/search/">
 										<div class="col-md-6 col-md-offset-3">
 											<div class="input-group input-group-lg">
-												<input type="text" class="form-control search-form" placeholder="Search">
+												<input type="text" class="form-control search-form" placeholder="Search" name="q">
 												<span class="input-group-btn">
-													<button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q"><i class="fa fa-search"></i></button>
+													<button type="submit" class="btn btn-primary search-btn" data-target="#search-form"><i class="fa fa-search"></i></button>
 												</span>
 											</div>
 										</div>

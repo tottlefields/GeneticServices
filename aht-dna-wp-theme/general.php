@@ -24,11 +24,12 @@ function clientSearch($search_terms){
 		$sql = "SELECT * FROM client WHERE (";
 		$last = array_pop(array_keys($search_terms));
 		foreach ($search_terms as $field => $term){
-			$sql .= "$field = '$term'";
+			$sql .= "($field <> ''  AND $field = '$term')";
 			if($field != $last) { $sql .= ' OR '; }
 		}
 		$sql .= ")";
 		$clients = $wpdb->get_results($sql, OBJECT );
+		//echo $wpdb->last_query."\n";
 	}
 	return $clients;
 }
@@ -41,7 +42,7 @@ function animalSearch($search_terms, $client_id=0){
 		$sql = "SELECT * FROM animal WHERE (";
 		$last = array_pop(array_keys($search_terms));
 		foreach ($search_terms as $field => $term){
-			$sql .= "$field = '$term'";
+			$sql .= "($field <> ''  AND $field = '$term')";
 			if($field != $last) { $sql .= ' OR '; }
 		}
 		$sql .= ")";
@@ -49,8 +50,39 @@ function animalSearch($search_terms, $client_id=0){
 			$sql .= " AND client_id=$client_id";
 		}
 		$animals = $wpdb->get_results($sql, OBJECT );
+		//echo $wpdb->last_query."\n";
 	}
 	return $animals;
+	
+}
+
+function orderSearch($search_terms){
+	global $wpdb;	
+	$clients = array();
+	
+	if(count($search_terms)>0){
+		$sql = "SELECT * FROM orders WHERE (";
+		$last = array_pop(array_keys($search_terms));
+		foreach ($search_terms as $field => $term){
+			$sql .= "$field = '$term'";
+			if($field != $last) { $sql .= ' AND '; }
+		}
+		$sql .= ")";
+		$orders = $wpdb->get_results($sql, OBJECT );
+	}
+	return $orders;
+}
+
+
+function addNewClient($client){
+	//| id | ClientID | Tel | Fax | Email | FullName | Address | Address2 | Address3 | Town | County | Postcode | Country |
+	//| ShippingName | ShippingCompany | ShippingAddress | ShippingAddress2 | ShippingAddress3 | ShippingTown | ShippingCounty | ShippingPostcode | ShippingCountry |
+	global $wpdb;
+	
+	$wpdb->insert('client', $client);
+	$insert_id = $wpdb->insert_id;
+	
+	return $insert_id;
 	
 }
 
@@ -71,6 +103,9 @@ function addNewOrder($order){
 	global $wpdb;
 	
 	$wpdb->insert('orders', $order);
+#	echo $wpdb->last_query."\n";
+#	echo $wpdb->last_result."\n";
+#	echo $wpdb->last_error."\n";
 	$insert_id = $wpdb->insert_id;
 	
 	return $insert_id;

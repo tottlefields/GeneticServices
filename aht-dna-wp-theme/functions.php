@@ -72,6 +72,7 @@ function mytheme_enqueue_scripts() {
     // register template-specific scripts
     wp_register_script('js-orders', get_template_directory_uri().'/assets/js/orders.js', array('jquery', 'datatables-js'), '0.1', true); 
     wp_register_script('js-new-order', get_template_directory_uri().'/assets/js/new-order.js', array('jquery'), '0.1', true); 
+    wp_register_script('js-portal', get_template_directory_uri().'/assets/js/portal.js', array('jquery'), '0.1', true); 
     
     // conditional load
     if (is_page(array('orders'))){
@@ -81,6 +82,9 @@ function mytheme_enqueue_scripts() {
     if (is_page(array('add-manual-order'))){
     	wp_enqueue_script('js-new-order');
     	wp_localize_script('js-new-order', 'DennisAjax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+    }
+    if (is_page(array('portal'))){
+    	wp_enqueue_script('js-portal');
     }
 
 }

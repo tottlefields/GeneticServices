@@ -293,6 +293,7 @@ h6 {
 .navbar {
 	margin-bottom: 0px;
 	background: #ff850d;
+	color: white;
 }
 
 .navbar-inner {
@@ -314,7 +315,7 @@ h6 {
 }
 
 .navbar-inner a {
-	color: #7b7b7b;
+	color: #ffffff;
 	text-shadow: 0 -1px 1px #0b090a;
 }
 
@@ -385,6 +386,13 @@ a.brand span {
 	border-top-color: #fff !important;
 	border-bottom-color: #fff !important;
 }
+
+navbar > li > a:focus, .navbar > li > a:hover {
+	background-color: #ffce9e;
+	color: white;
+}
+.navbar > li > a { color: white; padding: 15px; }
+.navbar > li { display: inline-block; }
 
 /* Navigation Section
 =================================================================== */

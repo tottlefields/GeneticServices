@@ -70,40 +70,20 @@
 					<a href="<?php echo site_url('/'); ?>"><img src="<?php echo get_template_directory_uri() . '/assets/img/logo.png'; ?>" alt="" class="navbar-brand top-logo" /></a>
 				</div>
 				
-				<div class="navbar-right">
+				<ul class="nav navbar navbar-top-links navbar-right mbn">
 				<?php if(is_user_logged_in()) { 
 					global $current_user;
 					get_currentuserinfo();
 					?>
-					<a href="/account/"><span class="hidden-xs">Hi, <?php echo $current_user->user_firstname; ?></a>
-					<a href="<?php echo wp_logout_url(); ?>">Log Out</a>
+                    <!-- <li class="dropdown"><a data-hover="dropdown" href="#" class="dropdown-toggle"><i class="fa fa-bell fa-fw"></i><span class="badge badge-green">3</span></a></li>
+                    <li class="dropdown"><a data-hover="dropdown" href="#" class="dropdown-toggle"><i class="fa fa-envelope fa-fw"></i><span class="badge badge-orange">7</span></a> </li>
+                    <li class="dropdown"><a data-hover="dropdown" href="#" class="dropdown-toggle"><i class="fa fa-tasks fa-fw"></i><span class="badge badge-yellow">8</span></a></li> -->
+                    <li class="topbar-user"><span style="padding:15px;">Hi, <?php echo $current_user->user_firstname; ?></span></li>
+                    <li><a href="<?php echo wp_logout_url(); ?>"><i class="fa fa-sign-out"></i>Log Out</a></li>
 				<?php } else { ?>
-					<a href="<?php echo wp_login_url(); ?>">Log In</a>
+					<li><a href="<?php echo wp_login_url(); ?>">Log In</a></li>
 					<?php } ?>
-				</div>
-					
-					<!-- start: Header Menu -->
-<!--					<div class="nav-no-collapse header-nav">
-						<form class="form-inline mt-2 mt-md-0"> <input class="form-control mr-sm-2" type="text" placeholder="Search"> <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> </form>
-						<ul class="nav navbar-nav navbar-right">
-							<li class="dropdown hidden-xs">
-								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-									<i class="fa fa-bell"></i>
-									<span class="badge blueDark">
-									7 </span>
-								</a>
-							</li>
-							<li class="dropdown hidden-phone">
-								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-									<i class="fa fa-calendar"></i>
-									<span class="badge blueDark">
-									5 </span>
-								</a>
-							</li>
-						</ul>
-					</div>-->
-					<!-- end: Header Menu -->
-					
+                </ul>					
 			</div>
 		</nav>
 		<!-- end: Header -->
@@ -123,29 +103,6 @@
 						);
 					?>
 				</nav>
-					
-				<!-- start: Main Menu -->
-				<!--
-				<nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
-					<ul class="nav nav-pills nav-stacked">
-						<li class="nav-item active"><a href="<?php echo site_url('/'); ?>" class="nav-link"><i class="fa fa-home"></i><span class="hidden-tablet"> Home</span></a></li>	
-						<li class="nav-item"><a href="/orders/" class="nav-link"><i class="icon-envelope"></i><span class="hidden-tablet"> Orders</span></a></li>
-						<li class="nav-item"><a href="tasks.html" class="nav-link"><i class="icon-tasks"></i><span class="hidden-tablet"> Tasks</span></a></li>
-						<li class="nav-item"><a href="ui.html" class="nav-link"><i class="icon-eye-open"></i><span class="hidden-tablet"> UI Features</span></a></li>
-						<li class="nav-item"><a href="widgets.html" class="nav-link"><i class="icon-dashboard"></i><span class="hidden-tablet"> Widgets</span></a></li>
-						<li><a href="form.html" class="nav-link"><i class="icon-edit"></i><span class="hidden-tablet"> Forms</span></a></li>
-						<li><a href="chart.html" class="nav-link"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
-						<li><a href="typography.html" class="nav-link"><i class="icon-font"></i><span class="hidden-tablet"> Typography</span></a></li>
-						<li><a href="gallery.html" class="nav-link"><i class="icon-picture"></i><span class="hidden-tablet"> Gallery</span></a></li>
-						<li><a href="table.html" class="nav-link"><i class="icon-align-justify"></i><span class="hidden-tablet"> Tables</span></a></li>
-						<li><a href="calendar.html" class="nav-link"><i class="icon-calendar"></i><span class="hidden-tablet"> Calendar</span></a></li>
-						<li><a href="file-manager.html" class="nav-link"><i class="icon-folder-open"></i><span class="hidden-tablet"> File Manager</span></a></li>
-						<li><a href="icon.html" class="nav-link"><i class="icon-star"></i><span class="hidden-tablet"> Icons</span></a></li>
-						<li><a href="login.html" class="nav-link"><i class="icon-lock"></i><span class="hidden-tablet"> Login Page</span></a></li>
-					</ul>
-				</nav>
-				-->
-				<!-- end: Main Menu -->
 				
 				<noscript>
 					<div class="alert alert-block col-sm-10">
