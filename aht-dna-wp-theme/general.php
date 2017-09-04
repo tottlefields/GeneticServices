@@ -22,11 +22,16 @@ function clientSearch($search_terms){
 	
 	if(count($search_terms)>0){
 		$sql = "SELECT * FROM client WHERE (";
-		$last = array_pop(array_keys($search_terms));
+		//$last = array_pop(array_keys($search_terms));
+		$where = array();
 		foreach ($search_terms as $field => $term){
-			$sql .= "($field <> ''  AND $field = '$term')";
-			if($field != $last) { $sql .= ' OR '; }
+			if($term !== ""){
+				array_push($where, "($field <> ''  AND $field = '$term')");
+			}
+			//$sql .= "($field <> ''  AND $field = '$term')";
+			//if($field != $last) { $sql .= ' OR '; }
 		}
+		$sql .= implode(" AND ", $where);
 		$sql .= ")";
 		$clients = $wpdb->get_results($sql, OBJECT );
 		//echo $wpdb->last_query."\n";
@@ -40,11 +45,16 @@ function animalSearch($search_terms, $client_id=0){
 	
 	if(count($search_terms)>0){
 		$sql = "SELECT * FROM animal WHERE (";
-		$last = array_pop(array_keys($search_terms));
+		//$last = array_pop(array_keys($search_terms));
+		$where = array();
 		foreach ($search_terms as $field => $term){
-			$sql .= "($field <> ''  AND $field = '$term')";
-			if($field != $last) { $sql .= ' OR '; }
+			if($term !== ""){
+				array_push($where, "($field <> ''  AND $field = '$term')");
+			}
+			//$sql .= "($field <> ''  AND $field = '$term')";
+			//if($field != $last) { $sql .= ' OR '; }
 		}
+		$sql .= implode(" AND ", $where);
 		$sql .= ")";
 		if (isset($client_id) && $client_id > 0){
 			$sql .= " AND client_id=$client_id";
@@ -62,11 +72,16 @@ function orderSearch($search_terms){
 	
 	if(count($search_terms)>0){
 		$sql = "SELECT * FROM orders WHERE (";
-		$last = array_pop(array_keys($search_terms));
+		//$last = array_pop(array_keys($search_terms));
+		$where = array();
 		foreach ($search_terms as $field => $term){
-			$sql .= "$field = '$term'";
-			if($field != $last) { $sql .= ' AND '; }
+			//$sql .= "$field = '$term'";
+			//if($field != $last) { $sql .= ' AND '; }
+			if($term !== ""){
+				array_push($where, "$field = '$term'");
+			}
 		}
+		$sql .= implode(" AND ", $where);
 		$sql .= ")";
 		$orders = $wpdb->get_results($sql, OBJECT );
 	}
