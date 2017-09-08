@@ -1,4 +1,4 @@
-<?php /* Template Name: View Test */ ?>
+<?php /* Template Name: View Sample */ ?>
 <?php get_header(); ?>
 
 	<h1><?php wp_title('', true,''); ?><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
