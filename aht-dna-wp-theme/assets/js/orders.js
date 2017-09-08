@@ -2,12 +2,12 @@ jQuery(document).ready(function($) {
 	var details = $('#order_details');
 	var table = $('#orders').DataTable({
 		select : true,
-		order : [ [ 0, 'desc' ] ],
+		order : [ [ 1, 'desc' ] ],
 		columnDefs : [ {
-			targets : [ 3, 5, 6 ],
+			targets : [ 5, 6 ],
 			orderable : false
 		}, {
-			targets : [ 1 ],
+			targets : [ 0, 2 ],
 			visible : false
 		} ]
 	});

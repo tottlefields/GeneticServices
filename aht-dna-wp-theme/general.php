@@ -1,5 +1,14 @@
 <?php
 
+$order_steps = array(
+		'Order Placed',
+		'Kit(s) Dispatched',
+		'Sample(s) Received',
+		'Sample(s) Processed',
+		'Data Analysis & QC',
+		'Result(s) Sent'
+);
+
 function debug_array($array){
 	echo '<pre>';
 	print_r($array);
@@ -71,13 +80,17 @@ function orderSearch($search_terms){
 	$clients = array();
 	
 	if(count($search_terms)>0){
-		$sql = "SELECT * FROM orders WHERE (";
+//		$sql = "SELECT * FROM orders WHERE (";
+		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, VetReportFormat, Paid, AgreeResearch, 
+				client_id, FullName, Email, ShippingCountry, count(*) as TestCount 
+				from orders left outer join client on client.id=client_id left outer join order_tests on orders.id=order_id WHERE (";
 		//$last = array_pop(array_keys($search_terms));
 		$where = array();
 		foreach ($search_terms as $field => $term){
 			//$sql .= "$field = '$term'";
 			//if($field != $last) { $sql .= ' AND '; }
 			if($term !== ""){
+				if ($field == 'id'){ $field = 'orders.id'; }
 				array_push($where, "$field = '$term'");
 			}
 		}
@@ -86,6 +99,36 @@ function orderSearch($search_terms){
 		$orders = $wpdb->get_results($sql, OBJECT );
 	}
 	return $orders;
+}
+
+function getTestsByOrder($order_id){
+	global $wpdb;	
+	$tests = array();
+	
+	$sql = "select id from order_tests where order_id=".$order_id;
+	$test_ids = $wpdb->get_results($sql, ARRAY_N );
+	foreach ($test_ids as $row){
+		$test_details = getTestDetails($row[0]);
+		array_push($tests, $test_details);
+	}
+	return $tests;	
+}
+
+function getTestDetails($swab_id){
+	global $wpdb;	
+	$test_details = array();
+	
+	$sql = "select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, a.*, t.*, test_name, no_results, no_swabs, sub_tests 
+			from orders o inner join order_tests t on o.id=order_id 
+			left outer join animal a on animal_id=a.id 
+			left outer join breed_list b on a.breed_id=b.id 
+			left outer join test_codes using(test_code) 
+			where (a.breed_id is NULL or b.is_primary=1) and t.id=".$swab_id;
+	$test_details = $wpdb->get_results($sql, OBJECT );
+#	echo $wpdb->last_query."\n";
+#	echo $wpdb->last_result."\n";
+#	echo $wpdb->last_error."\n";
+	return $test_details;	
 }
 
 
