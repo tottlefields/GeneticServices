@@ -1,7 +1,7 @@
 <?php /* Template Name: View Order */ ?>
 <?php 
 if(empty($_REQUEST) || !isset($_REQUEST['id'])){
-	wp_redirect(site_url('/orders/'));
+	wp_redirect(get_site_url().'/orders/');
 	exit;	
 }
 $order_id = $_REQUEST['id'];
