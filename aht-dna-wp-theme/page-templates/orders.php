@@ -30,7 +30,7 @@
 		
 		<?php
 		foreach ( $results as $order ){
-			$client = '<a href="/clients/view?id='.$order->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order->FullName.'</a>';
+			$client = '<a href="'.get_site_url().'/clients/view?id='.$order->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order->FullName.'</a>';
 			if ($order->Email != ''){
 				$client .= '&nbsp;<a href="mailto:'.$order->Email.'"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>';
 			}
@@ -38,7 +38,7 @@
 			echo '
 			<tr>
 				<td class="text-center">'.$order->ID.'</td>
-				<td class="text-center"><a href="/orders/view?id='.$order->ID.'">'.$order->ID.'</a></td>
+				<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$order->ID.'">'.$order->ID.'</a></td>
 				<td class="text-center">'.$order->webshop_id.'</td>
 				<td class="text-center">'.$order_date->format('d/m/Y').'</td>
 				<!-- <td>'.$order->ReportFormat.'</td>-->
