@@ -132,7 +132,7 @@ function getOrders(orderId, div) {
 			client_panel += '<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">' + ClientDetails.County + '</div></div>';
 			client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
 			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
-			div.append('<h2><a href="/orders/view?id=' + OrderDetails.id + '">Order #' + OrderDetails.ID + '</a></h2>');
+			div.append('<h2><a href="/orders/view?id=' + OrderDetails.ID + '">Order #' + OrderDetails.ID + '</a></h2>');
 			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Order Details</h3></div><div class="panel-body">'
 					+ order_panel + '</div></div>');
 			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Client Details</h3></div><div class="panel-body">'
