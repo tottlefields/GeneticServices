@@ -13,7 +13,7 @@ if (preg_match('/^[a-zA-Z]{2,5}\d{1,3}$/', $query)){
 			WHERE PortalID='".$query."'";
 	$results = $wpdb->get_results($sql);
 	if (count($results) == 1){
-		wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
+//		wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
 		exit;	
 	}
 }
@@ -27,7 +27,27 @@ if (preg_match('/^\d{1,5}\/\d{1,5}$/', $query)){
 			WHERE orders.id='".$sample_details[0]."'";
 	$results = $wpdb->get_results($sql);
 	if (count($results) == 1){
-		wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
+//		wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
+		exit;	
+	}
+}
+
+if (preg_match('/^9\d{14}$/', $query)){
+	//Microchip
+	$sql = "select * from animal where TattooOrChip ='".$query."'";
+	$results = $wpdb->get_results($sql);
+	if (count($results) == 1){
+		wp_redirect(get_site_url().'/animals/view?id='.$results[0]->id);
+		exit;	
+	}
+}
+
+if (preg_match('/^KC[a-zA-Z]{2}\d{7,9}$/', $query) || preg_match('/^[a-zA-Z]{2}\d{7,9}$/', $query) || preg_match('/^K\d{6}$/', $query)){
+	//Registration No.
+	$sql = "select * from animal where RegistrationNo ='".$query."'";
+	$results = $wpdb->get_results($sql);
+	if (count($results) == 1){
+		wp_redirect(get_site_url().'/animals/view?id='.$results[0]->id);
 		exit;	
 	}
 }
