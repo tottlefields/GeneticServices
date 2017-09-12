@@ -2,6 +2,7 @@ jQuery(document).ready(function($) {
 	var details = $('#order_details');
 	var table = $('#orders').DataTable({
 		select : true,
+		pageLength: 20,
 		order : [ [ 1, 'desc' ] ],
 		columnDefs : [ {
 			targets : [ 5, 6 ],

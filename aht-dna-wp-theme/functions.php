@@ -42,13 +42,11 @@ function mytheme_enqueue_scripts() {
 	
 	//PDF Make
 	wp_register_script('pdfmake-js', get_template_directory_uri().'/assets/js/pdfmake.min.js', false, '0.1.31', true);
-	//wp_register_script('pdfmake-js', get_template_directory_uri().'/assets/js/pdfmake2.js', false, '0.1.31', true);
 	wp_register_script('pdfmake-fonts-js', get_template_directory_uri().'/assets/js/vfs_fonts.js', array('pdfmake-js'), '0.1.31', true);
 	wp_enqueue_script('pdfmake-js');
 	wp_enqueue_script('pdfmake-fonts-js');
 	
 	//DataTables
-	//wp_register_script('datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.js', array('jquery', 'bootstrap-js', 'pdfmake-js'), '1.10.15', true);
 	wp_register_script('datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.min.js', array('jquery', 'bootstrap-js', 'pdfmake-js'), '1.10.15', true);
 	wp_enqueue_script('datatables-js');
 	
@@ -61,8 +59,12 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script('jquery-barcode-js');
 	
 	//jQuery Validate
+	wp_register_script('editable-js', '//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js', array('jquery', 'bootstrap-js'), '1.5.0', true);
+	wp_enqueue_script('editable-js');
+	
+	//Editable
 	wp_register_script('jquery-validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js', array('jquery'), '1.17.0', true);
-	wp_enqueue_script('jquery-validate');
+	wp_enqueue_script('jquery-validate');	
 	
 	//Main functions js file
     wp_register_script('js-functions', get_template_directory_uri().'/assets/js/functions.js', array('jquery', 'datatables-js'), '0.1', true); 

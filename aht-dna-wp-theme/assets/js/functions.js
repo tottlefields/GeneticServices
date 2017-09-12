@@ -141,6 +141,31 @@ function getOrders(orderId, div) {
 	});
 }
 
+function getTestDetails(orderId, swabID) {
+
+	var data = {
+		'action' : 'order_details',
+		'orderId' : orderId,
+		'swabId' : swabID
+	};
+
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(details) {
+			console.log(details)
+		}
+	});
+}
+
+
+
+
+
+
+
 pdfMake.fonts = {
 	Courier : {
 		normal : 'Courier.ttf',

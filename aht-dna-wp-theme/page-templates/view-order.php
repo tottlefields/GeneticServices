@@ -30,7 +30,7 @@ foreach ($test_details as $result){
 	}
 	else{
 		$sentDate = new DateTime($test->kit_sent);
-		array_push($kit_sent, $myDate->format('d/m/y'));
+		array_push($kit_sent, $sentDate->format('d/m/y'));
 		$result[0]->order_status = $order_steps[1];
 	}
 	
@@ -39,7 +39,7 @@ foreach ($test_details as $result){
 	}
 	else {
 		$returnedDate = new DateTime($test->returned_date);
-		array_push($returned_date, $myDate->format('d/m/y'));
+		array_push($returned_date, $returnedDate->format('d/m/y'));
 		$result[0]->order_status = $order_steps[2];
 	}
 }
@@ -58,7 +58,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 			<ul class="nav nav-tabs nav-justified step-anchor">
 			<?php for ($i=0; $i<count($order_steps); $i++){
 				if($this_order_status[$i] == ''){
-					echo '<li><a href="">'.$order_steps[$i].'<br /><small>&nbsp;</small></a></li>';
+					echo '<li><span>'.$order_steps[$i].'<br /><small>&nbsp;</small></span></li>';
 				}
 				else{
 					$class = 'done';
@@ -68,7 +68,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 				//	elseif($i+1 == count($order_steps)){
 				//		
 				//	}
-					echo '<li class="'.$class.'"><a href="">'.$order_steps[$i].'<br /><small>'.$this_order_status[$i].'</small></a></li>';
+					echo '<li class="'.$class.'"><span>'.$order_steps[$i].'<br /><small>'.$this_order_status[$i].'</small></span></li>';
 				}
 			}?>
 			</ul>
@@ -77,13 +77,13 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 	</section>
 
 	<section class="row">
-		<div class="col-md-12">
-		<h3>Tests in Order</h3>
+		<div class="col-md-12" style="margin-top:15px;">
 		<?php if ( $test_details ){ ?>
-			<table id="orders" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
+			<table id="orderDetails" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
 				<thead>
+					<th></th>
+					<th></th>
 					<th class="text-center">SwabID</th>
-					<th class="text-center">PortalID</th>
 					<th>Test</th>
 					<th>Breed</th>
 					<!-- <th>Report Format</th> -->
@@ -111,10 +111,11 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 				
 				echo '
 				<tr>
-					<td class="text-center">'.$test->id.'</td>
-					<td class="text-center">'.$portalID.'</a></td>
+					<td>'.$order_id.'</td>
+					<td>'.$test->id.'</td>
+					<td class="text-center">'.$test->id.'<span class="hidden-sm hidden-xs">&nbsp;<em><small>'.$test->PortalID.'</small></em></td>
 					<td>'.$test->test_name.'</td>
-					<td>'.$test->Breed.'</td>
+					<td>'.$test->breed.'</td>
 					<!-- <td>'.$order->ReportFormat.'</td>-->
 					<td>'.$animal.'</td>
 					<td>'.$client.'</td>
@@ -133,5 +134,42 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 		?>
 		</div>
 	</section>
+	<section class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4"></div>
+		<div class="col-md-4"></div>
+	</section>
+
+<?php
+function footer_js(){ ?>
+<script>
+jQuery(document).ready(function($) {
+	console.log("ready!");
+	var table = $('#orderDetails').DataTable({
+		select : true,
+		order : [ [ 1, 'desc' ] ],
+		"ordering": false,
+		"paging": false,
+		columnDefs : [ {
+			targets : [ 0,1 ],
+			visible : false
+		} ]
+	});
+
+	table.on('select', function(e, dt, type, indexes) {
+		if (table.rows('.selected').data().length === 1) {
+			var rowData = table.rows(indexes).data().toArray();
+			console.log(rowData[0][0]);
+			getOrders(rowData[0][0], details);
+		} else {
+			details.empty();
+		}
+	}).on('deselect', function(e, dt, type, indexes) {
+		//details.empty();
+	});
+})
+</script>
+<?php } 
+add_action('wp_footer', 'footer_js', 100); ?>
 
 <?php get_footer(); ?>
