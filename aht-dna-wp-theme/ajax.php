@@ -12,18 +12,18 @@ add_action( 'wp_ajax_nopriv_breed_tests', 'get_breed_tests' );
 	
 	 $return = array();
 	 $orderId = intval( $_POST['orderId'] );
-	 $swabId = intval( $_POST['$swabId'] );
+	 $swabId = intval( $_POST['swabId'] );
 	
 	 //$order_details = $wpdb->get_row("select o.* from orders o where o.id=".$orderId);
 	 $orders = orderSearch(array('id' => $orderId));
 	 $order_details = $orders[0];
 	 $client_details = $wpdb->get_row("select c.* from orders o left outer join client c on client_id=c.id where o.id=".$orderId);
+	 foreach ($client_details as $key => $value){
+	 	if($value === null){ $client_details->$key = ""; }
+	 }
 	 
-	 $sql = "select b.breed, a.*, t.*, test_name, no_results, no_swabs, sub_tests from orders o inner join order_tests t on o.id=order_id left outer join animal a on animal_id=a.id inner join breed_list b on a.breed_id=b.id left outer join test_codes using(test_code) where b.is_primary=1 and o.id=".$orderId;
-	 if (isset($swabId) && $swabId > 0){ $sql .= " AND t.id=".$swabId; }
-	 
-	 $test_details = $wpdb->get_results($sql);
-	 
+	 if (isset($swabId) && $swabId > 0){ $test_details = getTestDetails($swabId); }
+	 else{ $test_details = getTestsByOrder($orderId); }	 
 	 $order_details->test_details = $test_details;
 	
 	 $return['order'] = $order_details;

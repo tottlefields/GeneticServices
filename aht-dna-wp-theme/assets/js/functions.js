@@ -1,4 +1,3 @@
-
 function addVetDetails() {
 	var vetDetails;
 	try {
@@ -36,7 +35,7 @@ function addVetDetails() {
 	if ($('#vet-select option').size() > 1) {
 		$('#vet-select option:last').prop('selected', true);
 	}
-	//localStorage.setItem('vetDetails', JSON.stringify(vetDetails));
+	// localStorage.setItem('vetDetails', JSON.stringify(vetDetails));
 }
 
 function showVetModal() {
@@ -52,8 +51,6 @@ function showVetModal() {
 		}
 	});
 }
-
-
 
 function generatePDFs(order_ids) {
 
@@ -122,16 +119,8 @@ function getOrders(orderId, div) {
 					order_panel += '<em><a href="/animals/view?id=' + test.animal_id + '">' + test.PetName + '</a></em> - ' + test.test_name + '<br />';
 				}
 			}
-			client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id=' + ClientDetails.id
-					+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a></div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8"><a href="mailto:' + ClientDetails.Email
-					+ '"><i class="fa fa-envelope-o" aria-hidden="true"></i>' + ClientDetails.Email + '</a></div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">' + ClientDetails.Tel + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">' + ClientDetails.Address + '<br />'
-					+ ClientDetails.Address2 + '<br />' + ClientDetails.Address3 + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">' + ClientDetails.County + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
+
+			client_panel = createClientPanel(details.client);
 			div.append('<h2><a href="/orders/view?id=' + OrderDetails.ID + '">Order #' + OrderDetails.ID + '</a></h2>');
 			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Order Details</h3></div><div class="panel-body">'
 					+ order_panel + '</div></div>');
@@ -141,7 +130,7 @@ function getOrders(orderId, div) {
 	});
 }
 
-function getTestDetails(orderId, swabID) {
+function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 
 	var data = {
 		'action' : 'order_details',
@@ -155,16 +144,89 @@ function getTestDetails(orderId, swabID) {
 		url : DennisAjax.ajax_url,
 		data : data,
 		success : function(details) {
-			console.log(details)
+			// console.log(details)
+			OrderDetails = details.order;
+			SwabDetails = details.order.test_details;
+			ClientDetails = details.client;
+			console.log(SwabDetails)
+
+			client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><i class="fa fa-user" aria-hidden="true"></i>'
+					+ '<span id="client_name" data-type="text" data-pk="' + ClientDetails.id + '" class="editable">' + ClientDetails.FullName
+					+ '</span></div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8"><i class="fa fa-envelope-o" aria-hidden="true"></i>'
+					+ '<span id="client_email" data-type="text" data-pk="' + ClientDetails.id + '" class="editable">' + ClientDetails.Email
+					+ '</span></div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">' + ClientDetails.Tel + '</div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">' + ClientDetails.Address + '<br />'
+					+ ClientDetails.Address2 + '<br />' + ClientDetails.Address3 + '</div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Town</div><div class="col-sm-8">' + ClientDetails.Town + '</div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">' + ClientDetails.County + '</div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
+
+			animal_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><i class="fa fa-paw" aria-hidden="true"></i>'
+					+ '<span id="animal_regname" data-type="text" data-pk="' + SwabDetails.animal_id + '" class="editable">' + SwabDetails.RegisteredName
+					+ '</span></div></div>';
+			animal_panel += '<div class="row"><div class="col-sm-4">Pet Name</div><div class="col-sm-8">'
+					+ '<span id="animal_petname" data-type="text" data-pk="' + SwabDetails.animal_id + '" class="editable">' + SwabDetails.PetName
+					+ '</span></div></div>';
+
+			// clientDiv.html(client_panel);
+			clientDiv.html(createClientPanel(ClientDetails));
+			clientAddress = [ ClientDetails.Address ];
+			if (ClientDetails.Address2 !== null && ClientDetails.Address2 !== "")
+				clientAddress.push(ClientDetails.Address2);
+			if (ClientDetails.Address3 !== null && ClientDetails.Address3 !== "")
+				clientAddress.push(ClientDetails.Address3);
+			
+			clientShipAddress = [ ClientDetails.ShippingAddress ];
+			if (ClientDetails.ShippingAddress2 !== null && ClientDetails.ShippingAddress2 !== "")
+				clientShipAddress.push(ClientDetails.ShippingAddress2);
+			if (ClientDetails.ShippingAddress3 !== null && ClientDetails.ShippingAddress3 !== "")
+				clientShipAddress.push(ClientDetails.ShippingAddress3);
+
+			$('#client_id').attr('value', ClientDetails.id);
+			$('#client_FullName').attr('value', ClientDetails.FullName);
+			$('#client_Email').attr('value', ClientDetails.Email);
+			$('#client_Tel').attr('value', ClientDetails.Tel);
+			
+			$('#client_Address').attr('value', clientAddress.join(', '));
+			$('#client_Town').attr('value', ClientDetails.Town);
+			$('#client_Postcode').attr('value', ClientDetails.Postcode);
+			$('#client_County').attr('value', ClientDetails.County);
+			$('#client_Country').attr('value', ClientDetails.Country);
+			
+			$('#client_ShippingAddress').attr('value', clientShipAddress.join(', '));
+			$('#client_ShippingTown').attr('value', ClientDetails.ShippingTown);
+			$('#client_ShippingPostcode').attr('value', ClientDetails.ShippingPostcode);
+			$('#client_ShippingCounty').attr('value', ClientDetails.ShippingCounty);
+			$('#client_ShippingCountry').attr('value', ClientDetails.ShippingCountry);
+
+			animalDiv.html(animal_panel);
+
 		}
 	});
 }
 
+function createClientPanel(ClientDetails) {
+	console.log(ClientDetails);
+	client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id=' + ClientDetails.id
+			+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a></div></div>';
+	email = '&nbsp;';
+	if (ClientDetails.Email !== '') {
+		email = '<a href="mailto:' + ClientDetails.Email + '"><i class="fa fa-envelope-o" aria-hidden="true"></i>' + ClientDetails.Email + '</a>;'
+	}
+	client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8">' + email + '</div></div>';
+	client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">' + ClientDetails.Tel + '</div></div>';
+	client_panel += '<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">' + ClientDetails.Address + '<br />' + ClientDetails.Address2
+			+ '<br />' + ClientDetails.Address3 + '</div></div>';
+	client_panel += '<div class="row"><div class="col-sm-4">Town</div><div class="col-sm-8">' + ClientDetails.Town + '</div></div>';
+	client_panel += '<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">' + ClientDetails.County + '</div></div>';
+	client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
+	client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
 
-
-
-
-
+	return client_panel;
+}
 
 pdfMake.fonts = {
 	Courier : {
@@ -324,12 +386,12 @@ function vetSection() {
 
 function testDetails(test, swab_no) {
 	testName = test.test_name.toUpperCase();
-/*	if (test.no_swabs > 1 && test.sub_tests !== ""){
-		subTests = test.sub_tests.split(":");
-		subTest = subTests[swab_no];
-		testName += " - "+subTest;
-	}*/
-	
+	/*
+	 * if (test.no_swabs > 1 && test.sub_tests !== ""){ subTests =
+	 * test.sub_tests.split(":"); subTest = subTests[swab_no]; testName += " -
+	 * "+subTest; }
+	 */
+
 	return [ {
 		text : [ {
 			text : "Test(s) Ordered: ",
@@ -400,7 +462,7 @@ function generateBarcode(value) {
 		barHeight : 40,
 		posX : 0,
 		posY : 0,
-		fontSize: 16,
+		fontSize : 16,
 		showHRI : 1
 	};
 	$("#canvasBarcode").show().barcode(value, "code39", settings);
@@ -446,7 +508,7 @@ function labelsSection(client, test) {
 							}
 						}, {
 							image : barcodeImg,
-							width: 150,
+							width : 150,
 							absolutePosition : {
 								x : 400,
 								y : 675

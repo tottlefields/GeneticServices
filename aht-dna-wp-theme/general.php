@@ -128,7 +128,7 @@ function getTestDetails($swab_id){
 #	echo $wpdb->last_query."\n";
 #	echo $wpdb->last_result."\n";
 #	echo $wpdb->last_error."\n";
-	return $test_details;	
+	return $test_details[0];	
 }
 
 

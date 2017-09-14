@@ -12,7 +12,7 @@ if (preg_match('/^[a-zA-Z]{2,5}\d{1,3}$/', $query)){
 			left outer join order_tests on orders.id=order_id
 			WHERE PortalID='".$query."'";
 	$results = $wpdb->get_results($sql);
-	if (count($results) == 1){
+	if (count($results) == 1 && $results[0]->ID > 0){
 		wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
 		exit;	
 	}
@@ -26,7 +26,7 @@ if (preg_match('/^\d{1,5}\/\d{1,5}$/', $query)){
 			left outer join order_tests on orders.id=order_id
 			WHERE orders.id='".$sample_details[0]."'";
 	$results = $wpdb->get_results($sql);
-	if (count($results) == 1){
+	if (count($results) == 1 && $results[0]->id > 0){
 		wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
 		exit;	
 	}
@@ -36,7 +36,7 @@ if (preg_match('/^9\d{14}$/', $query)){
 	//Microchip
 	$sql = "select * from animal where TattooOrChip ='".$query."'";
 	$results = $wpdb->get_results($sql);
-	if (count($results) == 1){
+	if (count($results) == 1 && $results[0]->id > 0){
 		wp_redirect(get_site_url().'/animals/view?id='.$results[0]->id);
 		exit;	
 	}
@@ -46,7 +46,7 @@ if (preg_match('/^KC[a-zA-Z]{2}\d{7,9}$/', $query) || preg_match('/^[a-zA-Z]{2}\
 	//Registration No.
 	$sql = "select * from animal where RegistrationNo ='".$query."'";
 	$results = $wpdb->get_results($sql);
-	if (count($results) == 1){
+	if (count($results) == 1 && $results[0]->id > 0){
 		wp_redirect(get_site_url().'/animals/view?id='.$results[0]->id);
 		exit;	
 	}

@@ -4,6 +4,36 @@ if(empty($_REQUEST) || !isset($_REQUEST['id'])){
 	wp_redirect(get_site_url().'/orders/');
 	exit;	
 }
+
+global $wpdb;
+
+if (isset($_REQUEST['order_id'])){
+	
+	if (isset($_REQUEST['client-submitted'])){
+		
+		$data = array();
+		$where = array();
+		foreach ($_REQUEST as $key => $value){
+			if (preg_match('/^client_/', $key)){
+				$new_key = str_replace('client_', '', $key);
+				if ($new_key === 'id'){ $where['id'] = $value;}
+				elseif (preg_match('/Address/', $new_key)){
+					$address = array_pad(explode(', ', $value), 3, '');
+					$data[$new_key."3"] = array_pop($address);
+					$data[$new_key."2"] = array_pop($address);
+					$data[$new_key] = implode(', ', $address);
+				}
+				else{
+					$data[$new_key] = $value;
+				}
+			}
+		}
+		$wpdb->update('client', $data, $where);
+		wp_redirect(get_site_url().'/orders/view/?id='.$_REQUEST['id']);
+		exit;	
+	}
+}
+
 $order_id = $_REQUEST['id'];
 
 $orders = orderSearch(array('id' => $order_id));
@@ -20,10 +50,9 @@ if (isset($order_details->OrderDate)){
 
 $kit_sent = array();
 $returned_date = array();
-foreach ($test_details as $result){
-	$test = $result[0];
-	
-	$result[0]->order_status = $order_steps[0];
+foreach ($test_details as $test){
+
+	$test->order_status = $order_steps[0];
 	
 	if ($test->kit_sent == ''){
 		array_push($kit_sent, $test->kit_sent);
@@ -31,7 +60,7 @@ foreach ($test_details as $result){
 	else{
 		$sentDate = new DateTime($test->kit_sent);
 		array_push($kit_sent, $sentDate->format('d/m/y'));
-		$result[0]->order_status = $order_steps[1];
+		$test->order_status = $order_steps[1];
 	}
 	
 	if ($test->returned_date == ''){
@@ -40,7 +69,7 @@ foreach ($test_details as $result){
 	else {
 		$returnedDate = new DateTime($test->returned_date);
 		array_push($returned_date, $returnedDate->format('d/m/y'));
-		$result[0]->order_status = $order_steps[2];
+		$test->order_status = $order_steps[2];
 	}
 }
 
@@ -97,8 +126,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 		
 			<?php
 			$test_count = 0;
-			foreach ( $test_details as $result){
-				$test = $result[0];
+			foreach ( $test_details as $test){
 				
 				$client = '<a href="'.get_site_url().'/clients/view?id='.$order_details->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order_details->FullName.'</a>';
 				if ($order_details->Email != ''){
@@ -134,17 +162,180 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 		?>
 		</div>
 	</section>
-	<section class="row">
-		<div class="col-md-4"></div>
-		<div class="col-md-4"></div>
-		<div class="col-md-4"></div>
+	<section class="row well" style="margin-top:15px;">
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="order" disabled="disabled" data-toggle="modal" data-target="#orderModal">
+						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
+					</button>
+					<h3 class="panel-title">Order Details</h3>
+				</div>
+				<div class="panel-body" id="details_order">
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="client" disabled="disabled" data-toggle="modal" data-target="#clientModal">
+						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
+					</button>
+					<h3 class="panel-title">Client Details</h3>
+				</div>
+				<div class="panel-body" id="details_client">
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="animal" disabled="disabled" data-toggle="modal" data-target="#animalModal">
+						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
+					</button>
+					<h3 class="panel-title">Animal Details</h3>
+				</div>
+				<div class="panel-body" id="details_animal">
+				</div>
+			</div>
+		</div>
 	</section>
+
+
+	<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<form class="form form-horizontal" role="form" method="post">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h2 class="modal-title" id="orderModalLabel"><i class="fa fa-flask"></i>&nbsp;Test Details</h2>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="client_name" class="control-label col-sm-2">Order#</label>
+							<div class="col-sm-10"><p class="form-control-static"><?php echo $order_id; ?></p></div>
+						</div>						
+					</div>
+					<div class="modal-footer">
+						<input type="hidden" id="swab_id" name="swab_id" value="">
+						<input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Update</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<form class="form form-horizontal" role="form" method="post">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h2 class="modal-title" id="clientModalLabel"><i class="fa fa-user"></i>&nbsp;Client Details</h2>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="client_name" class="control-label col-sm-2">Name</label>
+									<div class="col-sm-10"><input type="text" class="form-control" id="client_FullName" name="client_FullName" value=""></div>
+								</div>
+								<div class="form-group">
+									<label for="client_email" class="control-label col-sm-2">Email</label>
+									<div class="col-sm-4"><input type="email" class="form-control" id="Eclient_mail" name="client_Email" value=""></div>
+									<label for="client_phone" class="control-label col-sm-2">Phone</label>
+									<div class="col-sm-4"><input type="tel" class="form-control" id="client_Tel" name="client_Tel" value=""></div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="well">
+									<h3 style="margin-top: 0px;margin-bottom: 20px;">Home Address</h3>
+									<div class="form-group">
+										<label for="client_address" class="control-label col-sm-2">Address</label>
+										<div class="col-sm-10"><input type="text" class="form-control" id="client_Address" name="client_Address" value=""></div>
+									</div>
+									<div class="form-group">
+										<label for="client_town" class="control-label col-sm-2">Town</label>
+										<div class="col-sm-5 "><input type="text" class="form-control" id="client_Town" name="client_Town" value=""></div>
+										<label for="client_postcode" class="control-label col-sm-2">Postcode</label>
+										<div class="col-sm-3"><input type="text" class="form-control" id="client_Postcode" name="client_Postcode" value=""></div>
+									</div>
+									<div class="form-group">
+										<label for="client_county" class="control-label col-sm-2">County</label>
+										<div class="col-sm-5 "><input type="text" class="form-control" id="client_County" name="client_County" value=""></div>
+										<label for="client_country" class="control-label col-sm-2">Country</label>
+										<div class="col-sm-3"><input type="text" class="form-control" id="client_Country" name="client_Country" value=""></div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="well">
+									<h3 style="margin-top: 0px;margin-bottom: 20px;">Delivery Address</h3>
+									<div class="form-group">
+										<label for="client_address" class="control-label col-sm-2">Address</label>
+										<div class="col-sm-10"><input type="text" class="form-control" id="client_ShippingAddress" name="client_ShippingAddress" value=""></div>
+									</div>
+									<div class="form-group">
+										<label for="client_town" class="control-label col-sm-2">Town</label>
+										<div class="col-sm-5 "><input type="text" class="form-control" id="client_ShippingTown" name="client_ShippingTown" value=""></div>
+										<label for="client_postcode" class="control-label col-sm-2">Postcode</label>
+										<div class="col-sm-3"><input type="text" class="form-control" id="client_ShippingPostcode" name="client_ShippingPostcode" value=""></div>
+									</div>
+									<div class="form-group">
+										<label for="client_county" class="control-label col-sm-2">County</label>
+										<div class="col-sm-5 "><input type="text" class="form-control" id="client_ShippingCounty" name="client_ShippingCounty" value=""></div>
+										<label for="client_country" class="control-label col-sm-2">Country</label>
+										<div class="col-sm-3"><input type="text" class="form-control" id="client_ShippingCountry" name="client_ShippingCountry" value=""></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="hidden" id="client_id" name="client_id" value="">
+						<input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary" name="client-submitted">Update</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="animalModal" tabindex="-1" role="dialog" aria-labelledby="animalModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<form class="form form-horizontal" role="form" method="post">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h2 class="modal-title" id="animalModalLabel"><i class="fa fa-paw"></i>&nbsp;Animal Details</h2>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="client_name" class="control-label col-sm-2">Order#</label>
+							<div class="col-sm-10"><p class="form-control-static"><?php echo $order_id; ?></p></div>
+						</div>						
+					</div>
+					<div class="modal-footer">
+						<input type="hidden" id="animal_id" name="animal_id" value="">
+						<input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Update</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 <?php
 function footer_js(){ ?>
 <script>
 jQuery(document).ready(function($) {
-	console.log("ready!");
+	   
 	var table = $('#orderDetails').DataTable({
 		select : true,
 		order : [ [ 1, 'desc' ] ],
@@ -159,13 +350,19 @@ jQuery(document).ready(function($) {
 	table.on('select', function(e, dt, type, indexes) {
 		if (table.rows('.selected').data().length === 1) {
 			var rowData = table.rows(indexes).data().toArray();
-			console.log(rowData[0][0]);
-			getOrders(rowData[0][0], details);
+			getTestDetails(rowData[0][0], rowData[0][1], $('#details_order'), $('#details_client'), $('#details_animal'));
+			$('.details-btn').prop('disabled', false);
 		} else {
-			details.empty();
+			$('.details-btn').prop('disabled', true);
+			$('#details_order').empty();
+			$('#details_client').empty();
+			$('#details_animal').empty();
 		}
 	}).on('deselect', function(e, dt, type, indexes) {
-		//details.empty();
+		$('.details-btn').prop('disabled', true);
+		$('#details_order').empty();
+		$('#details_client').empty();
+		$('#details_animal').empty();
 	});
 })
 </script>

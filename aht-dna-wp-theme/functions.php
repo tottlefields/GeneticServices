@@ -57,14 +57,18 @@ function mytheme_enqueue_scripts() {
 	//Barcode JS
 	wp_register_script('jquery-barcode-js', get_template_directory_uri().'/assets/js/jquery-barcode.min.js', array('jquery'), '2.0.3', true);
 	wp_enqueue_script('jquery-barcode-js');
-	
-	//jQuery Validate
-	wp_register_script('editable-js', '//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js', array('jquery', 'bootstrap-js'), '1.5.0', true);
-	wp_enqueue_script('editable-js');
-	
+
 	//Editable
+//	wp_register_script('editable-js', '//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js', array('jquery', 'bootstrap-js'), '1.5.0', true);
+//	wp_enqueue_script('editable-js');
+
+	//jQuery Validate
 	wp_register_script('jquery-validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js', array('jquery'), '1.17.0', true);
 	wp_enqueue_script('jquery-validate');	
+	
+	//Bootbox.js
+	wp_register_script('bootbox-js', '//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js', array('jquery', 'bootstrap-js'), '4.4.0', true);
+	wp_enqueue_script('bootbox-js');	
 	
 	//Main functions js file
     wp_register_script('js-functions', get_template_directory_uri().'/assets/js/functions.js', array('jquery', 'datatables-js'), '0.1', true); 
@@ -79,11 +83,11 @@ function mytheme_enqueue_scripts() {
     // conditional load
     if (is_page(array('orders'))){
     	wp_enqueue_script('js-orders');
-    	wp_localize_script('js-orders', 'DennisAjax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+    	//wp_localize_script('js-orders', 'DennisAjax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
     }
     if (is_page(array('add-manual-order'))){
     	wp_enqueue_script('js-new-order');
-    	wp_localize_script('js-new-order', 'DennisAjax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+    	//wp_localize_script('js-new-order', 'DennisAjax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
     }
     if (is_page(array('portal'))){
     	wp_enqueue_script('js-portal');
