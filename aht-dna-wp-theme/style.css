@@ -18,6 +18,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 @import url('//cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css');
 @import url('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css');
 
+.datepicker { z-index: 1200 !important; }
 
 /* Main Colors
 =================================================================== */

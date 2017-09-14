@@ -118,7 +118,7 @@ function getTestDetails($swab_id){
 	global $wpdb;	
 	$test_details = array();
 	
-	$sql = "select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, a.*, t.*, test_name, no_results, no_swabs, sub_tests 
+	$sql = "select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, a.*, t.*, test_name, no_results, no_swabs, sub_tests, date_format(a.BirthDate, \"%d/%m/%Y\") as DOB 
 			from orders o inner join order_tests t on o.id=order_id 
 			left outer join animal a on animal_id=a.id 
 			left outer join breed_list b on a.breed_id=b.id 

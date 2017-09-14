@@ -144,18 +144,17 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 		url : DennisAjax.ajax_url,
 		data : data,
 		success : function(details) {
-			// console.log(details)
 			OrderDetails = details.order;
 			SwabDetails = details.order.test_details;
 			ClientDetails = details.client;
-			console.log(SwabDetails)
+			
+			console.log(SwabDetails);
+			
 
-			client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><i class="fa fa-user" aria-hidden="true"></i>'
-					+ '<span id="client_name" data-type="text" data-pk="' + ClientDetails.id + '" class="editable">' + ClientDetails.FullName
-					+ '</span></div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8"><i class="fa fa-envelope-o" aria-hidden="true"></i>'
-					+ '<span id="client_email" data-type="text" data-pk="' + ClientDetails.id + '" class="editable">' + ClientDetails.Email
-					+ '</span></div></div>';
+			/* CLIENT DETAILS */
+			client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id=' + ClientDetails.id
+					+ '"><strong>' + ClientDetails.FullName + '</strong></a></div></div>';
+			client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8">' + ClientDetails.Email + '</div></div>';
 			client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">' + ClientDetails.Tel + '</div></div>';
 			client_panel += '<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">' + ClientDetails.Address + '<br />'
 					+ ClientDetails.Address2 + '<br />' + ClientDetails.Address3 + '</div></div>';
@@ -164,21 +163,14 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
 			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
 
-			animal_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><i class="fa fa-paw" aria-hidden="true"></i>'
-					+ '<span id="animal_regname" data-type="text" data-pk="' + SwabDetails.animal_id + '" class="editable">' + SwabDetails.RegisteredName
-					+ '</span></div></div>';
-			animal_panel += '<div class="row"><div class="col-sm-4">Pet Name</div><div class="col-sm-8">'
-					+ '<span id="animal_petname" data-type="text" data-pk="' + SwabDetails.animal_id + '" class="editable">' + SwabDetails.PetName
-					+ '</span></div></div>';
-
-			// clientDiv.html(client_panel);
-			clientDiv.html(createClientPanel(ClientDetails));
+			clientDiv.html(client_panel);
+			
 			clientAddress = [ ClientDetails.Address ];
 			if (ClientDetails.Address2 !== null && ClientDetails.Address2 !== "")
 				clientAddress.push(ClientDetails.Address2);
 			if (ClientDetails.Address3 !== null && ClientDetails.Address3 !== "")
 				clientAddress.push(ClientDetails.Address3);
-			
+
 			clientShipAddress = [ ClientDetails.ShippingAddress ];
 			if (ClientDetails.ShippingAddress2 !== null && ClientDetails.ShippingAddress2 !== "")
 				clientShipAddress.push(ClientDetails.ShippingAddress2);
@@ -189,20 +181,41 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			$('#client_FullName').attr('value', ClientDetails.FullName);
 			$('#client_Email').attr('value', ClientDetails.Email);
 			$('#client_Tel').attr('value', ClientDetails.Tel);
-			
+
 			$('#client_Address').attr('value', clientAddress.join(', '));
 			$('#client_Town').attr('value', ClientDetails.Town);
 			$('#client_Postcode').attr('value', ClientDetails.Postcode);
 			$('#client_County').attr('value', ClientDetails.County);
 			$('#client_Country').attr('value', ClientDetails.Country);
-			
+
 			$('#client_ShippingAddress').attr('value', clientShipAddress.join(', '));
 			$('#client_ShippingTown').attr('value', ClientDetails.ShippingTown);
 			$('#client_ShippingPostcode').attr('value', ClientDetails.ShippingPostcode);
 			$('#client_ShippingCounty').attr('value', ClientDetails.ShippingCounty);
 			$('#client_ShippingCountry').attr('value', ClientDetails.ShippingCountry);
+			
+
+			/* ANIMAL DETAILS */
+			animal_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/animals/view?id=' + SwabDetails.animal_id
+					+ '"><strong>' + SwabDetails.RegisteredName + '</strong></a></div></div>';
+			animal_panel += '<div class="row"><div class="col-sm-4">Pet Name</div><div class="col-sm-8">' + SwabDetails.PetName + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-sm-4">Reg No.</div><div class="col-sm-8">' + SwabDetails.RegistrationNo + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-sm-4">Breed</div><div class="col-sm-8">' + SwabDetails.breed + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-sm-4">DOB</div><div class="col-sm-8">' + SwabDetails.DOB + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-sm-4">Sex</div><div class="col-sm-8">' + SwabDetails.Sex + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-sm-4">Microchip</div><div class="col-sm-8">' + SwabDetails.TattooOrChip + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-sm-4">Colour</div><div class="col-sm-8">' + SwabDetails.Colour + '</div></div>';
 
 			animalDiv.html(animal_panel);
+
+			$('#animal_id').attr('value', SwabDetails.animal_id);
+			$('#animal_RegisteredName').attr('value', SwabDetails.RegisteredName);
+			$('#animal_RegistrationNo').attr('value', SwabDetails.RegistrationNo);
+			$('#animal_PetName').attr('value', SwabDetails.PetName);
+			$('#animal_TattooOrChip').attr('value', SwabDetails.TattooOrChip);
+			$('#animal_BirthDate').attr('value', SwabDetails.DOB);
+			$('#animal_Colour').attr('value', SwabDetails.Colour);
+			$('#animal_Sex').attr('value', SwabDetails.Sex);
 
 		}
 	});
