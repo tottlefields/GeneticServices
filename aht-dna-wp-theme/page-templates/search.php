@@ -32,7 +32,7 @@ if (preg_match('/^\d{1,5}\/\d{1,5}$/', $query)){
 	}
 }
 
-if (preg_match('/^9\d{14}$/', $query)){
+if (preg_match('/^\d{12,17}$/', $query)){
 	//Microchip
 	$sql = "select * from animal where TattooOrChip ='".$query."'";
 	$results = $wpdb->get_results($sql);
