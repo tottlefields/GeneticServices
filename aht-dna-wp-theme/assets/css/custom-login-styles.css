@@ -1,0 +1,6 @@
+.login h1 a {
+  background-image: url('../img/logo.png');
+}
+
+p#nav { display: none; }
+p#backtoblog { display: none; }
