@@ -244,7 +244,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 								</div>
 								<div class="form-group">
 									<label for="client_email" class="control-label col-sm-2">Email</label>
-									<div class="col-sm-4"><input type="email" class="form-control" id="client_mail" name="client_Email" value=""></div>
+									<div class="col-sm-4"><input type="email" class="form-control" id="client_Email" name="client_Email" value=""></div>
 									<label for="client_phone" class="control-label col-sm-2">Phone</label>
 									<div class="col-sm-4"><input type="tel" class="form-control" id="client_Tel" name="client_Tel" value=""></div>
 								</div>
