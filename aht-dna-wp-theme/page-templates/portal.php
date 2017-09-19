@@ -128,7 +128,7 @@ if (isset($_REQUEST['submit'])){
 	<section class="row">
 		<div class="col-md-6">
 <?php
-/*	global $wpdb;
+	global $wpdb;
 
 	$sql = "select concat('\"', breed, '\":{', group_concat(concat('\"',test_code, '\":\"', test_name,'\"')), '}') as row 
     		from breed_test_lookup inner join test_codes using (test_code) 
@@ -136,15 +136,16 @@ if (isset($_REQUEST['submit'])){
 	$results = $wpdb->get_results($sql, OBJECT );
 	
 	if ( $results ){
-		echo '<pre>
+		echo '<pre style="margin-bottom:50px;">
 var breedTests = {
-	"all": {"CP":"Canine DNA profiles (ISAG 2006)"},';
+	"all": {"CP":"Canine DNA profiles (ISAG 2006)"},
+';
 		foreach ( $results as $row ){
 			echo "\t".$row->row.",\n";
 		}
 		echo '};</pre>';
 	}
-*/?>
+?>
 		</div>
 		<div class="col-md-6">
 			<div class="panel">
