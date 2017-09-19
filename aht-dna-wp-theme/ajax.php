@@ -17,13 +17,25 @@ add_action( 'wp_ajax_nopriv_breed_tests', 'get_breed_tests' );
 	 //$order_details = $wpdb->get_row("select o.* from orders o where o.id=".$orderId);
 	 $orders = orderSearch(array('id' => $orderId));
 	 $order_details = $orders[0];
+	 foreach ($order_details as $key => $value){
+	 	if (preg_match('/\d{4}-\d{1,2}-\d{1,2}/', $value)){
+	 		$order_details->$key = SQLToDate($value);
+	 	}
+	 }
+	 
 	 $client_details = $wpdb->get_row("select c.* from orders o left outer join client c on client_id=c.id where o.id=".$orderId);
 	 foreach ($client_details as $key => $value){
 	 	if($value === null){ $client_details->$key = ""; }
 	 }
 	 
 	 if (isset($swabId) && $swabId > 0){ $test_details = getTestDetails($swabId); }
-	 else{ $test_details = getTestsByOrder($orderId); }	 
+	 else{ $test_details = getTestsByOrder($orderId); }
+	 foreach ($test_details as $key => $value){
+	 	if($value === null){ $test_details->$key = ""; }
+	 	elseif (preg_match('/\d{4}-\d{1,2}-\d{1,2}/', $value)){
+	 		$test_details->$key = SQLToDate($value);
+	 	}
+	 }
 	 $order_details->test_details = $test_details;
 	
 	 $return['order'] = $order_details;

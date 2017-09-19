@@ -32,6 +32,32 @@ if (isset($_REQUEST['order_id'])){
 		wp_redirect(get_site_url().'/orders/view/?id='.$_REQUEST['id']);
 		exit;	
 	}
+	
+	if (isset($_REQUEST['animal-submitted'])){
+		
+		$data = array();
+		$where = array();
+		foreach ($_REQUEST as $key => $value){
+			if (preg_match('/^animal_/', $key)){
+				$new_key = str_replace('animal_', '', $key);
+				if ($new_key === 'id'){ $where['id'] = $value;}
+				elseif (preg_match('/Sex/', $new_key)){
+					$value = substr($value, 0, 1);
+					$data['Sex'] = $value;
+				}
+				elseif (preg_match('/BirthDate/', $new_key)){
+					$data[$new_key] = dateToSQL($value);
+				}
+				else{
+					$data[$new_key] = $value;
+				}
+			}
+		}
+		$wpdb->update('animal', $data, $where);
+		wp_redirect(get_site_url().'/orders/view/?id='.$_REQUEST['id']);
+		exit;	
+		
+	}
 }
 
 $order_id = $_REQUEST['id'];
@@ -112,7 +138,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 				<thead>
 					<th></th>
 					<th></th>
-					<th class="text-center">SwabID</th>
+					<th class="text-center">TestID</th>
 					<th>Test</th>
 					<th>Breed</th>
 					<!-- <th>Report Format</th> -->
@@ -166,9 +192,9 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="order" disabled="disabled" data-toggle="modal" data-target="#orderModal">
+					<!-- <button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="order" disabled="disabled" data-toggle="modal" data-target="#orderModal">
 						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
-					</button>
+					</button> -->
 					<h3 class="panel-title"><i class="fa fa-flask"></i>&nbsp;Test Details</h3>
 				</div>
 				<div class="panel-body" id="details_order">
@@ -202,7 +228,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 	</section>
 
 
-	<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel">
+	<!-- <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<form class="form form-horizontal" role="form" method="post">
@@ -212,12 +238,25 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="client_name" class="control-label col-sm-2">Order#</label>
-							<div class="col-sm-10"><p class="form-control-static"><?php echo $order_id; ?></p></div>
-						</div>						
+							<label  class="control-label col-sm-2">Order#</label>
+							<div class="col-sm-4"><p class="form-control-static"><?php echo $order_id; ?></p></div>
+							<label  class="control-label col-sm-2">Test#</label>
+							<div class="col-sm-4"><p class="form-control-static" id="test_id"></p></div>
+						</div>
+						<div class="form-group">
+							<label for="test_test_name" class="control-label col-sm-2">Test</label>
+							<div class="col-sm-10"><p class="form-control-static" id="test_test_name"></p></div>
+						</div>
+						<div class="form-group">
+							<label for="test_breed" class="control-label col-sm-2">Breed</label>
+							<div class="col-sm-10"><p class="form-control-static" id="test_breed"></p></div>
+						</div>
+						<div>
+						Progress...
+						</div>			
 					</div>
 					<div class="modal-footer">
-						<input type="hidden" id="swab_id" name="swab_id" value="">
+						<input type="hidden" id="test_id" name="test_id" value="">
 						<input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						<button type="submit" class="btn btn-primary">Update</button>
@@ -225,7 +264,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 				</form>
 			</div>
 		</div>
-	</div>
+	</div>-->
 	
 	<div class="modal fade" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel">
 		<div class="modal-dialog modal-lg" role="document">
@@ -318,29 +357,29 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="form-group">
-									<label for="client_name" class="control-label col-sm-2">Name</label>
+									<label for="animal_RegisteredName" class="control-label col-sm-2">Name</label>
 									<div class="col-sm-10"><input type="text" class="form-control" id="animal_RegisteredName" name="animal_RegisteredName" value=""></div>
 								</div>
 								<div class="form-group">
-									<label for="client_email" class="control-label col-sm-2">Reg No.</label>
+									<label for="animal_RegistrationNo" class="control-label col-sm-2">Reg No.</label>
 									<div class="col-sm-4"><input type="text" class="form-control" id="animal_RegistrationNo" name="animal_RegistrationNo" value=""></div>
-									<label for="client_phone" class="control-label col-sm-2">Pet Name</label>
+									<label for="animal_PetName" class="control-label col-sm-2">Pet Name</label>
 									<div class="col-sm-4"><input type="text" class="form-control" id="animal_PetName" name="animal_PetName" value=""></div>
 								</div>
 								<div class="form-group">
-									<label for="client_email" class="control-label col-sm-2">DOB</label>
+									<label for="animal_BirthDate" class="control-label col-sm-2">DOB</label>
 									<div class="col-sm-4"><input type="text" value="" name="animal_BirthDate" id="animal_BirthDate" class="form-control datepick" autocomplete="off" placeholder="dd/mm/yyyy"></div>
-									<label for="client_phone" class="control-label col-sm-2">Sex</label>
+									<label class="control-label col-sm-2">Sex</label>
 									<div class="col-sm-4">
 										<div class="radioerror"></div>
-										<label class="radio-inline"><input type="radio" class="radiorequired" value="Male" name="sex" checked="checked"> Male</label>
-										<label class="radio-inline"><input type="radio" class="radiorequired" value="Female" name="sex"> Female</label>
+										<label class="radio-inline"><input type="radio" id="animal_Sex-Male" class="radiorequired" value="Male" name="animal_Sex" checked="checked"> Male</label>
+										<label class="radio-inline"><input type="radio" id="animal_Sex-Female" class="radiorequired" value="Female" name="animal_Sex"> Female</label>
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="client_email" class="control-label col-sm-2">Microchip</label>
+									<label for="animal_TattooOrChip" class="control-label col-sm-2">Microchip</label>
 									<div class="col-sm-4"><input type="text" class="form-control" id="animal_TattooOrChip" name="animal_TattooOrChip" value=""></div>
-									<label for="client_phone" class="control-label col-sm-2">Colour</label>
+									<label for="animal_Colour" class="control-label col-sm-2">Colour</label>
 									<div class="col-sm-4"><input type="text" class="form-control" id="animal_Colour" name="animal_Colour" value=""></div>
 								</div>
 							</div>

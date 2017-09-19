@@ -26,7 +26,8 @@ if (preg_match('/^\d{1,5}\/\d{1,5}$/', $query)){
 			left outer join order_tests on orders.id=order_id
 			WHERE orders.id='".$sample_details[0]."'";
 	$results = $wpdb->get_results($sql);
-	if (count($results) == 1 && $results[0]->id > 0){
+	
+	if (count($results) == 1 && $results[0]->ID > 0){
 		wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
 		exit;	
 	}
