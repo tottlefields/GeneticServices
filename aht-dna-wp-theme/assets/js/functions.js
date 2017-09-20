@@ -250,7 +250,7 @@ function createClientPanel(ClientDetails) {
 			+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a></div></div>';
 	email = '&nbsp;';
 	if (ClientDetails.Email !== '') {
-		email = '<a href="mailto:' + ClientDetails.Email + '"><i class="fa fa-envelope-o" aria-hidden="true"></i>' + ClientDetails.Email + '</a>;'
+		email = '<a href="mailto:' + ClientDetails.Email + '"><i class="fa fa-envelope-o" aria-hidden="true"></i>' + ClientDetails.Email + '</a>';
 	}
 	client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8">' + email + '</div></div>';
 	client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">' + ClientDetails.Tel + '</div></div>';
@@ -488,6 +488,8 @@ function testDetails(test, swab_no) {
 function generateBarcode(value) {
 	var canvas = document.createElement('canvas');
 	canvas.setAttribute("id", "canvasBarcode");
+	canvas.setAttribute("width", "350px");
+	canvas.setAttribute("height", "75px");
 	document.body.appendChild(canvas);
 
 	var settings = {
