@@ -4,21 +4,55 @@
 							<?php custom_breadcrumbs(); ?>
 						</span>
 					</h1>
+					
+					<div class="row">
+						<div class="col-sm-12">
+    						<div class="jumbotron text-center">
+    							<div class="container">
+									<form id="search-form" role="form" method="post" action="<?php echo get_site_url(); ?>/search/">
+										<div class="col-md-6 col-md-offset-3">
+											<div class="input-group input-group-lg">
+												<input type="text" class="form-control search-form" placeholder="Search" name="q">
+												<span class="input-group-btn">
+													<button type="submit" class="btn btn-primary search-btn" data-target="#search-form"><i class="fa fa-search"></i></button>
+												</span>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
 
 					<section class="row text-center placeholders">
-						<div class="col-6 col-sm-3 placeholder"> <img src="https://i0.wp.com/afterimagedesigns.com/wp-bootstrap-starter/wp-content/uploads/2017/06/blue.jpg?resize=200%2C200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail" data-recalc-dims="1"> </p>
-						<h4>Label</h4>
-						<div class="text-muted">Something else</div>
-					</div>
-					<div class="col-6 col-sm-3 placeholder"> <img src="https://i1.wp.com/afterimagedesigns.com/wp-bootstrap-starter/wp-content/uploads/2017/06/green.jpg?resize=200%2C200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail" data-recalc-dims="1"> </p>
-						<h4>Label</h4>
-						<p> <span class="text-muted">Something else</span> </div>
-					<div class="col-6 col-sm-3 placeholder"> <img src="https://i0.wp.com/afterimagedesigns.com/wp-bootstrap-starter/wp-content/uploads/2017/06/blue.jpg?resize=200%2C200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail" data-recalc-dims="1"> </p>
-						<h4>Label</h4>
-						<p> <span class="text-muted">Something else</span> </div>
-					<div class="col-6 col-sm-3 placeholder"> <img src="https://i1.wp.com/afterimagedesigns.com/wp-bootstrap-starter/wp-content/uploads/2017/06/green.jpg?resize=200%2C200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail" data-recalc-dims="1"> </p>
-						<h4>Label</h4>
-						<p> <span class="text-muted">Something else</span> </div>
+						<div class="col-md-3 col-sm-6 placeholder">
+							<h4>This Month</h4>
+							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-purple.png'; ?>);">
+								<div style="line-height:200px;"><i class="fa fa-flask" aria-hidden="true"></i><?php echo countTests(date('Y'), date('m')); ?></div>
+							</div>
+							<div class="text-muted">Tests ordered this month.</div>
+						</div>
+						<div class="col-md-3 col-sm-6 placeholder">
+							<h4>This Year</h4>
+							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-green.png'; ?>);">
+								<div style="line-height:200px;"><i class="fa fa-flask" aria-hidden="true"></i><?php echo countTests(date('Y')); ?></div>						
+							</div>
+							<div class="text-muted">Tests ordered this year.</div>
+						</div>
+						<div class="col-md-3 col-sm-6 placeholder">
+							<h4>This Month</h4>
+							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-purple.png'; ?>);">
+								<div style="line-height:200px;"><i class="fa fa-shopping-basket" aria-hidden="true"></i><?php echo countOrders(date('Y'), date('m')); ?></div>	
+							</div>
+							<div class="text-muted">Total orders this month.</div>
+						</div>
+						<div class="col-md-3 col-sm-6 placeholder">
+							<h4>This Year</h4>
+							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-green.png'; ?>);">
+								<div style="line-height:200px;"><i class="fa fa-shopping-basket" aria-hidden="true"></i><?php echo countOrders(date('Y')); ?></div>	
+							</div>
+							<div class="text-muted">Total orders this year.</div>
+						</div>
 					</section>
 
 <?php get_footer(); ?>

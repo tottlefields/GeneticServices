@@ -9,9 +9,19 @@
 			</div><!--/row-->
 		</div><!--/.container-fluid-->
 		
-		<?php wp_footer(); ?>
 		
 		<!-- start: JavaScript-->
+		<script>
+		var DennisAjax = {"ajax_url":"<?php echo admin_url( 'admin-ajax.php' ); ?>"};
+		</script>
+		<?php wp_footer(); ?>
+		
+		<script>
+		$(document).ready(function() {
+			$('.datepick').datepicker({
+				format: 'dd/mm/yyyy'
+			});
+		});
 		<!-- <script src="<?php echo get_template_directory_uri() . '/assets/js/custom.js';?>"></script> -->
 		<!-- end: JavaScript-->
 

@@ -55,6 +55,8 @@ foreach( $posts as $post ) {
 		elseif (get_field('vet-report-by-post-pm') != 'FALSE') { $vetReport = 'POST';}
 		elseif (get_field('vet-report-by-fax-pm') != 'FALSE') { $vetReport = 'FAX';}
 		
+		$research = 0;
+		if (get_field('agree-to-research-pm') != 'FALSE') { $research = 1; }
 		
 		$orders[$orderId] = array(
 				'ClientID' => $clientId,
@@ -62,6 +64,7 @@ foreach( $posts as $post ) {
 				'ReportFormat' => $reportFormat,
 				'VetReportFormat' => $vetReport,
 				'Paid' => get_field('paid-pm'),
+				'AgreeResearch' => $research,
 				'tests' => array()
 		);
 	}
@@ -143,7 +146,7 @@ foreach ($orders as $orderId => $order){
 			'ReportFormat' => $order['ReportFormat'],
 			'VetReportFormat' => $order['VetReportFormat'],
 			'Paid' => $order['Paid'],
-			
+			'AgreeResearch' => $order['AgreeResearch']
 	));
 	foreach ($order['tests'] as $test){
 		$wpdb->insert('order_tests', $test);

@@ -17,10 +17,11 @@
 	?>
 		<table id="orders" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
 			<thead>
+				<th></th>
 				<th class="text-center">OrderID</th>
 				<th class="text-center">Webshop</th>
 				<th class="text-center">Date</th>
-				<th>Report Format</th>
+				<!-- <th>Report Format</th> -->
 				<th>Client</th>
 				<th class="text-center">#Tests</th>
 				<th class="text-center">PDF</th>
@@ -29,16 +30,18 @@
 		
 		<?php
 		foreach ( $results as $order ){
-			$client = '<a href="/client/view?id='.$order->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order->FullName.'</a>';
+			$client = '<a href="'.get_site_url().'/clients/view?id='.$order->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order->FullName.'</a>';
 			if ($order->Email != ''){
 				$client .= '&nbsp;<a href="mailto:'.$order->Email.'"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>';
 			}
+			$order_date = new DateTime($order->OrderDate);
 			echo '
 			<tr>
 				<td class="text-center">'.$order->ID.'</td>
+				<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$order->ID.'">'.$order->ID.'</a></td>
 				<td class="text-center">'.$order->webshop_id.'</td>
-				<td class="text-center">'.$order->OrderDate.'</td>
-				<td>'.$order->ReportFormat.'</td>
+				<td class="text-center">'.$order_date->format('d/m/Y').'</td>
+				<!-- <td>'.$order->ReportFormat.'</td>-->
 				<td>'.$client.'</td>
 				<td class="text-center">'.$order->TestCount.'</td>
 				<td class="text-center"><a href="javascript:generatePDFs(\''.$order->ID.'\')"><i class="fa fa-file-pdf-o link" id="pdf_'.$order->ID.'"></i></a></td>
