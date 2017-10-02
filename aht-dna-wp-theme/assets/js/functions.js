@@ -245,7 +245,6 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 }
 
 function createClientPanel(ClientDetails) {
-	console.log(ClientDetails);
 	client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id=' + ClientDetails.id
 			+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a></div></div>';
 	email = '&nbsp;';

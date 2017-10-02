@@ -101,7 +101,7 @@ function orderSearch($search_terms){
 			}
 		}
 		$sql .= implode(" AND ", $where);
-		$sql .= ")";
+		$sql .= ")  group by orders.id";
 		$orders = $wpdb->get_results($sql, OBJECT );
 	}
 	return $orders;
@@ -157,6 +157,9 @@ function addNewAnimal($animal){
 	global $wpdb;
 	
 	$wpdb->insert('animal', $animal);
+#	echo $wpdb->last_query."\n";
+#	echo $wpdb->last_result."\n";
+#	echo $wpdb->last_error."\n";
 	$insert_id = $wpdb->insert_id;
 	
 	return $insert_id;
@@ -181,6 +184,9 @@ function addOrderTest($order_test){
 	global $wpdb;
 
 	$wpdb->insert('order_tests', $order_test);
+#	echo $wpdb->last_query."\n";
+#	echo $wpdb->last_result."\n";
+#	echo $wpdb->last_error."\n";
 	$insert_id = $wpdb->insert_id;
 
 	return $insert_id;
