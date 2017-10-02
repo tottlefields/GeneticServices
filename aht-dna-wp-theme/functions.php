@@ -16,6 +16,8 @@ function wpb_sender_name($original_email_from) {
 	return 'DENNIS';
 }
 
+add_theme_support('title-tag');
+
 // Editing the login page
 add_filter ( 'wp_mail_from', 'wpb_sender_email' );
 add_filter ( 'wp_mail_from_name', 'wpb_sender_name' );
