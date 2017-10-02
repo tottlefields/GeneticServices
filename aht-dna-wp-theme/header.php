@@ -7,7 +7,6 @@ if(!is_user_logged_in()) {
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title><?php wp_title(''); ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
 		<meta name="description" content="">
