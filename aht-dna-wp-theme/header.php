@@ -83,6 +83,9 @@ if(!is_user_logged_in()) {
                     <li class="dropdown"><a data-hover="dropdown" href="#" class="dropdown-toggle"><i class="fa fa-envelope fa-fw"></i><span class="badge badge-orange">7</span></a> </li>
                     <li class="dropdown"><a data-hover="dropdown" href="#" class="dropdown-toggle"><i class="fa fa-tasks fa-fw"></i><span class="badge badge-yellow">8</span></a></li> -->
                     <li class="topbar-user"><span style="padding:15px;">Hi, <?php echo $current_user->user_firstname; ?></span></li>
+                <?php if(current_user_can('administrator')) { ?>
+                    <li><a href="<?php echo admin_url(); ?>"><i class="fa fa-lock"></i>Admin</a></li>
+                <?php } ?>
                     <li><a href="<?php echo wp_logout_url(); ?>"><i class="fa fa-sign-out"></i>Log Out</a></li>
 				<?php } else { ?>
 					<li><a href="<?php echo wp_login_url(); ?>">Log In</a></li>
