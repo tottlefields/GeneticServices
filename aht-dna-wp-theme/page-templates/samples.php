@@ -23,7 +23,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 					$samples_updated++;
 				}
 				else{
-					$error .= "error with $swabID<br />";
+					$error .= "ERROR! Can't find an order with this ID (<a href='/search/?q=$swabID'>$swabID</a>)<br />Has this kit already been dispatched?<br />";
 				}
 			}
 			elseif (preg_match('/^\d{1,5}\/\d{1,5}$/', $swabID)){
@@ -36,7 +36,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 					$samples_updated++;
 				}
 				else{
-					$error .= "error with $swabID<br />";
+					$error .= "ERROR! Can't find an order with this ID (<a href='/search/?q=$swabID'>$swabID</a>)<br />Has this kit already been dispatched?<br />";
 				}
 			}
 		}
@@ -63,7 +63,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 					$samples_updated++;
 				}
 				else{
-					$error .= "error with $swabID<br />";
+					$error .= "ERROR! Can't find an kit with with this id (<a href='/search/?q=$swabID'>$swabID</a>)<br />Has this kit already been received?<br />";
 				}
 			}
 			elseif (preg_match('/^\d{1,5}\/\d{1,5}$/', $swabID)){
@@ -76,7 +76,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 					$samples_updated++;
 				}
 				else{
-					$error .= "error with $swabID<br />";
+					$error .= "ERROR! Can't find an kit with with this id (<a href='/search/?q=$swabID'>$swabID</a>)<br />Has this kit already been received?<br />";
 				}
 			}
 		}
