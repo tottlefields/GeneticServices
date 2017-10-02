@@ -1,8 +1,8 @@
 					
 					<div class="clearfix"></div>
-					<footer>
+					<!-- <footer>
 						<p><span style="text-align:left;float:left">&copy; <?php echo date('Y'); ?> DENNIS</span></p>
-					</footer>
+					</footer> -->
 				</main><!--/#content.col-sm-9.col-md-10-->
 				<!-- end: Content -->
 

@@ -75,7 +75,7 @@ if (isset($_REQUEST['submit'])){
 							'Paid'				=> 1
 					));
 				}
-				elseif (count($orders) == 1) { $order_id = $orders[0]->id; }
+				elseif (count($orders) == 1) { $order_id = $orders[0]->ID; }
 				else {  $error = "multiple orders match : ".$line[13].' ('.$client_id.') / '.date('Y-m-d'); break; }
 				
 				$vet_id = NULL;
@@ -100,7 +100,7 @@ if (isset($_REQUEST['submit'])){
 	
 				$results = $wpdb->get_results("SELECT * from order_tests WHERE PortalID='".$line[1]."'", OBJECT );
 				if (count($results) == 0){
-					addOrderTest(array(
+					$swab_id = addOrderTest(array(
 							'order_id'	=> $order_id,
 							'PortalID'	=> $line[1],
 							'animal_id'	=> $animal_id,
@@ -109,8 +109,11 @@ if (isset($_REQUEST['submit'])){
 							'kit_sent'	=> date('Y-m-d'),
 							'returned_date'	=> ($line[0]) ? date('Y-m-d') : NULL,
 							'received_by'	=> ($line[0]) ? $current_user->user_login : NULL
-					));			
-					$tests_loaded++;
+					));
+					if($swab_id > 0){
+						$tests_loaded++;
+					}
+					else {  $error = "test hasn't loaded correctly : ".$line[1]; break; }
 				}
 			}
 		}
