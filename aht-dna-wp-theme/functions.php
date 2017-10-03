@@ -160,7 +160,7 @@ function filter_wp_nav_menu_items($items, $args) {
 	foreach ( $items_array as $item ) {
 		if (preg_match ( "/fa-\S+/i", $item, $matches )) {
 			$item = preg_replace ( '/' . $matches [0] . ' /', '', $item );
-			$item = preg_replace ( '/<i class="fa">/', '<i class="fa ' . $matches [0] . '">', $item );
+			$item = preg_replace ( '/<i class="fa">/', '<i class="fa fa-fw ' . $matches [0] . '">', $item );
 		}
 		array_push ( $new_items, $item );
 	}
