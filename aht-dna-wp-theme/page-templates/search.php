@@ -11,7 +11,8 @@ if (preg_match('/^[a-zA-Z]{2,5}\d{1,3}$/', $query)){
 	$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, ShippingCountry, count(*) as TestCount 
 			from orders left outer join client on client.id=client_id 
 			left outer join order_tests on orders.id=order_id
-			WHERE PortalID='".$query."'";
+			WHERE PortalID='".$query."'
+			GROUP BY orders.id";
 	$results = $wpdb->get_results($sql);
 	if (count($results) == 1 && $results[0]->ID > 0){
 		wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
@@ -27,7 +28,8 @@ if (preg_match('/^\d{1,5}\/\d{1,5}$/', $query)){
 	$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, ShippingCountry, count(*) as TestCount 
 			from orders left outer join client on client.id=client_id 
 			left outer join order_tests on orders.id=order_id
-			WHERE orders.id='".$sample_details[0]."'";
+			WHERE orders.id='".$sample_details[0]."'
+			GROUP BY orders.id";
 	$results = $wpdb->get_results($sql);	
 	if (count($results) == 1 && $results[0]->ID > 0){
 		wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
@@ -96,6 +98,18 @@ $sql = "select a.id as ID, a.*, c.* from animal a inner join client c on c.id=cl
 $results = $wpdb->get_results($sql);
 if(!isset($allResults['animals'])) { $allResults['animals'] = array(); }
 if (count($results) >= 1){ $allResults['animals'] = array_merge($allResults['animals'], $results); }
+
+$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, ShippingCountry, count(*) as TestCount
+			from orders left outer join client on client.id=client_id
+			left outer join order_tests on orders.id=order_id
+			WHERE orders.id='".$query."' OR orders.OrderID='".$query."' or PortalID='".$query."'
+			GROUP BY orders.id";
+$results = $wpdb->get_results($sql);
+if(!isset($allResults['orders'])) { $allResults['orders'] = array(); }
+if (count($results) >= 1){ $allResults['orders'] = array_merge($allResults['orders'], $results); }
+
+
+
 
 if (preg_match('/ AND /i', $query)){
 	//Assume pet name AND surname
