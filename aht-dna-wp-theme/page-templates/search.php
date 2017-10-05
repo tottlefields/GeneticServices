@@ -84,7 +84,7 @@ if (preg_match('/@/', $query)){
 	$sql = "select c.id as ID, c.* from client c where Email ='".$query."'";
 	$results = $wpdb->get_results($sql);
 	if (count($results) == 1 && $results[0]->id > 0){
-		wp_redirect(get_site_url().'/clients/view?id='.$results[0]->id);
+		wp_redirect(get_site_url().'/clients/view?id='.$results[0]->ID);
 		exit;	
 	}
 	if(!isset($allResults['clients'])) { $allResults['clients'] = array(); }
@@ -96,7 +96,7 @@ if (preg_match('/^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/i', $query)){
 	$sql = "select c.id as ID, c.* from client c where REPLACE(Postcode, ' ', '') = '".str_replace(' ', '', $query)."'";
 	$results = $wpdb->get_results($sql);
 	if (count($results) == 1 && $results[0]->id > 0){
-		wp_redirect(get_site_url().'/clients/view?id='.$results[0]->id);
+		wp_redirect(get_site_url().'/clients/view?id='.$results[0]->ID);
 		exit;	
 	}
 	if(!isset($allResults['clients'])) { $allResults['clients'] = array(); }
