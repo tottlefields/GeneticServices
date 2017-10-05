@@ -322,7 +322,7 @@ function instructionsSection() {
 						'Take swabs as detailed on the enclosed instruction sheet.',
 						'Apply the label provided, detailing the name of the dog and AHT reference number, to the outside of the envelope.',
 						'Place both swabs in the envelope. No packaging or paperwork should be placed in this envelope.',
-						'The envelope containing the swabs, and this form, should be placed in the outer envelope for return. A return address label has been provided for your convenience.' ],
+						'The envelope containing the swabs, and this form, should be placed in the outer envelope for return.' ],
 				margin : [ 25, 0, 0, 5 ]
 			},
 			{
@@ -585,7 +585,7 @@ function labelsSection(client, test) {
 							layout : 'noBorders',
 							absolutePosition : {
 								x : 320,
-								y : 730
+								y : 720
 							}
 						} ]
 					} ] ]
