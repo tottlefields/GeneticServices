@@ -6,6 +6,22 @@ global $wpdb;
 $query = $_REQUEST['q'];
 $allResults = array();
 
+if (preg_match('/^AHT\d{1,5}$/', $query)){
+	//Dennis (AHT) ID - between 1 & 5 digits [OrderID] pre-pended by 'AHT'
+	$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, ShippingCountry, count(*) as TestCount 
+			from orders left outer join client on client.id=client_id 
+			left outer join order_tests on orders.id=order_id
+			WHERE orders.id='".str_replace('AHT', '', $query)."'
+			GROUP BY orders.id";
+	$results = $wpdb->get_results($sql);
+	if (count($results) == 1 && $results[0]->ID > 0){
+		wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
+		exit;	
+	}
+	if(!isset($allResults['orders'])) { $allResults['orders'] = array(); }
+	if (count($results) >= 1){ $allResults['orders'] = array_merge($allResults['orders'], $results); }
+}
+
 if (preg_match('/^[a-zA-Z]{2,5}\d{1,3}$/', $query)){
 	//Portal ID - between 2 & 5 letters followed by between 1 and 3 digits
 	$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, ShippingCountry, count(*) as TestCount 
@@ -68,7 +84,7 @@ if (preg_match('/@/', $query)){
 	$sql = "select c.id as ID, c.* from client c where Email ='".$query."'";
 	$results = $wpdb->get_results($sql);
 	if (count($results) == 1 && $results[0]->id > 0){
-		wp_redirect(get_site_url().'/clients/view?id='.$results[0]->id);
+		wp_redirect(get_site_url().'/clients/view?id='.$results[0]->ID);
 		exit;	
 	}
 	if(!isset($allResults['clients'])) { $allResults['clients'] = array(); }
@@ -80,7 +96,7 @@ if (preg_match('/^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/i', $query)){
 	$sql = "select c.id as ID, c.* from client c where REPLACE(Postcode, ' ', '') = '".str_replace(' ', '', $query)."'";
 	$results = $wpdb->get_results($sql);
 	if (count($results) == 1 && $results[0]->id > 0){
-		wp_redirect(get_site_url().'/clients/view?id='.$results[0]->id);
+		wp_redirect(get_site_url().'/clients/view?id='.$results[0]->ID);
 		exit;	
 	}
 	if(!isset($allResults['clients'])) { $allResults['clients'] = array(); }

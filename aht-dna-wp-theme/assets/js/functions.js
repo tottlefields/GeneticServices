@@ -1,3 +1,5 @@
+var address = 'Genetic Services, Animal Health Trust, Lanwades Park, Kentford, Newmarket, Suffolk, CB8 7UU';
+
 function addVetDetails() {
 	var vetDetails;
 	try {
@@ -146,7 +148,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 		success : function(details) {
 			OrderDetails = details.order;
 			TestDetails = details.order.test_details;
-			ClientDetails = details.client;			
+			ClientDetails = details.client;
 
 			/* CLIENT DETAILS */
 			client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id=' + ClientDetails.id
@@ -161,7 +163,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
 
 			clientDiv.html(client_panel);
-			
+
 			clientAddress = [ ClientDetails.Address ];
 			if (ClientDetails.Address2 !== null && ClientDetails.Address2 !== "")
 				clientAddress.push(ClientDetails.Address2);
@@ -190,7 +192,6 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			$('#client_ShippingPostcode').attr('value', ClientDetails.ShippingPostcode);
 			$('#client_ShippingCounty').attr('value', ClientDetails.ShippingCounty);
 			$('#client_ShippingCountry').attr('value', ClientDetails.ShippingCountry);
-			
 
 			/* ANIMAL DETAILS */
 			animal_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/animals/view?id=' + TestDetails.animal_id
@@ -212,31 +213,37 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			$('#animal_TattooOrChip').attr('value', TestDetails.TattooOrChip);
 			$('#animal_BirthDate').attr('value', TestDetails.DOB);
 			$('#animal_Colour').attr('value', TestDetails.Colour);
-			$("#animal_Sex-"+TestDetails.sex).prop("checked", true)
-			
+			$("#animal_Sex-" + TestDetails.sex).prop("checked", true)
+
 			/* TEST/ORDER DETAILS */
-			//console.log(OrderDetails);
+			// console.log(OrderDetails);
 			order_panel = '';
-			//order_panel = '<div class="row"><div class="col-sm-4">Sample ID</div><div class="col-sm-8"><a href="/samples/view?id=' + TestDetails.id
-			//	+ '"><strong>#' + TestDetails.id + '</strong></a></div></div>';
-			//order_panel += '<div class="row"><div class="col-sm-4">Test</div><div class="col-sm-8">' + TestDetails.test_name + '</div></div>';
-			//if(TestDetails.no_results > 1){
-			//	subTests = TestDetails.sub_tests.split(":");
-			//	order_panel += '<div class="row"><div class="col-sm-4">Sub Tests</div><div class="col-sm-8">' + subTests.join(" ") + '</div></div>';
-			//}
+			// order_panel = '<div class="row"><div class="col-sm-4">Sample
+			// ID</div><div class="col-sm-8"><a href="/samples/view?id=' +
+			// TestDetails.id
+			// + '"><strong>#' + TestDetails.id + '</strong></a></div></div>';
+			// order_panel += '<div class="row"><div
+			// class="col-sm-4">Test</div><div class="col-sm-8">' +
+			// TestDetails.test_name + '</div></div>';
+			// if(TestDetails.no_results > 1){
+			// subTests = TestDetails.sub_tests.split(":");
+			// order_panel += '<div class="row"><div class="col-sm-4">Sub
+			// Tests</div><div class="col-sm-8">' + subTests.join(" ") +
+			// '</div></div>';
+			// }
 			order_panel += '<div class="row"><div class="col-sm-12 small">';
-			//order_panel += '<h3>Progress</h3>';
+			// order_panel += '<h3>Progress</h3>';
 			order_panel += '<table class="table table-striped table-condensed"><tbody>';
-			order_panel += '<tr><th>Ordered</th><td>'+OrderDetails.OrderDate+'</td><td><span style="color:#BBBBBB">N/A</span></td></tr>';
-			order_panel += '<tr><th>Dispatched</th><td>'+TestDetails.kit_sent+'</td><td>'+TestDetails.sent_by+'</td></tr>';
-			order_panel += '<tr><th>Returned</th><td>'+TestDetails.returned_date+'</td><td>'+TestDetails.received_by+'</td></tr>';
+			order_panel += '<tr><th>Ordered</th><td>' + OrderDetails.OrderDate + '</td><td><span style="color:#BBBBBB">N/A</span></td></tr>';
+			order_panel += '<tr><th>Dispatched</th><td>' + TestDetails.kit_sent + '</td><td>' + TestDetails.sent_by + '</td></tr>';
+			order_panel += '<tr><th>Returned</th><td>' + TestDetails.returned_date + '</td><td>' + TestDetails.received_by + '</td></tr>';
 			order_panel += '<tr><th>Processed</th><td></td><td></td></tr>';
 			order_panel += '<tr><th>Analysed</th><td></td><td></td></tr>';
 			order_panel += '<tr><th>Resulted</th><td></td><td></td></tr>';
 			order_panel += '</tbody></table/></div></div>';
 			orderDiv.html(order_panel);
-			
-			$('#swab_id').text('#'+TestDetails.id);
+
+			$('#swab_id').text('#' + TestDetails.id);
 			$('#swab_test_name').text(TestDetails.test_name);
 			$('#swab_breed').text(TestDetails.breed);
 
@@ -318,12 +325,14 @@ function instructionsSection() {
 				style : 'strong'
 			},
 			{
-				ol : [
-						'Take swabs as detailed on the enclosed instruction sheet.',
+				ol : [ 'Take swabs as detailed on the enclosed instruction sheet.',
 						'Apply the label provided, detailing the name of the dog and AHT reference number, to the outside of the envelope.',
-						'Place both swabs in the envelope. No packaging or paperwork should be placed in this envelope.',
-						'The envelope containing the swabs, and this form, should be placed in the outer envelope for return. A return address label has been provided for your convenience.' ],
-				margin : [ 25, 0, 0, 5 ]
+						'Place both swabs in the envelope. No packaging or paperwork should be placed in this envelope.', {
+							text : [ 'The envelope containing the swabs, and this form, should be placed in another envelope for return to ', {
+								text : address, bold: true, fontSize : 10
+							} ]
+						}, ],
+				margin : [ 20, 0, 0, 5 ]
 			},
 			{
 				text : 'Please note that any changes to any of the details on this form should be submitted via Email, using the address registered to this order. We are unable to accept handmade alterations.'
@@ -450,7 +459,7 @@ function testDetails(test, swab_no) {
 			text : "Order No.: ",
 			style : 'strong'
 		}, {
-			text : test.order_id,
+			text : "AHT" + test.order_id,
 			style : 'pre'
 		} ],
 		margin : [ 0, 5, 0, 5 ]
@@ -553,6 +562,13 @@ function labelsSection(client, test) {
 						}, {
 							table : {
 								body : [ [ {
+									text : 'Order No.',
+									style : 'vetStrong'
+								}, {
+									text : "AHT" + test.order_id,
+									style : 'vet',
+									color : 'black'
+								} ], [ {
 									text : 'Test',
 									style : 'vetStrong'
 								}, {
@@ -578,13 +594,12 @@ function labelsSection(client, test) {
 							layout : 'noBorders',
 							absolutePosition : {
 								x : 320,
-								y : 730
+								y : 720
 							}
 						} ]
 					} ] ]
 		}
 	} ];
-
 }
 
 var ddLetter = {

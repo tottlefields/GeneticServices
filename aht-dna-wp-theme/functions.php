@@ -113,7 +113,7 @@ function mytheme_enqueue_scripts() {
 	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array (
 			'jquery',
 			'datatables-js' 
-	), '0.1', true );
+	), '0.1.1', true );
 	wp_enqueue_script ( 'js-functions' );
 	
 	// register template-specific scripts
