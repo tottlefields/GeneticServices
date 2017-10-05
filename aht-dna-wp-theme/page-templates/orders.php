@@ -38,7 +38,7 @@
 			echo '
 			<tr>
 				<td class="text-center">'.$order->ID.'</td>
-				<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$order->ID.'">'.$order->ID.'</a></td>
+				<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$order->ID.'">AHT'.$order->ID.'</a></td>
 				<td class="text-center">'.$order->webshop_id.'</td>
 				<td class="text-center">'.$order_date->format('d/m/Y').'</td>
 				<!-- <td>'.$order->ReportFormat.'</td>-->

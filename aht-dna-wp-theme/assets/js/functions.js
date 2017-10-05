@@ -450,7 +450,7 @@ function testDetails(test, swab_no) {
 			text : "Order No.: ",
 			style : 'strong'
 		}, {
-			text : test.order_id,
+			text : "AHT"+test.order_id,
 			style : 'pre'
 		} ],
 		margin : [ 0, 5, 0, 5 ]
@@ -553,6 +553,13 @@ function labelsSection(client, test) {
 						}, {
 							table : {
 								body : [ [ {
+									text : 'Order No.',
+									style : 'vetStrong'
+								}, {
+									text : "AHT"+test.order_id,
+									style : 'vet',
+									color : 'black'
+								} ], [ {
 									text : 'Test',
 									style : 'vetStrong'
 								}, {
@@ -584,7 +591,6 @@ function labelsSection(client, test) {
 					} ] ]
 		}
 	} ];
-
 }
 
 var ddLetter = {
