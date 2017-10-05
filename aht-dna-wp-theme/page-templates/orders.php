@@ -10,7 +10,7 @@
 
 	$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, ShippingCountry, count(*) as TestCount 
 	from orders left outer join client on client.id=client_id 
-	left outer join order_tests on orders.id=order_id where kit_sent is null group by orders.id order by OrderDate desc limit 50";
+	left outer join order_tests on orders.id=order_id where kit_sent is null group by orders.id order by OrderDate desc";
 	$results = $wpdb->get_results($sql, OBJECT );
 	
 	if ( $results ){
