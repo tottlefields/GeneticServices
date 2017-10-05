@@ -326,7 +326,8 @@ function instructionsSection() {
 				margin : [ 25, 0, 0, 5 ]
 			},
 			{
-				text : 'Please note that any changes to any of the details on this form should be submitted via Email, using the address registered to this order. We are unable to accept handmade alterations.'
+				text : 'Please note that any changes to any of the details on this form should be submitted via Email, using the address registered to this order. We are unable to accept handmade alterations.',
+				margin : [ 0, 5, 0, 5 ]
 			} ];
 }
 
