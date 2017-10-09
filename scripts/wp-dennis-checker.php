@@ -1,7 +1,7 @@
 <?php
 global $wpdb;
 
-$post_ids = array(trim(fgets(STDIN)));
+$post_ids = explode(',', trim(fgets(STDIN)));
 
 $args = array(
 		'post_type'		=> 'orders',
