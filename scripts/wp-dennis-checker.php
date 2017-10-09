@@ -33,6 +33,7 @@ foreach( $posts as $post ) {
 	$clientId = $post->post_author;
 	
 	if(!isset($orders[$orderId])){
+		echo "OrderID = ".$orderId."\n";
 		
 		$reportFormat = 'EMAIL';
 		if (get_field('report-by-post-pm') != 'FALSE') { $reportFormat = 'POST';}
@@ -132,6 +133,28 @@ foreach( $posts as $post ) {
 	$MAX_ID = $post->ID;
 }
 
-//echo $MAX_ID."\n";
+foreach ($orders as $orderId => $order){
+	$wpdb->insert('orders', array(
+			'OrderID' => $orderId,
+			'ClientID' => $order['ClientID'],
+			'OrderDate' => $order['OrderDate'],
+			'ReportFormat' => $order['ReportFormat'],
+			'VetReportFormat' => $order['VetReportFormat'],
+			'Paid' => $order['Paid'],
+			'AgreeResearch' => $order['AgreeResearch']
+	));
+	if ($wpdb->last_error) {
+		echo 'ERROR detected when inserting order with OrderID='.$orderId."\n" . $wpdb->last_error;
+	}
+
+	foreach ($order['tests'] as $test){
+		$wpdb->insert('order_tests', $test);
+		if ($wpdb->last_error) {
+			echo 'ERROR detected when inserting test row with OrderID='.$orderId."\n" . $wpdb->last_error;
+		}
+
+	}
+}
+
 
 ?>
