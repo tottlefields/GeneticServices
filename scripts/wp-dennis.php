@@ -5,7 +5,7 @@ $MAX_ID = trim(fgets(STDIN)); // reads one line from STDIN;
 if(!isset($MAX_ID) || $MAX_ID == 'NULL'){ $MAX_ID = 0; }
 $post_ids = array();
 
-//echo "MAX ID = ".$MAX_ID."\n";
+echo "MAX ID = ".$MAX_ID."\n";
 
 // Get all the IDs you want to choose from
 $sql = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE ID > %d", $MAX_ID );
@@ -32,7 +32,6 @@ $posts = get_posts($args);
 global $post;
 foreach( $posts as $post ) {
 	$postMeta = get_post_custom($post->ID);
-	$MAX_ID = $post->ID;
 	
 	if(!get_field('paid-pm')){
 		continue;
@@ -136,6 +135,7 @@ foreach( $posts as $post ) {
 		$animals[$animalId] = $animal;
 		$wpdb->replace('animal', $animal);
 	}
+	$MAX_ID = $post->ID;
 }
 
 foreach ($orders as $orderId => $order){
@@ -148,8 +148,16 @@ foreach ($orders as $orderId => $order){
 			'Paid' => $order['Paid'],
 			'AgreeResearch' => $order['AgreeResearch']
 	));
+	if ($wpdb->last_error) {
+		echo 'ERROR detected when inserting order with OrderID='.$orderId."\n" . $wpdb->last_error;
+	}
+
 	foreach ($order['tests'] as $test){
 		$wpdb->insert('order_tests', $test);
+		if ($wpdb->last_error) {
+	                echo 'ERROR detected when inserting test row with OrderID='.$orderId."\n" . $wpdb->last_error;
+        	}
+
 	}
 }
 
