@@ -55,7 +55,7 @@ foreach( $posts as $post ) {
 				'AgreeResearch' => $research,
 				'tests' => array()
 		);
-		print_r($orders[$orderId]);
+		//print_r($orders[$orderId]);
 	}
 	
 	
@@ -73,7 +73,7 @@ foreach( $posts as $post ) {
 	);	
 	array_push($orders[$orderId]['tests'], $test);
 	
-	echo "Test (".$testDataMeta['test-code-pm'][0].") added to order (".$orderId.")\n";
+	//echo "Test (".$testDataMeta['test-code-pm'][0].") added to order (".$orderId.")\n";
 	
 	if(!isset($clients[$clientId])){
 		$address = explode("\n", str_replace("\r", '', $postMeta['address-pm'][0]));
@@ -106,7 +106,6 @@ foreach( $posts as $post ) {
 		$clients[$clientId] = $client;
 		$wpdb->replace('client', $client);
 	}
-	print_r($clients[$clientId]);
 	
 	$animalId = $postMeta['animal-id-pm'][0];
 	if(!isset($animals[$animalId])){
@@ -129,11 +128,10 @@ foreach( $posts as $post ) {
 		$animals[$animalId] = $animal;
 		$wpdb->replace('animal', $animal);
 	}
-	print_r($animals[$animalId]);
 	
 	$MAX_ID = $post->ID;
 }
 
-echo $MAX_ID."\n";
+//echo $MAX_ID."\n";
 
 ?>
