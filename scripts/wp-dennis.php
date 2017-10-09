@@ -119,7 +119,7 @@ foreach( $posts as $post ) {
 	if(!isset($animals[$animalId])){
 		$breed = get_term_by('id', $postMeta['breed-id-pm'][0], 'test-breeds');
 		$parent = get_term_by('id', $breed->parent, 'test-breeds');
-		$animalData = $wpdb->get_row("SELECT * FROM wp_animals WHERE id='".$animalId."'", 'ARRAY_A');
+		$animalData = $wpdb->get_row("SELECT *, str_to_date(`birth-date`, '%d/%m/%Y') as dob FROM wp_animals WHERE id='".$animalId."'", 'ARRAY_A');
 		$animal = array(
 				'AnimalID' => $animalId,
 				'ClientID' => $clientId,
@@ -127,7 +127,7 @@ foreach( $posts as $post ) {
 				'Breed' => $breed->name,
 				'RegisteredName' => $animalData['registered-name'],
 				'RegistrationNo' => $animalData['registration-number'],
-				'Sex' => $animalData['sex'],
+				'Sex' => substr($animalData['sex'], 0, 1),
 				'BirthDate' => $animalData['dob'],
 				'TattooOrChip' => $animalData['tattoo-chip'],
 				'PetName' => $animalData['pet-name'],
