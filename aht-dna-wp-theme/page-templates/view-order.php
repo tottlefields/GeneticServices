@@ -28,7 +28,12 @@ if (isset($_REQUEST['order_id'])){
 				}
 			}
 		}
-		$wpdb->update('client', $data, $where);
+		if ($_REQUEST['client_id'] > 0){ $wpdb->update('client', $data, $where); }
+		else{
+			$wpdb->insert('client', $data);
+			$client_id = $wpdb->insert_id;
+			$wpdb->update('orders', array('client_id' => $client_id), array('id' => $_REQUEST['id']));
+		}
 		wp_redirect(get_site_url().'/orders/view/?id='.$_REQUEST['id']);
 		exit;	
 	}
