@@ -1,23 +1,11 @@
 <?php
 global $wpdb;
 
-$MAX_ID = trim(fgets(STDIN)); // reads one line from STDIN;
-if(!isset($MAX_ID) || $MAX_ID == 'NULL'){ $MAX_ID = 0; }
-$post_ids = array();
-
-echo "MAX ID = ".$MAX_ID."\n";
-
-// Get all the IDs you want to choose from
-$sql = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE ID > %d", $MAX_ID );
-$results = $wpdb->get_results( $sql );
-foreach ( $results as $row ) { array_push( $post_ids, $row->ID ); }
-
-if (count($post_ids) == 0){ exit; }
+$post_ids = explode(',', trim(fgets(STDIN)));
 
 $args = array(
 		'post_type'		=> 'orders',
 		'post_status'	=> array('publish'),
-//		'author'		=> '16213',
 		'order'			=> 'ASC',
 		'numberposts'	=> -1,
 		'post__in' 		=> $post_ids
@@ -40,10 +28,12 @@ foreach( $posts as $post ) {
 	$orderId = str_replace('Order #', '', get_the_title());
 	$a = explode(' &#8211;', $orderId);
 	$orderId = $a[0];
+	echo "OrderID = ".$orderId."\n";
 
 	$clientId = $post->post_author;
 	
 	if(!isset($orders[$orderId])){
+		echo "OrderID = ".$orderId."\n";
 		
 		$reportFormat = 'EMAIL';
 		if (get_field('report-by-post-pm') != 'FALSE') { $reportFormat = 'POST';}
@@ -66,7 +56,9 @@ foreach( $posts as $post ) {
 				'AgreeResearch' => $research,
 				'tests' => array()
 		);
+		//print_r($orders[$orderId]);
 	}
+	
 	
 	//Test Data
 	$testDataPost = get_post($postMeta['test-id-pm'][0]);
@@ -81,6 +73,8 @@ foreach( $posts as $post ) {
 			'VetID' => NULL,
 	);	
 	array_push($orders[$orderId]['tests'], $test);
+	
+	//echo "Test (".$testDataMeta['test-code-pm'][0].") added to order (".$orderId.")\n";
 	
 	if(!isset($clients[$clientId])){
 		$address = explode("\n", str_replace("\r", '', $postMeta['address-pm'][0]));
@@ -118,7 +112,7 @@ foreach( $posts as $post ) {
 	if(!isset($animals[$animalId])){
 		$breed = get_term_by('id', $postMeta['breed-id-pm'][0], 'test-breeds');
 		$parent = get_term_by('id', $breed->parent, 'test-breeds');
-		$animalData = $wpdb->get_row("SELECT *, str_to_date(`birth-date`, '%d/%m/%Y') as dob FROM wp_animals WHERE id='".$animalId."'", 'ARRAY_A');
+		$animalData = $wpdb->get_row("SELECT * FROM wp_animals WHERE id='".$animalId."'", 'ARRAY_A');
 		$animal = array(
 				'AnimalID' => $animalId,
 				'ClientID' => $clientId,
@@ -126,7 +120,7 @@ foreach( $posts as $post ) {
 				'Breed' => $breed->name,
 				'RegisteredName' => $animalData['registered-name'],
 				'RegistrationNo' => $animalData['registration-number'],
-				'Sex' => substr($animalData['sex'], 0, 1),
+				'Sex' => $animalData['sex'],
 				'BirthDate' => $animalData['dob'],
 				'TattooOrChip' => $animalData['tattoo-chip'],
 				'PetName' => $animalData['pet-name'],
@@ -135,6 +129,7 @@ foreach( $posts as $post ) {
 		$animals[$animalId] = $animal;
 		$wpdb->replace('animal', $animal);
 	}
+	
 	$MAX_ID = $post->ID;
 }
 
@@ -155,14 +150,11 @@ foreach ($orders as $orderId => $order){
 	foreach ($order['tests'] as $test){
 		$wpdb->insert('order_tests', $test);
 		if ($wpdb->last_error) {
-	                echo 'ERROR detected when inserting test row with OrderID='.$orderId."\n" . $wpdb->last_error;
-        	}
+			echo 'ERROR detected when inserting test row with OrderID='.$orderId."\n" . $wpdb->last_error;
+		}
 
 	}
 }
 
-fclose(STDOUT);
-$STDOUT = fopen('last_order', 'wb');
-echo $MAX_ID."\n";
 
 ?>

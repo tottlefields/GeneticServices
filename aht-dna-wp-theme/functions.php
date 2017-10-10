@@ -80,6 +80,9 @@ function mytheme_enqueue_scripts() {
 	), '1.10.15', true );
 	wp_enqueue_script ( 'datatables-js' );
 	
+	wp_register_script ( 'dt-ukdatesort-js', '//cdn.datatables.net/plug-ins/1.10.16/sorting/date-uk.js', array ('bootstrap-js'), '1.10.16', true);
+	wp_enqueue_script ( 'dt-ukdatesort-js' );
+	
 	// Bootstrap Toggle
 	wp_register_script ( 'bs-toggle-js', '//cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js', array (
 			'jquery' 

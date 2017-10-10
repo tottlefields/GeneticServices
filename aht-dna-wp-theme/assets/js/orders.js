@@ -2,7 +2,7 @@ jQuery(document).ready(function($) {
 	var details = $('#order_details');
 	var table = $('#orders').DataTable({
 		select : true,
-		pageLength: 20,
+		pageLength : 20,
 		order : [ [ 1, 'desc' ] ],
 		columnDefs : [ {
 			targets : [ 5, 6 ],
@@ -10,6 +10,9 @@ jQuery(document).ready(function($) {
 		}, {
 			targets : [ 0, 2 ],
 			visible : false
+		}, {
+			type : 'date-uk',
+			targets : 3
 		} ]
 	});
 
