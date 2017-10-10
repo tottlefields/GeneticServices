@@ -456,7 +456,7 @@ function testDetails(test, swab_no) {
 		margin : [ 0, 5, 0, 5 ]
 	}, {
 		text : [ {
-			text : "Order No.: ",
+			text : "Order: ",
 			style : 'strong'
 		}, {
 			text : "AHT" + test.order_id,
