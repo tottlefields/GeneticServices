@@ -2,15 +2,10 @@ jQuery(document).ready(function($) {
 	var details = $('#order_details');
 	var table = $('#orders').DataTable({
 		select : true,
-<<<<<<< HEAD
 		dom : '<"toolbar">frtip',
 		//pageLength: 20,
 		paging : false,
 		order : [ [ 2, 'desc' ] ],
-=======
-		pageLength : 20,
-		order : [ [ 1, 'desc' ] ],
->>>>>>> branch 'master' of https://github.com/tottlefields/GeneticServices.git
 		columnDefs : [ {
 			targets : [ 1,6,7 ],
 			orderable : false
@@ -19,11 +14,7 @@ jQuery(document).ready(function($) {
 			visible : false
 		}, {
 			type : 'date-uk',
-<<<<<<< HEAD
 			targets : 4
-=======
-			targets : 3
->>>>>>> branch 'master' of https://github.com/tottlefields/GeneticServices.git
 		} ]
 	});
 	
