@@ -106,6 +106,9 @@ foreach( $posts as $post ) {
 		);
 		$clients[$clientId] = $client;
 		$wpdb->replace('client', $client);
+		if ($wpdb->last_error) {
+			echo 'ERROR detected when inserting client with ClientID=' . $clientId . "\n" . $wpdb->last_error;
+		}
 	}
 	
 	$animalId = $postMeta['animal-id-pm'][0];
@@ -128,6 +131,9 @@ foreach( $posts as $post ) {
 		);
 		$animals[$animalId] = $animal;
 		$wpdb->replace('animal', $animal);
+		if ($wpdb->last_error) {
+			echo 'ERROR detected when inserting client with ClientID=' . $clientId . "\n" . $wpdb->last_error;
+		}
 	}
 	
 	$MAX_ID = $post->ID;
