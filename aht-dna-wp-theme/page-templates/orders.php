@@ -18,6 +18,7 @@
 		<table id="orders" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
 			<thead>
 				<th></th>
+				<td class="text-center"><input type="checkbox" id="checkAll" /></td>
 				<th class="text-center">OrderID</th>
 				<th class="text-center">Webshop</th>
 				<th class="text-center">Date</th>
@@ -38,6 +39,7 @@
 			echo '
 			<tr>
 				<td class="text-center">'.$order->ID.'</td>
+				<td class="text-center"><input type="checkbox" class="checkboxRow" name="orderList[]" value="'.$order->ID.'" /></td>
 				<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$order->ID.'">AHT'.$order->ID.'</a></td>
 				<td class="text-center">'.$order->webshop_id.'</td>
 				<td class="text-center">'.$order_date->format('d/m/Y').'</td>

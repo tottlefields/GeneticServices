@@ -66,27 +66,29 @@ function generatePDFs(order_ids) {
 		dataType : "json",
 		url : DennisAjax.ajax_url,
 		data : data,
-		success : function(details) {
-			OrderDetails = details.order;
-			ClientDetails = details.client;
-
+		success : function(results) {
 			ddLetter.content = [];
-
-			for (i = 0; i < OrderDetails.test_details.length; i++) {
-				var test = OrderDetails.test_details[i];
-				for (j = 0; j < test.no_swabs; j++) {
-					ddLetter.content.push(letterHeader(), testDetails(test, j), instructionsSection(), vetSection(), labelsSection(ClientDetails, test));
-					if (i === (OrderDetails.test_details.length - 1) && j === (test.no_swabs - 1)) {
-						ddLetter.content.push({
-							text : '',
-							style : 'small'
-						});
-					} else {
-						ddLetter.content.push({
-							text : '',
-							style : 'small',
-							pageBreak : 'after'
-						});
+			for (var x=0; x<results.length; x++){
+				details = results[x];
+				OrderDetails = details.order;
+				ClientDetails = details.client;
+	
+				for (i = 0; i < OrderDetails.test_details.length; i++) {
+					var test = OrderDetails.test_details[i];
+					for (j = 0; j < test.no_swabs; j++) {
+						ddLetter.content.push(letterHeader(), testDetails(test, j), instructionsSection(), vetSection(), labelsSection(ClientDetails, test));
+						if (i === (OrderDetails.test_details.length - 1) && j === (test.no_swabs - 1) && x === (results.length - 1)) {
+							ddLetter.content.push({
+								text : '',
+								style : 'small'
+							});
+						} else {
+							ddLetter.content.push({
+								text : '',
+								style : 'small',
+								pageBreak : 'after'
+							});
+						}
 					}
 				}
 			}
@@ -109,8 +111,8 @@ function getOrders(orderId, div) {
 		url : DennisAjax.ajax_url,
 		data : data,
 		success : function(details) {
-			OrderDetails = details.order;
-			ClientDetails = details.client;
+			OrderDetails = details[0].order;
+			ClientDetails = details[0].client;
 			order_panel = '';
 			for (i in OrderDetails.test_details) {
 				test = OrderDetails.test_details[i];
@@ -122,7 +124,7 @@ function getOrders(orderId, div) {
 				}
 			}
 
-			client_panel = createClientPanel(details.client);
+			client_panel = createClientPanel(ClientDetails);
 			div.append('<h2><a href="/orders/view?id=' + OrderDetails.ID + '">Order #' + OrderDetails.ID + '</a></h2>');
 			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Order Details</h3></div><div class="panel-body">'
 					+ order_panel + '</div></div>');
@@ -145,7 +147,8 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 		dataType : "json",
 		url : DennisAjax.ajax_url,
 		data : data,
-		success : function(details) {
+		success : function(results) {
+			details = results[0];
 			OrderDetails = details.order;
 			TestDetails = details.order.test_details;
 			ClientDetails = details.client;
