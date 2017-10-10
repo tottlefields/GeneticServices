@@ -11,6 +11,7 @@ add_action( 'wp_ajax_nopriv_breed_tests', 'get_breed_tests' );
 	 global $wpdb; // this is how you get access to the database
 	
 	 $return = array();
+	 echo $_POST['orderId'];
 	 $orderId = intval( $_POST['orderId'] );
 	 $swabId = intval( $_POST['swabId'] );
 	
