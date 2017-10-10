@@ -562,7 +562,7 @@ function labelsSection(client, test) {
 						}, {
 							table : {
 								body : [ [ {
-									text : 'Order No.',
+									text : 'Order',
 									style : 'vetStrong'
 								}, {
 									text : "AHT" + test.order_id,
