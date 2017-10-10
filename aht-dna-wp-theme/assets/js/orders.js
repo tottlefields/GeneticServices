@@ -3,8 +3,9 @@ jQuery(document).ready(function($) {
 	var table = $('#orders').DataTable({
 		select : true,
 		dom : '<"toolbar">frtip',
-		//pageLength: 20,
-		paging : false,
+		pageLength: 20,
+		paging : true,
+		lengthChange: false,
 		order : [ [ 2, 'desc' ] ],
 		columnDefs : [ {
 			targets : [ 1,6,7 ],
