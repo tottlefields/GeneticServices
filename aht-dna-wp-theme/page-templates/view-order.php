@@ -168,11 +168,15 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 				
 				$portalID = ($test->PortalID == '') ? '<span style="color:#BBBBBB">N/A</span>' : $test->PortalID;
 				
+				$other_id = '';
+				if (isset($test->PortalID)){ $other_id = $test->PortalID; }
+				elseif (isset($test->OrderID)) { $other_id = $test->OrderID; }
+				
 				echo '
 				<tr>
 					<td>'.$order_id.'</td>
 					<td>'.$test->id.'</td>
-					<td class="text-center">'.$test->id.'<span class="hidden-sm hidden-xs">&nbsp;<em><small>'.$test->PortalID.'</small></em></td>
+					<td class="text-center">'.$test->id.'<span class="hidden-sm hidden-xs">&nbsp;<em><small>'.$other_id.'</small></em></td>
 					<td>'.$test->test_name.'</td>
 					<td>'.$test->breed.'</td>
 					<!-- <td>'.$order->ReportFormat.'</td>-->

@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
 			targets : [ 1,6,7 ],
 			orderable : false
 		}, {
-			targets : [ 0, 3 ],
+			targets : [ 0 ],
 			visible : false
 		}, {
 			type : 'date-uk',
