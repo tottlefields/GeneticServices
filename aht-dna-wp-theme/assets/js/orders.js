@@ -64,7 +64,6 @@ jQuery(document).ready(function($) {
 				orderIds.push($(this).val());
 			}
 		});
-		console.log(orderIds);
 		generatePDFs(orderIds);
 	});
 	

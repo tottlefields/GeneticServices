@@ -1,6 +1,8 @@
 .top-logo { padding:0px; }
 .toolbar { float:left; }
 
+tr.selected ul.dropdown-menu a { color: #646464 !important; }
+
 
 
 /* Font Awesome
