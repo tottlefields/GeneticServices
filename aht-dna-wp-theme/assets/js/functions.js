@@ -54,11 +54,12 @@ function showVetModal() {
 	});
 }
 
-function generatePDFs(order_ids) {
+function generatePDFs(order_ids, swabID) {
 
 	var data = {
-		'action' : 'order_details',
-		'orderId' : order_ids
+		'action'  : 'order_details',
+		'orderId' : order_ids,
+		'swabId'  : swabID
 	};
 
 	jQuery.ajax({
@@ -95,7 +96,24 @@ function generatePDFs(order_ids) {
 			pdfMake.createPdf(ddLetter).open();
 		}
 	});
+}
 
+function cancelTest(swabID){
+
+	var data = {
+		'action'  : 'cancel_test',
+		'swabId'  : swabID
+	};
+
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(results) {
+			location.reload();
+		}
+	});
 }
 
 function getOrders(orderId, div) {
@@ -150,7 +168,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 		success : function(results) {
 			details = results[0];
 			OrderDetails = details.order;
-			TestDetails = details.order.test_details;
+			TestDetails = details.order.test_details[0];
 			ClientDetails = details.client;
 
 			/* CLIENT DETAILS */
@@ -219,21 +237,8 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			$("#animal_Sex-" + TestDetails.sex).prop("checked", true)
 
 			/* TEST/ORDER DETAILS */
-			// console.log(OrderDetails);
+			//console.log(TestDetails);
 			order_panel = '';
-			// order_panel = '<div class="row"><div class="col-sm-4">Sample
-			// ID</div><div class="col-sm-8"><a href="/samples/view?id=' +
-			// TestDetails.id
-			// + '"><strong>#' + TestDetails.id + '</strong></a></div></div>';
-			// order_panel += '<div class="row"><div
-			// class="col-sm-4">Test</div><div class="col-sm-8">' +
-			// TestDetails.test_name + '</div></div>';
-			// if(TestDetails.no_results > 1){
-			// subTests = TestDetails.sub_tests.split(":");
-			// order_panel += '<div class="row"><div class="col-sm-4">Sub
-			// Tests</div><div class="col-sm-8">' + subTests.join(" ") +
-			// '</div></div>';
-			// }
 			order_panel += '<div class="row"><div class="col-sm-12 small">';
 			// order_panel += '<h3>Progress</h3>';
 			order_panel += '<table class="table table-striped table-condensed"><tbody>';

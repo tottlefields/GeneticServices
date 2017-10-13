@@ -3,9 +3,29 @@
 add_action( 'wp_ajax_order_details', 'get_order_details' );
 add_action( 'wp_ajax_nopriv_order_details', 'get_order_details' );
 
+add_action( 'wp_ajax_cancel_test', 'do_cancel_test' );
+add_action( 'wp_ajax_nopriv_cancel_test', 'do_cancel_test' );
+
 add_action( 'wp_ajax_breed_tests', 'get_breed_tests' );
 add_action( 'wp_ajax_nopriv_breed_tests', 'get_breed_tests' );
 
+
+function do_cancel_test(){
+	global $wpdb, $current_user; // this is how you get access to the database
+	
+	$swabId = intval( $_POST['swabId'] );
+	
+	$update_args = array(
+			'cancelled_by' => $current_user->user_login,
+			'cancelled_date' => date('Y-m-d')
+	);
+	
+	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
+
+	echo json_encode(array('results' => 'Successfully cancelled test with id of '.$swabId));
+	
+	wp_die();
+}
 
  function get_order_details() {
 	global $wpdb; // this is how you get access to the database
@@ -32,12 +52,14 @@ add_action( 'wp_ajax_nopriv_breed_tests', 'get_breed_tests' );
 		 	if($value === null){ $client_details->$key = ""; }
 		 }
 		 
-		 if (isset($swabId) && $swabId > 0){ $test_details = getTestDetails($swabId); }
+		 if (isset($swabId) && $swabId > 0){ $test_details = [getTestDetails($swabId)]; }
 		 else{ $test_details = getTestsByOrder($orderId); }
-		 foreach ($test_details as $key => $value){
-		 	if($value === null){ $test_details->$key = ""; }
-		 	elseif (preg_match('/\d{4}-\d{1,2}-\d{1,2}/', $value)){
-		 		$test_details->$key = SQLToDate($value);
+		 foreach ($test_details as $test){
+		 	foreach ($test as $key => $value){
+			 	if($value === null){ $test->$key = ""; }
+			 	elseif (preg_match('/\d{4}-\d{1,2}-\d{1,2}/', $value)){
+			 		$test->$key = SQLToDate($value);
+			 	}
 		 	}
 		 }
 		 $order_details->test_details = $test_details;
