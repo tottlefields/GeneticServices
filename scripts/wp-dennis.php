@@ -116,16 +116,7 @@ foreach ( $posts as $post ) {
 				'Town' => $postMeta ['town-pm'] [0],
 				'County' => $postMeta ['county-pm'] [0],
 				'Postcode' => $postMeta ['postcode-pm'] [0],
-				'Country' => $postMeta ['country-pm'] [0],
-				'ShippingName' => $postMeta ['shipping-name-pm'] [0],
-				'ShippingCompany' => $postMeta ['shipping-company-pm'] [0],
-				'ShippingAddress' => array_shift ( $shipping_address ),
-				'ShippingAddress2' => array_shift ( $shipping_address ),
-				'ShippingAddress3' => implode ( ", ", $shipping_address ),
-				'ShippingTown' => $postMeta ['shipping-town-pm'] [0],
-				'ShippingCounty' => $postMeta ['shipping-county-pm'] [0],
-				'ShippingPostcode' => $postMeta ['shipping-postcode-pm'] [0],
-				'ShippingCountry' => $postMeta ['shipping-country-pm'] [0] 
+				'Country' => $postMeta ['country-pm'] [0]
 		);
 		$clients [$clientId] = $client;
 		$wpdb->replace ( 'client', $client );
@@ -169,7 +160,16 @@ foreach ( $orders as $orderId => $order ) {
 			'ReportFormat' => $order ['ReportFormat'],
 			'VetReportFormat' => $order ['VetReportFormat'],
 			'Paid' => $order ['Paid'],
-			'AgreeResearch' => $order ['AgreeResearch'] 
+			'AgreeResearch' => $order ['AgreeResearch'],
+			'ShippingName' => $postMeta ['shipping-name-pm'] [0],
+			'ShippingCompany' => $postMeta ['shipping-company-pm'] [0],
+			'ShippingAddress' => array_shift ( $shipping_address ),
+			'ShippingAddress2' => array_shift ( $shipping_address ),
+			'ShippingAddress3' => implode ( ", ", $shipping_address ),
+			'ShippingTown' => $postMeta ['shipping-town-pm'] [0],
+			'ShippingCounty' => $postMeta ['shipping-county-pm'] [0],
+			'ShippingPostcode' => $postMeta ['shipping-postcode-pm'] [0],
+			'ShippingCountry' => $postMeta ['shipping-country-pm'] [0] 
 	) );
 	if ($wpdb->last_error) {
 		echo 'ERROR detected when inserting order with OrderID=' . $orderId . "\n" . $wpdb->last_error;
