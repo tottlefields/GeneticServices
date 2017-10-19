@@ -54,11 +54,12 @@ function showVetModal() {
 	});
 }
 
-function generatePDFs(order_ids) {
+function generatePDFs(order_ids, swabID) {
 
 	var data = {
-		'action' : 'order_details',
-		'orderId' : order_ids
+		'action'  : 'order_details',
+		'orderId' : order_ids,
+		'swabId'  : swabID
 	};
 
 	jQuery.ajax({
@@ -66,34 +67,53 @@ function generatePDFs(order_ids) {
 		dataType : "json",
 		url : DennisAjax.ajax_url,
 		data : data,
-		success : function(details) {
-			OrderDetails = details.order;
-			ClientDetails = details.client;
-
+		success : function(results) {
 			ddLetter.content = [];
-
-			for (i = 0; i < OrderDetails.test_details.length; i++) {
-				var test = OrderDetails.test_details[i];
-				for (j = 0; j < test.no_swabs; j++) {
-					ddLetter.content.push(letterHeader(), testDetails(test, j), instructionsSection(), vetSection(), labelsSection(ClientDetails, test));
-					if (i === (OrderDetails.test_details.length - 1) && j === (test.no_swabs - 1)) {
-						ddLetter.content.push({
-							text : '',
-							style : 'small'
-						});
-					} else {
-						ddLetter.content.push({
-							text : '',
-							style : 'small',
-							pageBreak : 'after'
-						});
+			for (var x=0; x<results.length; x++){
+				details = results[x];
+				OrderDetails = details.order;
+				ClientDetails = details.client;
+	
+				for (i = 0; i < OrderDetails.test_details.length; i++) {
+					var test = OrderDetails.test_details[i];
+					for (j = 0; j < test.no_swabs; j++) {
+						ddLetter.content.push(letterHeader(), testDetails(test, j), instructionsSection(), vetSection(), labelsSection(ClientDetails, test));
+						if (i === (OrderDetails.test_details.length - 1) && j === (test.no_swabs - 1) && x === (results.length - 1)) {
+							ddLetter.content.push({
+								text : '',
+								style : 'small'
+							});
+						} else {
+							ddLetter.content.push({
+								text : '',
+								style : 'small',
+								pageBreak : 'after'
+							});
+						}
 					}
 				}
 			}
 			pdfMake.createPdf(ddLetter).open();
 		}
 	});
+}
 
+function cancelTest(swabID){
+
+	var data = {
+		'action'  : 'cancel_test',
+		'swabId'  : swabID
+	};
+
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(results) {
+			location.reload();
+		}
+	});
 }
 
 function getOrders(orderId, div) {
@@ -109,8 +129,8 @@ function getOrders(orderId, div) {
 		url : DennisAjax.ajax_url,
 		data : data,
 		success : function(details) {
-			OrderDetails = details.order;
-			ClientDetails = details.client;
+			OrderDetails = details[0].order;
+			ClientDetails = details[0].client;
 			order_panel = '';
 			for (i in OrderDetails.test_details) {
 				test = OrderDetails.test_details[i];
@@ -122,7 +142,7 @@ function getOrders(orderId, div) {
 				}
 			}
 
-			client_panel = createClientPanel(details.client);
+			client_panel = createClientPanel(ClientDetails);
 			div.append('<h2><a href="/orders/view?id=' + OrderDetails.ID + '">Order #' + OrderDetails.ID + '</a></h2>');
 			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Order Details</h3></div><div class="panel-body">'
 					+ order_panel + '</div></div>');
@@ -145,9 +165,10 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 		dataType : "json",
 		url : DennisAjax.ajax_url,
 		data : data,
-		success : function(details) {
+		success : function(results) {
+			details = results[0];
 			OrderDetails = details.order;
-			TestDetails = details.order.test_details;
+			TestDetails = details.order.test_details[0];
 			ClientDetails = details.client;
 
 			/* CLIENT DETAILS */
@@ -216,21 +237,8 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			$("#animal_Sex-" + TestDetails.sex).prop("checked", true)
 
 			/* TEST/ORDER DETAILS */
-			// console.log(OrderDetails);
+			//console.log(TestDetails);
 			order_panel = '';
-			// order_panel = '<div class="row"><div class="col-sm-4">Sample
-			// ID</div><div class="col-sm-8"><a href="/samples/view?id=' +
-			// TestDetails.id
-			// + '"><strong>#' + TestDetails.id + '</strong></a></div></div>';
-			// order_panel += '<div class="row"><div
-			// class="col-sm-4">Test</div><div class="col-sm-8">' +
-			// TestDetails.test_name + '</div></div>';
-			// if(TestDetails.no_results > 1){
-			// subTests = TestDetails.sub_tests.split(":");
-			// order_panel += '<div class="row"><div class="col-sm-4">Sub
-			// Tests</div><div class="col-sm-8">' + subTests.join(" ") +
-			// '</div></div>';
-			// }
 			order_panel += '<div class="row"><div class="col-sm-12 small">';
 			// order_panel += '<h3>Progress</h3>';
 			order_panel += '<table class="table table-striped table-condensed"><tbody>';
@@ -562,7 +570,7 @@ function labelsSection(client, test) {
 						}, {
 							table : {
 								body : [ [ {
-									text : 'Order No.',
+									text : 'Order',
 									style : 'vetStrong'
 								}, {
 									text : "AHT" + test.order_id,

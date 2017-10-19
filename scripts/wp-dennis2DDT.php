@@ -3,19 +3,19 @@ global $wpdb;
 
 $sex_lookup = array('m' => 'Male', 'f' => 'Female');
 
-$results = $wpdb->get_results("select t4.id as clientID, t3.id as animalID, Quantity, test_name, t1.test_code, Breed, RegisteredName, RegistrationNo,
-	Sex, BirthDate, TattooOrChip, t4.Tel as clientTel, t4.Fax as clientFax, t4.Email as clientEmail, t4.FullName as clientName,
+$results = $wpdb->get_results("select t2.OrderId as webshopID, t2.id as orderId, t4.id as clientID, t3.id as animalID, Quantity, test_name, t1.test_code, Breed, RegisteredName, RegistrationNo,
+	Sex, DATE_FORMAT(BirthDate, '%d/%m/%Y') as BirthDate, TattooOrChip, t4.Tel as clientTel, t4.Fax as clientFax, t4.Email as clientEmail, t4.FullName as clientName,
 	t4.Address as clientAddress, t4.Town as clientTown, t4.county as clientCounty, t4.Postcode as clientPostcode, t4.Country as clientCountry,
-	AgreeResearch, PetName, Colour, OrderDate, PortalID, returned_date, ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2,
-	ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry, t1.VetID, t6.FullName as vetName, t6.Tel as vetTel,
-	t6.Fax as vetFax, t6.Email as vetEmail, t6.Address as vetAddress, t6.Address2 as vetAddress2, t6.Address3 as vetAddress3, 
+	AgreeResearch, PetName, Colour, ATE_FORMAT(OrderDate, '%d/%m/%Y') as OrderDate, PortalID, DATE_FORMAT(returned_date, '%d/%m/%Y') as returned_date, 
+	ShippingName, ShippingCompany, ShippingAddress, ShippingAddress2, ShippingAddress3, ShippingTown, ShippingCounty, ShippingPostcode, ShippingCountry, 
+	t1.VetID, t6.FullName as vetName, t6.Tel as vetTel, t6.Fax as vetFax, t6.Email as vetEmail, t6.Address as vetAddress, t6.Address2 as vetAddress2, t6.Address3 as vetAddress3, 
 	t6.Town as vetTown, t6.County as vetCounty, t6.Postcode as vetPostcode, t6.Country as vetCountry
 	from order_tests t1 inner join orders t2 on t1.order_id=t2.id 
 	inner join animal t3 on t1.animal_id=t3.id 
 	inner join client t4 on t2.client_id=t4.id 
 	inner join test_codes t5 on t1.test_code=t5.test_code
 	left outer join vet t6 on t1.VetID=t6.id 
-	where PortalID is not null and returned_date =date(NOW())"
+	where returned_date =date(NOW())"
 );
 if(count($results > 0)){
 	echo "OrderID\tClientID\tAnimalID\tQuantity\tTestDescription\tTestCode\tBloodTestRequired\tSwabRequired\tSpecies\tBreed\tRegistryName\tRegisteredName\tRegistration\tSex\tBirthDate\tTattooOrChip\tClientCode\tReportByEmail\tReportByPost\tReportByFax\tTel\tFax\tEmail\tFullName\tOrganisation\tAddress1\tTown\tCounty\tPostcode\tCountry\tAgreeToResearch\tVetPracticeName\tVetSurgeonName\tVetAddressLine1\tVetAddressLine2\tVetAddressLine3\tVetTown\tVetPostcode\tVetCounty\tVetCountry\tVetEmail\tVetFaxNumber\tVetReportByEmail\tVetReportByPost\tVetReportByFax\tPetName\tColour\tOrderDate\tSwabReceived\tSwabKitNumber\tSampleType\tSampleReceivedDate\tDeliveryFullName\tDeliveryOrganisation\tDeliveryAddress1\tDeliveryTown\tDeliveryCounty\tDeliveryPostcode\tDeliveryCountry\tVerifiedByVet\n";
@@ -31,6 +31,11 @@ if(count($results > 0)){
 		# DeliveryFullName	DeliveryOrganisation	DeliveryAddress1	DeliveryTown	
 		# DeliveryCounty	DeliveryPostcode	DeliveryCountry	VerifiedByVet
 		
+		$order_id = '';
+		if (isset($row->PortalID)){ $order_id = $row->PortalID; }
+		elseif (isset($row->webshopID)){ $order_id = $row->webshopID; }
+		else{ $order_id = "AHT".$row->orderId; }
+		
 		$report_format = "TRUE\tFALSE\tFALSE";
 		if ($row->ReportFormat === 'POST'){ $report_format = "FALSE\tTRUE\tFALSE"; }
 		if ($row->ReportFormat === 'FAX'){ $report_format = "FLASE\tFALSE\tTRUE"; }
@@ -39,9 +44,9 @@ if(count($results > 0)){
 		if ($row->VetReportFormat === 'EMAIL'){ $vet_report_format = "TRUE\tFALSE\tFALSE"; }
 		if ($row->VetReportFormat === 'POST'){ $vet_report_format = "FALSE\tTRUE\tFALSE"; }
 		if ($row->VetReportFormat === 'FAX'){ $vet_report_format = "FLASE\tFALSE\tTRUE"; }
-		
+
 		$ddt_row = array();
-		array_push($ddt_row, $row->PortalID);
+		array_push($ddt_row, $order_id);
 		array_push($ddt_row, $row->clientID);
 		array_push($ddt_row, $row->animalID);
 		array_push($ddt_row, $row->Quantity);
@@ -86,7 +91,7 @@ if(count($results > 0)){
 		array_push($ddt_row, $row->Colour);
 		array_push($ddt_row, $row->OrderDate);
 		array_push($ddt_row, "TRUE");
-		array_push($ddt_row, $row->PortalID);
+		array_push($ddt_row, $order_id);
 		array_push($ddt_row, "");
 		array_push($ddt_row, $row->returned_date);
 		array_push($ddt_row, ($row->ShippingName == "") ? $row->clientName : $row->ShippingName);

@@ -1,3 +1,12 @@
-.top-logo {
-	padding:0px;
-}
+.top-logo { padding:0px; }
+.toolbar { float:left; }
+
+tr.selected ul.dropdown-menu a { color: #646464 !important; }
+
+
+
+/* Font Awesome
+=================================================================== */
+.fa { padding: 0px 5px 0px 0px; }
+.fa-file-pdf-o { color:darkred; }
+.link { cursor: pointer; }

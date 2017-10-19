@@ -1173,12 +1173,6 @@ footer {
 	      	border-radius: 0px;
 }
 
-/* Font Awesome
-=================================================================== */
-.fa { padding: 0px 5px 0px 0px; }
-.fa-file-pdf-o { color:darkred; }
-.link { cursor: pointer; }
-
 /* Wizard
 =================================================================== */
 .sw-theme-arrows {
