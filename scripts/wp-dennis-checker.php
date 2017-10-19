@@ -20,15 +20,14 @@ $posts = get_posts($args);
 global $post;
 foreach( $posts as $post ) {
 	$postMeta = get_post_custom($post->ID);
-	
+
 	if(!get_field('paid-pm')){
 		continue;
 	}
-	
+
 	$orderId = str_replace('Order #', '', get_the_title());
 	$a = explode(' &#8211;', $orderId);
 	$orderId = $a[0];
-	echo "OrderID = ".$orderId."\n";
 
 	$clientId = $post->post_author;
 	
@@ -56,7 +55,7 @@ foreach( $posts as $post ) {
 				'AgreeResearch' => $research,
 				'tests' => array()
 		);
-		//print_r($orders[$orderId]);
+//		print_r($orders[$orderId]);
 	}
 	
 	
@@ -132,6 +131,8 @@ foreach( $posts as $post ) {
 	
 	$MAX_ID = $post->ID;
 }
+
+if (count($orders) == 0){ exit(0); }
 
 foreach ($orders as $orderId => $order){
 	$wpdb->insert('orders', array(
