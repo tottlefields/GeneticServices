@@ -9,7 +9,7 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 	
 	if (preg_match('/^AHT\d{1,5}$/', $query)){
 		//Dennis (AHT) ID - between 1 & 5 digits [OrderID] pre-pended by 'AHT'
-		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, ShippingCountry, count(*) as TestCount 
+		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, orders.ShippingCountry, count(*) as TestCount 
 				from orders left outer join client on client.id=client_id 
 				left outer join order_tests on orders.id=order_id
 				WHERE orders.id='".str_replace('AHT', '', $query)."'
@@ -25,7 +25,7 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 	
 	if (preg_match('/^[a-zA-Z]{2,5}\d{1,3}$/', $query)){
 		//Portal ID - between 2 & 5 letters followed by between 1 and 3 digits
-		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, ShippingCountry, count(*) as TestCount 
+		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, orders.ShippingCountry, count(*) as TestCount 
 				from orders left outer join client on client.id=client_id 
 				left outer join order_tests on orders.id=order_id
 				WHERE PortalID='".$query."'
@@ -42,7 +42,7 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 	if (preg_match('/^\d{1,5}\/\d{1,5}$/', $query)){
 		//Swab ID - between 1 & 5 digits [OrderID] followed by between 1 and 5 digits [SwabID], seperated with '/'
 		$sample_details = explode('/', $query);
-		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, ShippingCountry, count(*) as TestCount 
+		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, orders.ShippingCountry, count(*) as TestCount 
 				from orders left outer join client on client.id=client_id 
 				left outer join order_tests on orders.id=order_id
 				WHERE orders.id='".$sample_details[0]."'
@@ -116,7 +116,7 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 	if(!isset($allResults['animals'])) { $allResults['animals'] = array(); }
 	if (count($results) >= 1){ $allResults['animals'] = array_merge($allResults['animals'], $results); }
 	
-	$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, ShippingCountry, count(*) as TestCount
+	$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, orders.ShippingCountry, count(*) as TestCount
 				from orders left outer join client on client.id=client_id
 				left outer join order_tests on orders.id=order_id
 				WHERE PortalID='".$query."' ";

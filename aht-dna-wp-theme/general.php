@@ -87,21 +87,21 @@ function orderSearch($search_terms){
 	
 	if(count($search_terms)>0){
 //		$sql = "SELECT * FROM orders WHERE (";
-		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, VetReportFormat, Paid, AgreeResearch, 
-				client_id, FullName, Email, ShippingCountry, count(*) as TestCount 
-				from orders left outer join client on client.id=client_id left outer join order_tests on orders.id=order_id WHERE (";
+		$sql = "select o.OrderID as webshop_id, o.id as ID, OrderDate, ReportFormat, VetReportFormat, Paid, AgreeResearch, 
+			client_id, FullName, Email, o.ShippingCountry, count(*) as TestCount 
+			from orders o left outer join client on client.id=client_id left outer join order_tests on o.id=order_id WHERE (";
 		//$last = array_pop(array_keys($search_terms));
 		$where = array();
 		foreach ($search_terms as $field => $term){
 			//$sql .= "$field = '$term'";
 			//if($field != $last) { $sql .= ' AND '; }
 			if($term !== ""){
-				if ($field == 'id'){ $field = 'orders.id'; }
+				if ($field == 'id'){ $field = 'o.id'; }
 				array_push($where, "$field = '$term'");
 			}
 		}
 		$sql .= implode(" AND ", $where);
-		$sql .= ")  group by orders.id";
+		$sql .= ")  group by o.id";
 		$orders = $wpdb->get_results($sql, OBJECT );
 	}
 	return $orders;
