@@ -87,7 +87,7 @@ function do_return_sample(){
 		 	}
 		 }
 		 
-		 $client_details = $wpdb->get_row("select c.* from orders o left outer join client c on client_id=c.id where o.id=".$orderId);
+		 $client_details = $wpdb->get_row("select c.*, o.* from orders o left outer join client c on client_id=c.id where o.id=".$orderId);
 		 foreach ($client_details as $key => $value){
 		 	if($value === null){ $client_details->$key = ""; }
 		 }
