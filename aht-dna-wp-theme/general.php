@@ -88,7 +88,7 @@ function orderSearch($search_terms){
 	if(count($search_terms)>0){
 //		$sql = "SELECT * FROM orders WHERE (";
 		$sql = "select o.OrderID as webshop_id, o.id as ID, OrderDate, ReportFormat, VetReportFormat, Paid, AgreeResearch, 
-			client_id, FullName, Email, o.ShippingCountry, count(*) as TestCount 
+			client_id, FullName, Email, o.ShippingCountry, count(*) as TestCount, content 
 			from orders o left outer join client on client.id=client_id left outer join order_tests on o.id=order_id WHERE (";
 		//$last = array_pop(array_keys($search_terms));
 		$where = array();
