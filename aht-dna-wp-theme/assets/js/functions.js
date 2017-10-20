@@ -116,6 +116,42 @@ function cancelTest(swabID){
 	});
 }
 
+function sendSample(swabID){
+
+	var data = {
+		'action'  : 'send_sample',
+		'swabId'  : swabID
+	};
+
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(results) {
+			location.reload();
+		}
+	});
+}
+
+function receiveSample(swabID){
+
+	var data = {
+		'action'  : 'return_sample',
+		'swabId'  : swabID
+	};
+
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(results) {
+			location.reload();
+		}
+	});
+}
+
 function getOrders(orderId, div) {
 
 	var data = {

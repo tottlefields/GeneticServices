@@ -6,6 +6,12 @@ add_action( 'wp_ajax_nopriv_order_details', 'get_order_details' );
 add_action( 'wp_ajax_cancel_test', 'do_cancel_test' );
 add_action( 'wp_ajax_nopriv_cancel_test', 'do_cancel_test' );
 
+add_action( 'wp_ajax_send_sample', 'do_send_sample' );
+add_action( 'wp_ajax_nopriv_send_sample', 'do_send_sample' );
+
+add_action( 'wp_ajax_return_sample', 'do_return_sample' );
+add_action( 'wp_ajax_nopriv_return_sample', 'do_return_sample' );
+
 add_action( 'wp_ajax_breed_tests', 'get_breed_tests' );
 add_action( 'wp_ajax_nopriv_breed_tests', 'get_breed_tests' );
 
@@ -23,6 +29,40 @@ function do_cancel_test(){
 	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
 
 	echo json_encode(array('results' => 'Successfully cancelled test with id of '.$swabId));
+	
+	wp_die();
+}
+
+function do_send_sample(){
+	global $wpdb, $current_user; // this is how you get access to the database
+	
+	$swabId = intval( $_POST['swabId'] );
+	
+	$update_args = array(
+			'sent_by' => $current_user->user_login,
+			'kit_sent' => date('Y-m-d')
+	);
+	
+	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
+
+	echo json_encode(array('results' => 'Successfully logged dispatch of sample with id of '.$swabId));
+	
+	wp_die();
+}
+
+function do_return_sample(){
+	global $wpdb, $current_user; // this is how you get access to the database
+	
+	$swabId = intval( $_POST['swabId'] );
+	
+	$update_args = array(
+			'received_by' => $current_user->user_login,
+			'returned_date' => date('Y-m-d')
+	);
+	
+	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
+
+	echo json_encode(array('results' => 'Successfully logged return of sample with id of '.$swabId));
 	
 	wp_die();
 }

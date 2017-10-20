@@ -8,7 +8,7 @@
 	<?php
 	global $wpdb;
 
-	$sql = "select o.OrderID as webshop_id, o.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, o.ShippingCountry, count(*) as TestCount 
+	$sql = "select o.OrderID as webshop_id, o.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, o.ShippingCountry, count(*) as TestCount, sum(no_swabs) as SwabCount, content
 	from orders o left outer join client on client.id=client_id 
 	left outer join order_tests on o.id=order_id 
 	where cancelled_date is null and kit_sent is null 
@@ -26,7 +26,7 @@
 				<th class="text-center">Date</th>
 				<!-- <th>Report Format</th> -->
 				<th>Client</th>
-				<th class="text-center">#Tests</th>
+				<th class="text-center">#Swabs</th>
 				<th class="text-center">PDF</th>
 			</thead>
 			<tbody>
@@ -47,7 +47,7 @@
 				<td class="text-center">'.$order_date->format('d/m/Y').'</td>
 				<!-- <td>'.$order->ReportFormat.'</td>-->
 				<td>'.$client.'</td>
-				<td class="text-center">'.$order->TestCount.'</td>
+				<td class="text-center">'.$order->SwabCount.'</td>
 				<td class="text-center"><a href="javascript:generatePDFs(\''.$order->ID.'\')"><i class="fa fa-file-pdf-o link" id="pdf_'.$order->ID.'"></i></a></td>
 			</tr>';
 		}
