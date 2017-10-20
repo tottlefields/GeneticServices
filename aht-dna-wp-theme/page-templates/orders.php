@@ -11,6 +11,7 @@
 	$sql = "select o.OrderID as webshop_id, o.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, o.ShippingCountry, count(*) as TestCount, sum(no_swabs) as SwabCount, content
 	from orders o left outer join client on client.id=client_id 
 	left outer join order_tests on o.id=order_id 
+	left outer join test_codes using (test_code)
 	where cancelled_date is null and kit_sent is null 
 	group by o.id order by OrderDate desc";
 	$results = $wpdb->get_results($sql, OBJECT );
