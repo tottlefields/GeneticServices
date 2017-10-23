@@ -179,6 +179,16 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 				$status_label = '<span class="label label-info">'.str_replace('(s)', '', $test->order_status).'</span>';
 				if ($test->order_status == 'Cancelled'){ $status_label = '<span class="label label-danger">'.str_replace('(s)', '', $test->order_status).'</span>'; $class_disabled = ' disabled'; }
 				
+				$next_action = '';
+				switch ($test->order_status) {
+					case 'Order Placed':
+						$next_action = '<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="fa fa-paper-plane-o link"></i>&nbsp;Dispatch Sample</a></li>';
+						break;
+					case 'Kit(s) Dispatched':
+						$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
+						break;
+				}
+				
 				echo '
 				<tr>
 					<td>'.$order_id.'</td>
@@ -197,6 +207,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
 								<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
+								'.$next_action.'
 								<!--<li><a href="#">Something else here</a></li>
 								<li role="separator" class="divider"></li>
 								<li><a href="#">Separated link</a></li>-->
