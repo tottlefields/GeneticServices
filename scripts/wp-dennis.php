@@ -83,7 +83,6 @@ foreach ( $posts as $post ) {
 				'VetReportFormat' => $vetReport,
 				'Paid' => get_field ( 'paid-pm' ),
 				'AgreeResearch' => $research,
-				'tests' => array (),
 				'ShippingName' => $postMeta ['shipping-name-pm'] [0],
 				'ShippingCompany' => $postMeta ['shipping-company-pm'] [0],
 				'ShippingAddress' => array_shift ( $shipping_address ),
@@ -92,7 +91,8 @@ foreach ( $posts as $post ) {
 				'ShippingTown' => $postMeta ['shipping-town-pm'] [0],
 				'ShippingCounty' => $postMeta ['shipping-county-pm'] [0],
 				'ShippingPostcode' => $postMeta ['shipping-postcode-pm'] [0],
-				'ShippingCountry' => $postMeta ['shipping-country-pm'] [0] 
+				'ShippingCountry' => $postMeta ['shipping-country-pm'] [0],
+				'tests' => array ()
 		);
 	}
 	
@@ -169,7 +169,16 @@ foreach ( $orders as $orderId => $order ) {
 			'ReportFormat' => $order ['ReportFormat'],
 			'VetReportFormat' => $order ['VetReportFormat'],
 			'Paid' => $order ['Paid'],
-			'AgreeResearch' => $order ['AgreeResearch']
+			'AgreeResearch' => $order ['AgreeResearch'],
+			'ShippingName' => $order['ShippingName'],
+			'ShippingCompany' => $order['ShippingCompany'],
+			'ShippingAddress' => $order['ShippingAddress'],
+			'ShippingAddress2' => $order['ShippingAddress2'],
+			'ShippingAddress3' => $order['ShippingAddress3'],
+			'ShippingTown' => $order['ShippingTown'],
+			'ShippingCounty' => $order['ShippingCounty'],
+			'ShippingPostcode' => $order['ShippingPostcode'],
+			'ShippingCountry' => $order['ShippingCountry'],
 	) );
 	if ($wpdb->last_error) {
 		echo 'ERROR detected when inserting order with OrderID=' . $orderId . "\n" . $wpdb->last_error;

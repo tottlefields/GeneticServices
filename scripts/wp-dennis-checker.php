@@ -48,7 +48,6 @@ foreach( $posts as $post ) {
 
 		$shipping_address = explode("\n", str_replace("\r", '', $postMeta['shipping-address-pm'][0]));
 		$shipping_address = array_pad($shipping_address, 3, "");
-		
 		$orders[$orderId] = array(
 				'ClientID' => $clientId,
 				'OrderDate' => date('Y-m-d', strtotime(get_the_date())),
@@ -67,9 +66,7 @@ foreach( $posts as $post ) {
 				'ShippingCountry' => $postMeta['shipping-country-pm'][0],
 				'tests' => array()
 		);
-//		print_r($orders[$orderId]);
 	}
-	
 	
 	//Test Data
 	$testDataPost = get_post($postMeta['test-id-pm'][0]);
@@ -81,11 +78,9 @@ foreach( $posts as $post ) {
 			'Quantity' => $postMeta['quantity-pm'][0],
 			'TestCode' => $testDataMeta['test-code-pm'][0],
 			'SampleType' => 'Swab',
-			'VetID' => NULL,
+			'VetID' => NULL
 	);	
 	array_push($orders[$orderId]['tests'], $test);
-	
-	//echo "Test (".$testDataMeta['test-code-pm'][0].") added to order (".$orderId.")\n";
 	
 	if(!isset($clients[$clientId])){
 		$address = explode("\n", str_replace("\r", '', $postMeta['address-pm'][0]));
@@ -115,7 +110,7 @@ foreach( $posts as $post ) {
 	if(!isset($animals[$animalId])){
 		$breed = get_term_by('id', $postMeta['breed-id-pm'][0], 'test-breeds');
 		$parent = get_term_by('id', $breed->parent, 'test-breeds');
-		$animalData = $wpdb->get_row("SELECT * FROM wp_animals WHERE id='".$animalId."'", 'ARRAY_A');
+		$animalData = $wpdb->get_row ( "SELECT *, str_to_date(`birth-date`, '%d/%m/%Y') as dob FROM wp_animals WHERE id='" . $animalId . "'", 'ARRAY_A' );
 		$animal = array(
 				'AnimalID' => $animalId,
 				'ClientID' => $clientId,
@@ -123,7 +118,7 @@ foreach( $posts as $post ) {
 				'Breed' => $breed->name,
 				'RegisteredName' => $animalData['registered-name'],
 				'RegistrationNo' => $animalData['registration-number'],
-				'Sex' => $animalData['sex'],
+				'Sex' => substr ( $animalData ['sex'], 0, 1 ),
 				'BirthDate' => $animalData['dob'],
 				'TattooOrChip' => $animalData['tattoo-chip'],
 				'PetName' => $animalData['pet-name'],
@@ -132,10 +127,9 @@ foreach( $posts as $post ) {
 		$animals[$animalId] = $animal;
 		$wpdb->replace('animal', $animal);
 		if ($wpdb->last_error) {
-			echo 'ERROR detected when inserting client with ClientID=' . $clientId . "\n" . $wpdb->last_error;
+			echo 'ERROR detected when inserting animal with AnimalID=' . $animalId . "\n" . $wpdb->last_error;
 		}
 	}
-	
 	$MAX_ID = $post->ID;
 }
 
