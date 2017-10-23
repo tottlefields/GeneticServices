@@ -150,7 +150,6 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 					<th class="text-center">TestID</th>
 					<th>Test</th>
 					<th>Breed</th>
-					<!-- <th>Report Format</th> -->
 					<th>Animal</th>
 					<th>Client</th>
 					<th class="text-center">Status</th>
@@ -196,7 +195,6 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 					<td class="text-center">'.$test->id.'<span class="hidden-sm hidden-xs">&nbsp;<em><small>'.$other_id.'</small></em></td>
 					<td>'.$test->test_name.'</td>
 					<td>'.$test->breed.'</td>
-					<!-- <td>'.$order->ReportFormat.'</td>-->
 					<td>'.$animal.'</td>
 					<td>'.$client.'</td>
 					<td class="text-center">'.$status_label.'</td>
