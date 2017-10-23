@@ -1,7 +1,7 @@
 <?php /* Template Name: Orders */ ?>
 <?php get_header(); ?>
 
-	<h1><?php wp_title('', true,''); ?><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
+	<h1><?php wp_title('', true,''); ?><a href="<?php echo get_site_url(); ?>/orders/add-manual-order/" class="btn btn-default btn-sm" style="margin-left:10px;margin-bottom:3px;">Add Order</a><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
 	<section class="row">
 		<div class="col-md-8">
 	
@@ -34,9 +34,12 @@
 		
 		<?php
 		foreach ( $results as $order ){
-			$client = '<a href="'.get_site_url().'/clients/view?id='.$order->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order->FullName.'</a>';
-			if ($order->Email != ''){
-				$client .= '&nbsp;<a href="mailto:'.$order->Email.'"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>';
+			$client = '';
+			if ($order->client_id > 0){
+				$client = '<a href="'.get_site_url().'/clients/view?id='.$order->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order->FullName.'</a>';
+				if ($order->Email != ''){
+					$client .= '&nbsp;<a href="mailto:'.$order->Email.'"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>';
+				}
 			}
 			$order_date = new DateTime($order->OrderDate);
 			echo '

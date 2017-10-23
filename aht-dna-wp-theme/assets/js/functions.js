@@ -296,8 +296,11 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 }
 
 function createClientPanel(ClientDetails) {
-	client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id=' + ClientDetails.id
-			+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a></div></div>';
+	client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8">';
+	if (ClientDetails.id > 0){
+		client_panel += '<a href="/clients/view?id=' + ClientDetails.id+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a>';
+	}
+	client_panel += '</div></div>';
 	email = '&nbsp;';
 	if (ClientDetails.Email !== '') {
 		email = '<a href="mailto:' + ClientDetails.Email + '"><i class="fa fa-envelope-o" aria-hidden="true"></i>' + ClientDetails.Email + '</a>';
