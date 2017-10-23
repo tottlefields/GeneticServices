@@ -27,7 +27,24 @@ $test_details = getTestsByClient($client_id);
 					<h3 class="panel-title"><i class="fa fa-user"></i>&nbsp;Client Details</h3>
 				</div>
 				<div class="panel-body" id="details_client">
-					<?php debug_array($client_details); ?>
+					<?php
+					echo '
+					<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8">
+						<a href="/clients/view?id='.$client_details->id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$client_details->FullName.'</a>
+					</div></div>';
+					$email = '&nbsp;';
+					if ($client_details->Email !== '') {
+						$email = '<a href="mailto:'.$client_details->Email.'"><i class="fa fa-envelope-o" aria-hidden="true"></i>'.$client_details->Email.'</a>';
+					}
+					echo '
+					<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8">'.$email.'</div></div>
+					<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">'.$client_details->Tel.'</div></div>
+					<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">'.$client_details->Address.'<br />'.$client_details->Address2.'<br />'.$client_details->Address3.'</div></div>
+					<div class="row"><div class="col-sm-4">Town</div><div class="col-sm-8">'.$client_details->Town.'</div></div>
+					<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">'.$client_details->County.'</div></div>
+					<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">'.$client_details->Postcode.'</div></div>
+					<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">'.$client_details->Country.'</div></div>';
+					?>
 				</div>
 			</div>
 		</div>

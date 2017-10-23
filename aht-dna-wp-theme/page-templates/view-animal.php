@@ -32,7 +32,19 @@ $test_details = getTestsByAnimal($animal_id);
 					<h3 class="panel-title"><i class="fa fa-paw"></i>&nbsp;Animal Details</h3>
 				</div>
 				<div class="panel-body" id="details_animal">
-					<?php debug_array($animal_details); ?>
+					<?php
+					echo '
+					<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/animals/view?id='.$animal_details->id.'">
+						<strong>'.$animal_details->RegisteredName.'</strong></a>
+					</div></div>
+					<div class="row"><div class="col-sm-4">Pet Name</div><div class="col-sm-8">'.$animal_details->PetName.'</div></div>
+					<div class="row"><div class="col-sm-4">Reg No.</div><div class="col-sm-8">'.$animal_details->RegistrationNo.'</div></div>
+					<div class="row"><div class="col-sm-4">Breed</div><div class="col-sm-8">'.$animal_details->Breed.'</div></div>
+					<div class="row"><div class="col-sm-4">DOB</div><div class="col-sm-8">'.$animal_details->DOB.'</div></div>
+					<div class="row"><div class="col-sm-4">Sex</div><div class="col-sm-8">'.$animal_details->sex.'</div></div>
+					<div class="row"><div class="col-sm-4">Microchip</div><div class="col-sm-8">'.$animal_details->TattooOrChip.'</div></div>
+					<div class="row"><div class="col-sm-4">Colour</div><div class="col-sm-8">'.$animal_details->Colour.'</div></div>';
+					?>
 				</div>
 			</div>
 		</div>
