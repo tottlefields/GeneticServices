@@ -31,6 +31,7 @@ jQuery(document).ready(function($) {
 	});
 	
 	$(".checkboxRow").on("click", function() {
+			console.log("here - "+this.checked);
 		if (this.checked == true){
 			$("#exportPDFs").prop("disabled", false);
 		}

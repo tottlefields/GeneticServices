@@ -219,36 +219,8 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
 			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
 
-			clientDiv.html(client_panel);
-
-			clientAddress = [ ClientDetails.Address ];
-			if (ClientDetails.Address2 !== null && ClientDetails.Address2 !== "")
-				clientAddress.push(ClientDetails.Address2);
-			if (ClientDetails.Address3 !== null && ClientDetails.Address3 !== "")
-				clientAddress.push(ClientDetails.Address3);
-
-			clientShipAddress = [ ClientDetails.ShippingAddress ];
-			if (ClientDetails.ShippingAddress2 !== null && ClientDetails.ShippingAddress2 !== "")
-				clientShipAddress.push(ClientDetails.ShippingAddress2);
-			if (ClientDetails.ShippingAddress3 !== null && ClientDetails.ShippingAddress3 !== "")
-				clientShipAddress.push(ClientDetails.ShippingAddress3);
-
-			$('#client_id').attr('value', ClientDetails.id);
-			$('#client_FullName').attr('value', ClientDetails.FullName);
-			$('#client_Email').attr('value', ClientDetails.Email);
-			$('#client_Tel').attr('value', ClientDetails.Tel);
-
-			$('#client_Address').attr('value', clientAddress.join(', '));
-			$('#client_Town').attr('value', ClientDetails.Town);
-			$('#client_Postcode').attr('value', ClientDetails.Postcode);
-			$('#client_County').attr('value', ClientDetails.County);
-			$('#client_Country').attr('value', ClientDetails.Country);
-
-			$('#client_ShippingAddress').attr('value', clientShipAddress.join(', '));
-			$('#client_ShippingTown').attr('value', ClientDetails.ShippingTown);
-			$('#client_ShippingPostcode').attr('value', ClientDetails.ShippingPostcode);
-			$('#client_ShippingCounty').attr('value', ClientDetails.ShippingCounty);
-			$('#client_ShippingCountry').attr('value', ClientDetails.ShippingCountry);
+			clientDiv.html(client_panel);			
+			populateClientModal(ClientDetails);
 
 			/* ANIMAL DETAILS */
 			animal_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/animals/view?id=' + TestDetails.animal_id
@@ -261,16 +233,8 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			animal_panel += '<div class="row"><div class="col-sm-4">Microchip</div><div class="col-sm-8">' + TestDetails.TattooOrChip + '</div></div>';
 			animal_panel += '<div class="row"><div class="col-sm-4">Colour</div><div class="col-sm-8">' + TestDetails.Colour + '</div></div>';
 
-			animalDiv.html(animal_panel);
-
-			$('#animal_id').attr('value', TestDetails.animal_id);
-			$('#animal_RegisteredName').attr('value', TestDetails.RegisteredName);
-			$('#animal_RegistrationNo').attr('value', TestDetails.RegistrationNo);
-			$('#animal_PetName').attr('value', TestDetails.PetName);
-			$('#animal_TattooOrChip').attr('value', TestDetails.TattooOrChip);
-			$('#animal_BirthDate').attr('value', TestDetails.DOB);
-			$('#animal_Colour').attr('value', TestDetails.Colour);
-			$("#animal_Sex-" + TestDetails.sex).prop("checked", true)
+			animalDiv.html(animal_panel);	
+			populateAnimalModal(TestDetails);
 
 			/* TEST/ORDER DETAILS */
 			//console.log(TestDetails);
@@ -295,9 +259,54 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 	});
 }
 
+function populateClientModal(ClientDetails){
+	clientAddress = [ ClientDetails.Address ];
+	if (ClientDetails.Address2 !== null && ClientDetails.Address2 !== "")
+		clientAddress.push(ClientDetails.Address2);
+	if (ClientDetails.Address3 !== null && ClientDetails.Address3 !== "")
+		clientAddress.push(ClientDetails.Address3);
+
+	clientShipAddress = [ ClientDetails.ShippingAddress ];
+	if (ClientDetails.ShippingAddress2 !== null && ClientDetails.ShippingAddress2 !== "")
+		clientShipAddress.push(ClientDetails.ShippingAddress2);
+	if (ClientDetails.ShippingAddress3 !== null && ClientDetails.ShippingAddress3 !== "")
+		clientShipAddress.push(ClientDetails.ShippingAddress3);
+    
+	$('#client_id').attr('value', ClientDetails.id);
+	$('#client_FullName').attr('value', ClientDetails.FullName);
+	$('#client_Email').attr('value', ClientDetails.Email);
+	$('#client_Tel').attr('value', ClientDetails.Tel);
+    
+	$('#client_Address').attr('value', clientAddress.join(', '));
+	$('#client_Town').attr('value', ClientDetails.Town);
+	$('#client_Postcode').attr('value', ClientDetails.Postcode);
+	$('#client_County').attr('value', ClientDetails.County);
+	$('#client_Country').attr('value', ClientDetails.Country);
+	
+	$('#client_ShippingAddress').attr('value', clientShipAddress.join(', '));
+	$('#client_ShippingTown').attr('value', ClientDetails.ShippingTown);
+	$('#client_ShippingPostcode').attr('value', ClientDetails.ShippingPostcode);
+	$('#client_ShippingCounty').attr('value', ClientDetails.ShippingCounty);
+	$('#client_ShippingCountry').attr('value', ClientDetails.ShippingCountry);
+}
+
+function populateAnimalModal(AnimalDetails){
+	$('#animal_id').attr('value', AnimalDetails.animal_id);
+	$('#animal_RegisteredName').attr('value', AnimalDetails.RegisteredName);
+	$('#animal_RegistrationNo').attr('value', AnimalDetails.RegistrationNo);
+	$('#animal_PetName').attr('value', AnimalDetails.PetName);
+	$('#animal_TattooOrChip').attr('value', AnimalDetails.TattooOrChip);
+	$('#animal_BirthDate').attr('value', AnimalDetails.DOB);
+	$('#animal_Colour').attr('value', AnimalDetails.Colour);
+	$("#animal_Sex-" + AnimalDetails.sex).prop("checked", true)	
+}
+
 function createClientPanel(ClientDetails) {
-	client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id=' + ClientDetails.id
-			+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a></div></div>';
+	client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8">';
+	if (ClientDetails.id > 0){
+		client_panel += '<a href="/clients/view?id=' + ClientDetails.id+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a>';
+	}
+	client_panel += '</div></div>';
 	email = '&nbsp;';
 	if (ClientDetails.Email !== '') {
 		email = '<a href="mailto:' + ClientDetails.Email + '"><i class="fa fa-envelope-o" aria-hidden="true"></i>' + ClientDetails.Email + '</a>';

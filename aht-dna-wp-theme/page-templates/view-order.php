@@ -230,9 +230,6 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<!-- <button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="order" disabled="disabled" data-toggle="modal" data-target="#orderModal">
-						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
-					</button> -->
 					<h3 class="panel-title"><i class="fa fa-flask"></i>&nbsp;Test Details</h3>
 				</div>
 				<div class="panel-body" id="details_order">
@@ -242,9 +239,11 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
+				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
 					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="client" disabled="disabled" data-toggle="modal" data-target="#clientModal">
 						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
 					</button>
+				<?php } ?>
 					<h3 class="panel-title"><i class="fa fa-user"></i>&nbsp;Client Details</h3>
 				</div>
 				<div class="panel-body" id="details_client">
@@ -254,9 +253,11 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
+				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
 					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="animal" disabled="disabled" data-toggle="modal" data-target="#animalModal">
 						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
 					</button>
+				<?php } ?>
 					<h3 class="panel-title"><i class="fa fa-paw"></i>&nbsp;Animal Details</h3>
 				</div>
 				<div class="panel-body" id="details_animal">
@@ -264,175 +265,9 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 			</div>
 		</div>
 	</section>
-
-
-	<!-- <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form class="form form-horizontal" role="form" method="post">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h2 class="modal-title" id="orderModalLabel"><i class="fa fa-flask"></i>&nbsp;Test Details</h2>
-					</div>
-					<div class="modal-body">
-						<div class="form-group">
-							<label  class="control-label col-sm-2">Order#</label>
-							<div class="col-sm-4"><p class="form-control-static"><?php echo $order_id; ?></p></div>
-							<label  class="control-label col-sm-2">Test#</label>
-							<div class="col-sm-4"><p class="form-control-static" id="test_id"></p></div>
-						</div>
-						<div class="form-group">
-							<label for="test_test_name" class="control-label col-sm-2">Test</label>
-							<div class="col-sm-10"><p class="form-control-static" id="test_test_name"></p></div>
-						</div>
-						<div class="form-group">
-							<label for="test_breed" class="control-label col-sm-2">Breed</label>
-							<div class="col-sm-10"><p class="form-control-static" id="test_breed"></p></div>
-						</div>
-						<div>
-						Progress...
-						</div>			
-					</div>
-					<div class="modal-footer">
-						<input type="hidden" id="test_id" name="test_id" value="">
-						<input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary">Update</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>-->
 	
-	<div class="modal fade" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<form class="form form-horizontal" role="form" method="post">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h2 class="modal-title" id="clientModalLabel"><i class="fa fa-user"></i>&nbsp;Client Details</h2>
-					</div>
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="form-group">
-									<label for="client_name" class="control-label col-sm-2">Name</label>
-									<div class="col-sm-10"><input type="text" class="form-control" id="client_FullName" name="client_FullName" value=""></div>
-								</div>
-								<div class="form-group">
-									<label for="client_email" class="control-label col-sm-2">Email</label>
-									<div class="col-sm-4"><input type="email" class="form-control" id="client_Email" name="client_Email" value=""></div>
-									<label for="client_phone" class="control-label col-sm-2">Phone</label>
-									<div class="col-sm-4"><input type="tel" class="form-control" id="client_Tel" name="client_Tel" value=""></div>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="well">
-									<h3 style="margin-top: 0px;margin-bottom: 20px;">Home Address</h3>
-									<div class="form-group">
-										<label for="client_address" class="control-label col-sm-2">Address</label>
-										<div class="col-sm-10"><input type="text" class="form-control" id="client_Address" name="client_Address" value=""></div>
-									</div>
-									<div class="form-group">
-										<label for="client_town" class="control-label col-sm-2">Town</label>
-										<div class="col-sm-5 "><input type="text" class="form-control" id="client_Town" name="client_Town" value=""></div>
-										<label for="client_postcode" class="control-label col-sm-2">Postcode</label>
-										<div class="col-sm-3"><input type="text" class="form-control" id="client_Postcode" name="client_Postcode" value=""></div>
-									</div>
-									<div class="form-group">
-										<label for="client_county" class="control-label col-sm-2">County</label>
-										<div class="col-sm-5 "><input type="text" class="form-control" id="client_County" name="client_County" value=""></div>
-										<label for="client_country" class="control-label col-sm-2">Country</label>
-										<div class="col-sm-3"><input type="text" class="form-control" id="client_Country" name="client_Country" value=""></div>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="well">
-									<h3 style="margin-top: 0px;margin-bottom: 20px;">Delivery Address</h3>
-									<div class="form-group">
-										<label for="client_address" class="control-label col-sm-2">Address</label>
-										<div class="col-sm-10"><input type="text" class="form-control" id="client_ShippingAddress" name="client_ShippingAddress" value=""></div>
-									</div>
-									<div class="form-group">
-										<label for="client_town" class="control-label col-sm-2">Town</label>
-										<div class="col-sm-5 "><input type="text" class="form-control" id="client_ShippingTown" name="client_ShippingTown" value=""></div>
-										<label for="client_postcode" class="control-label col-sm-2">Postcode</label>
-										<div class="col-sm-3"><input type="text" class="form-control" id="client_ShippingPostcode" name="client_ShippingPostcode" value=""></div>
-									</div>
-									<div class="form-group">
-										<label for="client_county" class="control-label col-sm-2">County</label>
-										<div class="col-sm-5 "><input type="text" class="form-control" id="client_ShippingCounty" name="client_ShippingCounty" value=""></div>
-										<label for="client_country" class="control-label col-sm-2">Country</label>
-										<div class="col-sm-3"><input type="text" class="form-control" id="client_ShippingCountry" name="client_ShippingCountry" value=""></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<input type="hidden" id="client_id" name="client_id" value="">
-						<input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary" name="client-submitted">Update</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	
-	<div class="modal fade" id="animalModal" tabindex="-1" role="dialog" aria-labelledby="animalModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form class="form form-horizontal" role="form" method="post">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h2 class="modal-title" id="animalModalLabel"><i class="fa fa-paw"></i>&nbsp;Animal Details</h2>
-					</div>
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="form-group">
-									<label for="animal_RegisteredName" class="control-label col-sm-2">Name</label>
-									<div class="col-sm-10"><input type="text" class="form-control" id="animal_RegisteredName" name="animal_RegisteredName" value=""></div>
-								</div>
-								<div class="form-group">
-									<label for="animal_RegistrationNo" class="control-label col-sm-2">Reg No.</label>
-									<div class="col-sm-4"><input type="text" class="form-control" id="animal_RegistrationNo" name="animal_RegistrationNo" value=""></div>
-									<label for="animal_PetName" class="control-label col-sm-2">Pet Name</label>
-									<div class="col-sm-4"><input type="text" class="form-control" id="animal_PetName" name="animal_PetName" value=""></div>
-								</div>
-								<div class="form-group">
-									<label for="animal_BirthDate" class="control-label col-sm-2">DOB</label>
-									<div class="col-sm-4"><input type="text" value="" name="animal_BirthDate" id="animal_BirthDate" class="form-control datepick" autocomplete="off" placeholder="dd/mm/yyyy"></div>
-									<label class="control-label col-sm-2">Sex</label>
-									<div class="col-sm-4">
-										<div class="radioerror"></div>
-										<label class="radio-inline"><input type="radio" id="animal_Sex-Male" class="radiorequired" value="Male" name="animal_Sex" checked="checked"> Male</label>
-										<label class="radio-inline"><input type="radio" id="animal_Sex-Female" class="radiorequired" value="Female" name="animal_Sex"> Female</label>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="animal_TattooOrChip" class="control-label col-sm-2">Microchip</label>
-									<div class="col-sm-4"><input type="text" class="form-control" id="animal_TattooOrChip" name="animal_TattooOrChip" value=""></div>
-									<label for="animal_Colour" class="control-label col-sm-2">Colour</label>
-									<div class="col-sm-4"><input type="text" class="form-control" id="animal_Colour" name="animal_Colour" value=""></div>
-								</div>
-							</div>
-						</div>					
-					</div>
-					<div class="modal-footer">
-						<input type="hidden" id="animal_id" name="animal_id" value="">
-						<input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary" name="animal-submitted">Update</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+<?php get_template_part('part-templates/modal', 'clientDelivery'); ?>
+<?php get_template_part('part-templates/modal', 'animal'); ?>
 
 <?php
 function footer_js(){ ?>
