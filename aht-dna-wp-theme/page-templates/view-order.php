@@ -230,9 +230,6 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<!-- <button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="order" disabled="disabled" data-toggle="modal" data-target="#orderModal">
-						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
-					</button> -->
 					<h3 class="panel-title"><i class="fa fa-flask"></i>&nbsp;Test Details</h3>
 				</div>
 				<div class="panel-body" id="details_order">
@@ -242,9 +239,11 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
+				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
 					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="client" disabled="disabled" data-toggle="modal" data-target="#clientModal">
 						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
 					</button>
+				<?php } ?>
 					<h3 class="panel-title"><i class="fa fa-user"></i>&nbsp;Client Details</h3>
 				</div>
 				<div class="panel-body" id="details_client">
@@ -254,9 +253,11 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
+				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
 					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="animal" disabled="disabled" data-toggle="modal" data-target="#animalModal">
 						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
 					</button>
+				<?php } ?>
 					<h3 class="panel-title"><i class="fa fa-paw"></i>&nbsp;Animal Details</h3>
 				</div>
 				<div class="panel-body" id="details_animal">
