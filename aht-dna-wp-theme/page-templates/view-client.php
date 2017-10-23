@@ -52,7 +52,8 @@ $test_details = getTestsByClient($client_id);
 			$test_count = 0;
 			foreach ( $test_details as $test){
 				$test->order_status = $order_steps[0];
-				
+				if($test->kit_sent != ''){$test->order_status = $order_steps[1];}
+				if($test->returned_date != ''){$test->order_status = $order_steps[2];}				
 				if($test->cancelled_date != ''){ $test->order_status = 'Cancelled'; }
 				
 				$status_label = '<span class="label label-info">'.str_replace('(s)', '', $test->order_status).'</span>';
