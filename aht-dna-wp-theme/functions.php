@@ -47,6 +47,14 @@ function admin_login_redirect($redirect_to, $request, $user) {
 }
 add_filter ( "login_redirect", "admin_login_redirect", 10, 3 );
 
+function login_checked_remember_me() {
+	add_filter( 'login_footer', 'rememberme_checked' );
+}
+add_action( 'init', 'login_checked_remember_me' );
+function rememberme_checked() {
+	echo "<script>document.getElementById('rememberme').checked = true;</script>";
+}
+
 // Hooking up our functions to WordPress filters
 function mytheme_enqueue_scripts() {
 	wp_deregister_script ( 'jquery' );
@@ -116,7 +124,7 @@ function mytheme_enqueue_scripts() {
 	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array (
 			'jquery',
 			'datatables-js' 
-	), '0.1.1', true );
+	), '0.1.2', true );
 	wp_enqueue_script ( 'js-functions' );
 	
 	// register template-specific scripts
