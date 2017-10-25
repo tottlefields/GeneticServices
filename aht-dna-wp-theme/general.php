@@ -35,7 +35,7 @@ function countOrders($status){
 		case 'Sample(s) Received' : $sql .= ' AND returned_date IS NOT NULL'; break;
 		case 'Sample(s) Processed' : $sql .= ''; break;
 	}
-	$count = $wpdb->get_var($sql, OBJECT );
+	$count = $wpdb->get_var($sql);
 	return $count;	
 }
 
@@ -246,7 +246,7 @@ function countTests($year=null, $month=0){
 	return $test_count;
 }
 
-function countOrders($year=null, $month=0){
+function orderStats($year=null, $month=0){
 	global $wpdb;
 	
 	if(!isset($year))

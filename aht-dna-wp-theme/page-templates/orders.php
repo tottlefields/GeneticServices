@@ -25,9 +25,9 @@
 				<th class="text-center">OrderID</th>
 				<th class="text-center">Webshop</th>
 				<th class="text-center">Date</th>
-				<!-- <th>Report Format</th> -->
 				<th>Client</th>
 				<th class="text-center">#Swabs</th>
+				<th class="text-center">Tests</th>
 				<th class="text-center">PDF</th>
 			</thead>
 			<tbody>
@@ -49,9 +49,9 @@
 				<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$order->ID.'">AHT'.$order->ID.'</a></td>
 				<td class="text-center">'.$order->webshop_id.'</td>
 				<td class="text-center">'.$order_date->format('d/m/Y').'</td>
-				<!-- <td>'.$order->ReportFormat.'</td>-->
 				<td>'.$client.'</td>
 				<td class="text-center">'.$order->SwabCount.'</td>
+				<td class="text-center">'.$order->content.'</td>
 				<td class="text-center"><a href="javascript:generatePDFs(\''.$order->ID.'\')"><i class="fa fa-file-pdf-o link" id="pdf_'.$order->ID.'"></i></a></td>
 			</tr>';
 		}
