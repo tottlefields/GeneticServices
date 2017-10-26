@@ -72,6 +72,7 @@ function do_return_sample(){
 	
 	$return = array();
 	$swabId = intval( $_POST['swabId'] );
+	$pending = isset( $_POST['pending'] ) ? intval( $_POST['pending'] ) : 0;
 	
 	$order_ids = (is_array($_POST['orderId'])) ? $_POST['orderId'] : explode(',', trim($_POST['orderId']));		
 	foreach ($order_ids as $orderId){
@@ -93,7 +94,7 @@ function do_return_sample(){
 		 }
 		 
 		 if (isset($swabId) && $swabId > 0){ $test_details = [getTestDetails($swabId)]; }
-		 else{ $test_details = getTestsByOrder($orderId); }
+		 else{ $test_details = getTestsByOrder($orderId, $pending); }
 		 foreach ($test_details as $test){
 		 	foreach ($test as $key => $value){
 			 	if($value === null){ $test->$key = ""; }

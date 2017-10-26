@@ -54,12 +54,13 @@ function showVetModal() {
 	});
 }
 
-function generatePDFs(order_ids, swabID) {
+function generatePDFs(order_ids, swabID, pending) {
 
 	var data = {
 		'action'  : 'order_details',
 		'orderId' : order_ids,
-		'swabId'  : swabID
+		'swabId'  : swabID,
+		'pending' : pending
 	};
 
 	jQuery.ajax({

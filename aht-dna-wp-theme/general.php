@@ -115,11 +115,12 @@ function orderSearch($search_terms){
 	return $orders;
 }
 
-function getTestsByOrder($order_id){
+function getTestsByOrder($order_id, $pending){
 	global $wpdb;	
 	$tests = array();
 	
 	$sql = "select id from order_tests where order_id=".$order_id;
+	if ($pending){ $sql .= ' AND kit_sent IS NULL'; }
 	$test_ids = $wpdb->get_results($sql, ARRAY_N );
 	foreach ($test_ids as $row){
 		$test_details = getTestDetails($row[0]);
