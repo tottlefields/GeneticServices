@@ -52,7 +52,7 @@
 				<td>'.$client.'</td>
 				<td class="text-center">'.$order->SwabCount.'</td>
 				<td class="text-center">'.$order->content.'</td>
-				<td class="text-center"><a href="javascript:generatePDFs(\''.$order->ID.'\')"><i class="fa fa-file-pdf-o link" id="pdf_'.$order->ID.'"></i></a></td>
+				<td class="text-center"><a href="javascript:generatePDFs(\''.$order->ID.'\', null, 1)"><i class="fa fa-file-pdf-o link" id="pdf_'.$order->ID.'"></i></a></td>
 			</tr>';
 		}
 		?>
