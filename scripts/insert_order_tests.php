@@ -3,7 +3,7 @@
 $HOME = getenv('HOME');
 $settings = parse_ini_file($HOME.'/.my.cnf',true);
 
-$DB = 'es_wp_dennis';
+$DB = 'wp_dennis';
 $HOST = 'localhost';
 $USER = $settings['client']['user'];
 $PASS = $settings['client']['password'];
@@ -25,9 +25,11 @@ while ($row = $res->fetch_assoc()) {
 	if ($row['no_swabs']>1){
 		$sub_tests = explode(':', $row['sub_tests']);
 		foreach ($sub_tests as $test_code){
-			$mysqli->query("replace into order_tests (OrderID,AnimalID,TestCode,Quantity,SampleType,VetID,test_code) values (".$row['OrderID'].",".$row['AnimalID'].",'".$row['TestCode']."',".$row['Quantity'].",'".$row['SampleType']."',".$row['VetID'].",'".$test_code."')");
+			$mysqli->query("replace into order_tests (OrderID,AnimalID,TestCode,Quantity,SampleType,VetID,test_code,bundle) values (".$row['OrderID'].",".$row['AnimalID'].",'".$row['TestCode']."',".$row['Quantity'].",'".$row['SampleType']."',".$row['VetID'].",'".$test_code."','".$row['test_code']."')");
 		}
-		$order_updates[$row['OrderID']][$row['TestCode']]++;
+		if(!isset($order_updates[$row['OrderID']])){ $order_updates[$row['OrderID']] = array(); }
+		if(!isset($order_updates[$row['OrderID']][$row['test_code']])){ $order_updates[$row['OrderID']][$row['test_code']] = 0; }
+		$order_updates[$row['OrderID']][$row['test_code']]++;
 	}
 	else{
 		$result = $mysqli->query("replace into order_tests (OrderID,AnimalID,TestCode,Quantity,SampleType,VetID,test_code) values (".$row['OrderID'].",".$row['AnimalID'].",'".$row['TestCode']."',".$row['Quantity'].",'".$row['SampleType']."','".$row['VetID']."','".$row['test_code']."')");
