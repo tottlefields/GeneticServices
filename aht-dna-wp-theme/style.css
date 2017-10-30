@@ -829,7 +829,7 @@ ul.messages li .message {
 
 	.statbox .footer {
 		background: rgba(0,0,0,.1);
-		background-color: #19FFFFFF;
+		color: #FFFFFF;
 		position: absolute;
 		bottom: 0px;
 		right: 0px;
