@@ -1,6 +1,9 @@
-<?php 
+<?php
+
+$referer = (wp_get_referer()) ? wp_get_referer : $_SERVER['HTTP_REFERER'];
+ 
 if(empty($_REQUEST)){
-	wp_safe_redirect(wp_get_referer());
+	wp_safe_redirect($referer);
 	exit;	
 }
 
@@ -31,8 +34,8 @@ if (isset($_REQUEST['client-submitted'])){
 		$client_id = $wpdb->insert_id;
 		$wpdb->update('orders', array('client_id' => $client_id), array('id' => $_REQUEST['id']));
 	}
-	wp_safe_redirect(wp_get_referer());
-	//wp_redirect(get_site_url().'/orders/view/?id='.$_REQUEST['id']);
+	wp_safe_redirect($referer);
+	//wp_safe_redirect(get_site_url().'/orders/view/?id='.$_REQUEST['id']);
 	exit;	
 }
 
@@ -57,8 +60,8 @@ if (isset($_REQUEST['animal-submitted'])){
 		}
 	}
 	$wpdb->update('animal', $data, $where);
-	wp_safe_redirect(wp_get_referer());
-	//wp_redirect(get_site_url().'/orders/view/?id='.$_REQUEST['id']);
+	wp_safe_redirect($referer);
+	//wp_safe_redirect(get_site_url().'/orders/view/?id='.$_REQUEST['id']);
 	exit;	
 	
 }
