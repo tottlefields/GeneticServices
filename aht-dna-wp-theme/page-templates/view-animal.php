@@ -1,4 +1,5 @@
 <?php /* Template Name: View Animal */ ?>
+<?php get_template_part('part-templates/modal-updates'); ?>
 <?php
 if(empty($_REQUEST) || !isset($_REQUEST['id'])){
 	//wp_redirect(get_site_url().'/orders/');
@@ -9,6 +10,7 @@ $animal_id = $_REQUEST['id'];
 $animals = animalSearch(array('id' => $animal_id));
 $animal_details = $animals[0];
 $name = (isset($animal_details->RegisteredName)) ? $animal_details->RegisteredName.' <em>('.$animal_details->PetName.')</em>' : $animal_details->PetName;
+$animal_details->animal_id = $animal_details->id;
 
 $clients = clientSearch(array('id' => $animal_details->client_id));
 $client_details = $clients[0];

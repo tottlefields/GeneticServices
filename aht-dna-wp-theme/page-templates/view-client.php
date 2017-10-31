@@ -1,4 +1,5 @@
 <?php /* Template Name: View Client */ ?>
+<?php get_template_part('part-templates/modal-updates'); ?>
 <?php
 if(empty($_REQUEST) || !isset($_REQUEST['id'])){
 	//wp_redirect(get_site_url().'/orders/');
