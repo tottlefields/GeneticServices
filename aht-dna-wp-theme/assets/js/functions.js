@@ -220,8 +220,10 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
 			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
 
-			clientDiv.html(client_panel);			
+			clientDiv.html(client_panel);
+			console.log(ClientDetails);
 			populateClientModal(ClientDetails);
+			$('#order_id').attr('value', orderId);
 
 			/* ANIMAL DETAILS */
 			animal_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/animals/view?id=' + TestDetails.animal_id
@@ -273,7 +275,7 @@ function populateClientModal(ClientDetails){
 	if (ClientDetails.ShippingAddress3 !== null && ClientDetails.ShippingAddress3 !== "")
 		clientShipAddress.push(ClientDetails.ShippingAddress3);
     
-	$('#client_id').attr('value', ClientDetails.id);
+	$('#client_id').attr('value', ClientDetails.client_id);
 	$('#client_FullName').attr('value', ClientDetails.FullName);
 	$('#client_Email').attr('value', ClientDetails.Email);
 	$('#client_Tel').attr('value', ClientDetails.Tel);
