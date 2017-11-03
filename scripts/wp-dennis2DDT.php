@@ -69,7 +69,7 @@ if(count($results > 0)){
 		array_push($ddt_row, $row->clientEmail);
 		array_push($ddt_row, $row->clientName);
 		array_push($ddt_row, "");
-		array_push($ddt_row, $row->clientAddress);
+		array_push($ddt_row, preg_replace( "/\r|\n/", ", ", $row->clientAddress));
 		array_push($ddt_row, $row->clientTown);
 		array_push($ddt_row, $row->clientCounty);
 		array_push($ddt_row, $row->clientPostcode);
@@ -96,7 +96,7 @@ if(count($results > 0)){
 		array_push($ddt_row, $row->returned_date);
 		array_push($ddt_row, ($row->ShippingName == "") ? $row->clientName : $row->ShippingName);
 		array_push($ddt_row, ($row->ShippingCompany == "") ? "" : $row->ShippingCompany);
-		array_push($ddt_row, (($row->ShippingAddress == "") ? $row->clientAddress : $row->ShippingAddress));
+		array_push($ddt_row, ($row->ShippingAddress == "") ? preg_replace( "/\r|\n/", ", ", $row->clientAddress) : preg_replace( "/\r|\n/", ", ", $row->ShippingAddress));
 		array_push($ddt_row, ($row->ShippingTown == "") ? $row->clientTown : $row->ShippingTown);
 		array_push($ddt_row, ($row->ShippingCounty == "") ? $row->clientCounty : $row->ShippingCounty);
 		array_push($ddt_row, ($row->ShippingPostcode == "") ? $row->clientPostcode : $row->ShippingPostcode);
