@@ -104,6 +104,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 			$test_count = 0;
 			foreach ( $test_details as $test){
 				
+				$class_disabled = '';
 				$client = '<a href="'.get_site_url().'/clients/view?id='.$order_details->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order_details->FullName.'</a>';
 				if ($order_details->Email != ''){
 					$client .= '&nbsp;<a href="mailto:'.$order_details->Email.'"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>';
