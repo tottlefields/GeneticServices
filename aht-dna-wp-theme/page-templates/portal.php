@@ -136,9 +136,9 @@ if (isset($_REQUEST['submit'])){
 <?php
 	global $wpdb;
 
-	$sql = "select concat('\"', breed, '\":{', group_concat(concat('\"',test_code, '\":\"', test_name,'\"')), '}') as row 
+	$sql = "select concat('\"', breed, '\":{', group_concat(concat('\"',test_code, '\":\"', test_name,'\"') order by test_name), '}') as row 
     		from breed_test_lookup inner join test_codes using (test_code) 
-    		inner join breed_list on ID=breed_id group by breed_id order by breed";
+    		inner join breed_list on ID=breed_id where no_swabs=1 group by breed order by breed";
 	$results = $wpdb->get_results($sql, OBJECT );
 	
 	if ( $results ){
