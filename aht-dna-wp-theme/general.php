@@ -160,13 +160,14 @@ function getTestDetails($swab_id){
 	$test_details = array();
 	
 	$sql = "select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, date_format(o.OrderDate, \"%d/%m/%Y\") as order_date,
-			a.*, t.*, test_name, no_results, no_swabs, sub_tests, 
-			date_format(a.BirthDate, \"%d/%m/%Y\") as DOB, case when Sex='f' then 'Female' else 'Male' end as sex
-			from orders o inner join order_tests t on o.id=order_id 
-			left outer join animal a on animal_id=a.id 
-			left outer join breed_list b on a.breed_id=b.id 
-			left outer join test_codes using(test_code) 
-			where (a.breed_id is NULL or b.is_primary=1) and t.id=".$swab_id;
+		a.*, t.*, date(kit_sent) as date_sent, date(returned_date) as date_returned, date(cancelled_date) as date_cancelled,
+		test_name, no_results, no_swabs, sub_tests, 
+		date_format(a.BirthDate, \"%d/%m/%Y\") as DOB, case when Sex='f' then 'Female' else 'Male' end as sex
+		from orders o inner join order_tests t on o.id=order_id 
+		left outer join animal a on animal_id=a.id 
+		left outer join breed_list b on a.breed_id=b.id 
+		left outer join test_codes using(test_code) 
+		where (a.breed_id is NULL or b.is_primary=1) and t.id=".$swab_id;
 	$test_details = $wpdb->get_results($sql, OBJECT );
 #	echo $wpdb->last_query."\n";
 #	echo $wpdb->last_result."\n";

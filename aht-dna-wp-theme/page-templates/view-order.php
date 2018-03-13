@@ -110,7 +110,8 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 					$client .= '&nbsp;<a href="mailto:'.$order_details->Email.'"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>';
 				}
 				
-				$animal = '<a href="'.get_site_url().'/animals/view?id='.$test->animal_id.'"><i class="fa fa-paw" aria-hidden="true"></i>'.$test->RegisteredName.'</a>';
+				$animal_name = ($test->RegisteredName && $test->RegisteredName != '') ? $test->RegisteredName : '<em>'.$test->PetName.'</em>';	
+				$animal = '<a href="'.get_site_url().'/animals/view?id='.$test->animal_id.'"><i class="fa fa-paw" aria-hidden="true"></i>'.$animal_name.'</a>';
 				
 				$portalID = ($test->PortalID == '') ? '<span style="color:#BBBBBB">N/A</span>' : $test->PortalID;
 				
