@@ -12,7 +12,7 @@ if (isset($_REQUEST['submit'])){
 	if ($_FILES["portal_file"]["error"] == 0){ // && preg_match('/text/', $_FILES["portal_file"]["type"])){
 		$fh = fopen($_FILES['portal_file']['tmp_name'], 'rb');
 		$first_line = fgets($fh);
-		if (count(explode(',', $first_line)) > 1){ $error = "File is comma-separated. Please re-save as tab-delimited and try uploading again."; }
+		if (count(explode(',', $first_line)) > 1){ $error .= "File is comma-separated. Please re-save as tab-delimited and try uploading again."; }
 		else{
 			while (($line = fgetcsv($fh, 1000, "\t")) !== false){
 				# [0] => Returned? // [1] => Swab# [2] => Test // [3] => Vet Verified? // [4] => Report?
@@ -23,6 +23,7 @@ if (isset($_REQUEST['submit'])){
 				
 				if ($line[0] === 'Returned?'){ continue; }
 				
+				$client_id = 0;				
 				$clients = clientSearch(array(
 						'Postcode'	=> $line[20],
 						'FullName'	=> $line[13],
@@ -39,8 +40,11 @@ if (isset($_REQUEST['submit'])){
 						'Postcode'	=> $line[20],
 				)); }
 				elseif (count($clients) == 1) { $client_id = $clients[0]->id; }
-				else { $error = "multiple clients match : ".$line[13]. '/ '.$line[14]; break; }
-		
+				else { $error .= "multiple clients match : ".$line[13]. '/ '.$line[14]; break; }
+				
+				if ($client_id == 0){ $error .= "Something has gone wrong with getting a client id : ".$line[13]. '/ '.$line[14]; break; }
+
+				$animal_id = 0;
 				$animals = animalSearch(array(
 						'RegisteredName'	=> $line[5],
 						'RegistrationNo'	=> $line[7],
@@ -61,7 +65,8 @@ if (isset($_REQUEST['submit'])){
 				}
 				elseif (count($animals) == 1) { $animal_id = $animals[0]->id; }
 				else {  $error = "multiple animals match : ".$line[5]." / ".$line[7]." / ".$line[8]; break; }
-	
+				
+				if ($animal_id == 0){ $error .= "Something has gone wrong with getting an animal id : ".$line[5]. '/ '.$line[7]; break; }	
 	
 				$orders = orderSearch(array(
 						'OrderDate'	=> date('Y-m-d'),
@@ -78,7 +83,7 @@ if (isset($_REQUEST['submit'])){
 					));
 				}
 				elseif (count($orders) == 1) { $order_id = $orders[0]->ID; }
-				else {  $error = "multiple orders match : ".$line[13].' ('.$client_id.') / '.date('Y-m-d'); break; }
+				else {  $error .= "multiple orders match : ".$line[13].' ('.$client_id.') / '.date('Y-m-d'); break; }
 				
 				$vet_id = NULL;
 				if ($line[3] == 'Yes'){
@@ -98,7 +103,7 @@ if (isset($_REQUEST['submit'])){
 						));
 					}
 					elseif (count($vets) == 1) { $vet_id = $vets[0]->id; }
-					else {  $error = "multiple vets match : ".$line[21].' / '.$line[22]; break; }
+					else {  $error .= "multiple vets match : ".$line[21].' / '.$line[22]; break; }
 				}
 	
 				$results = $wpdb->get_results("SELECT * from order_tests WHERE PortalID='".$line[1]."'", OBJECT );
@@ -116,7 +121,7 @@ if (isset($_REQUEST['submit'])){
 					if($swab_id > 0){
 						$tests_loaded++;
 					}
-					else {  $error = "test hasn't loaded correctly : ".$line[1]; break; }
+					else {  $error .= "test hasn't loaded correctly : ".$line[1]; break; }
 				}
 			}
 		}
