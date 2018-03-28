@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
 			targets : [ 1,6,7 ],
 			orderable : false
 		}, {
-			targets : [ 0 ],
+			targets : [ 0,7 ],
 			visible : false
 		}, {
 			type : 'date-uk',
@@ -31,6 +31,7 @@ jQuery(document).ready(function($) {
 	});
 	
 	$(".checkboxRow").on("click", function() {
+			console.log("here - "+this.checked);
 		if (this.checked == true){
 			$("#exportPDFs").prop("disabled", false);
 		}
@@ -64,7 +65,7 @@ jQuery(document).ready(function($) {
 				orderIds.push($(this).val());
 			}
 		});
-		generatePDFs(orderIds);
+		generatePDFs(orderIds, null, 1);
 	});
 	
 

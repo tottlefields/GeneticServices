@@ -27,8 +27,16 @@ function SQLToDate($date){
 	return date_format(DateTime::createFromFormat('Y-m-d', $date), 'd/m/Y');
 }
 
-function bookInSamples($samples, $user, $date){
-	
+function countOrders($status){
+	global $wpdb;
+	$sql = "SELECT count(distinct orders.id) from orders inner join order_tests on orders.id=order_id where cancelled_date is null";
+	switch($status){
+		case 'Order Placed' : $sql .= ' AND kit_sent IS NULL'; break;
+		case 'Sample(s) Received' : $sql .= ' AND returned_date IS NOT NULL'; break;
+		case 'Sample(s) Processed' : $sql .= ''; break;
+	}
+	$count = $wpdb->get_var($sql);
+	return $count;	
 }
 
 function clientSearch($search_terms){
@@ -59,7 +67,7 @@ function animalSearch($search_terms, $client_id=0){
 	$animals = array();
 	
 	if(count($search_terms)>0){
-		$sql = "SELECT * FROM animal WHERE (";
+		$sql = "SELECT *, date_format(BirthDate, \"%d/%m/%Y\") as DOB, case when Sex='f' then 'Female' else 'Male' end as sex FROM animal WHERE (";
 		//$last = array_pop(array_keys($search_terms));
 		$where = array();
 		foreach ($search_terms as $field => $term){
@@ -107,11 +115,38 @@ function orderSearch($search_terms){
 	return $orders;
 }
 
-function getTestsByOrder($order_id){
+function getTestsByOrder($order_id, $pending){
 	global $wpdb;	
 	$tests = array();
 	
 	$sql = "select id from order_tests where order_id=".$order_id;
+	if ($pending){ $sql .= ' AND kit_sent IS NULL'; }
+	$test_ids = $wpdb->get_results($sql, ARRAY_N );
+	foreach ($test_ids as $row){
+		$test_details = getTestDetails($row[0]);
+		array_push($tests, $test_details);
+	}
+	return $tests;	
+}
+
+function getTestsByAnimal($animal_id){
+	global $wpdb;	
+	$tests = array();
+	
+	$sql = "select id from order_tests where animal_id=".$animal_id;
+	$test_ids = $wpdb->get_results($sql, ARRAY_N );
+	foreach ($test_ids as $row){
+		$test_details = getTestDetails($row[0]);
+		array_push($tests, $test_details);
+	}
+	return $tests;	
+}
+
+function getTestsByClient($client_id){
+	global $wpdb;	
+	$tests = array();
+	
+	$sql = "select t.* from order_tests t inner join orders o on order_id=o.id  where client_id=".$client_id;
 	$test_ids = $wpdb->get_results($sql, ARRAY_N );
 	foreach ($test_ids as $row){
 		$test_details = getTestDetails($row[0]);
@@ -124,7 +159,8 @@ function getTestDetails($swab_id){
 	global $wpdb;	
 	$test_details = array();
 	
-	$sql = "select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, a.*, t.*, test_name, no_results, no_swabs, sub_tests, 
+	$sql = "select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, date_format(o.OrderDate, \"%d/%m/%Y\") as order_date,
+			a.*, t.*, test_name, no_results, no_swabs, sub_tests, 
 			date_format(a.BirthDate, \"%d/%m/%Y\") as DOB, case when Sex='f' then 'Female' else 'Male' end as sex
 			from orders o inner join order_tests t on o.id=order_id 
 			left outer join animal a on animal_id=a.id 
@@ -211,7 +247,7 @@ function countTests($year=null, $month=0){
 	return $test_count;
 }
 
-function countOrders($year=null, $month=0){
+function orderStats($year=null, $month=0){
 	global $wpdb;
 	
 	if(!isset($year))

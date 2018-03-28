@@ -81,82 +81,43 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'pdfmake-fonts-js' );
 	
 	// DataTables
-	wp_register_script ( 'datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.min.js', array (
-			'jquery',
-			'bootstrap-js',
-			'pdfmake-js' 
-	), '1.10.15', true );
+	wp_register_script ( 'datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.min.js', array ('jquery','bootstrap-js','pdfmake-js'), '1.10.15', true );
 	wp_enqueue_script ( 'datatables-js' );
 	
 	wp_register_script ( 'dt-ukdatesort-js', '//cdn.datatables.net/plug-ins/1.10.16/sorting/date-uk.js', array ('bootstrap-js'), '1.10.16', true);
 	wp_enqueue_script ( 'dt-ukdatesort-js' );
 	
 	// Bootstrap Toggle
-	wp_register_script ( 'bs-toggle-js', '//cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js', array (
-			'jquery' 
-	), '2.2.2', true );
+	wp_register_script ( 'bs-toggle-js', '//cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js', array ('jquery'), '2.2.2', true );
 	wp_enqueue_script ( 'bs-toggle-js' );
 	
 	// Barcode JS
-	wp_register_script ( 'jquery-barcode-js', get_template_directory_uri () . '/assets/js/jquery-barcode.min.js', array (
-			'jquery' 
-	), '2.0.3', true );
+	wp_register_script ( 'jquery-barcode-js', get_template_directory_uri () . '/assets/js/jquery-barcode.min.js', array ('jquery'), '2.0.3', true );
 	wp_enqueue_script ( 'jquery-barcode-js' );
 	
-	// Editable
-	// wp_register_script('editable-js', '//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js', array('jquery', 'bootstrap-js'), '1.5.0', true);
-	// wp_enqueue_script('editable-js');
-	
 	// jQuery Validate
-	wp_register_script ( 'jquery-validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js', array (
-			'jquery' 
-	), '1.17.0', true );
+	wp_register_script ( 'jquery-validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js', array ('jquery' ), '1.17.0', true );
 	wp_enqueue_script ( 'jquery-validate' );
 	
 	// Bootbox.js
-	wp_register_script ( 'bootbox-js', '//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js', array (
-			'jquery',
-			'bootstrap-js' 
-	), '4.4.0', true );
+	wp_register_script ( 'bootbox-js', '//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js', array ('jquery','bootstrap-js'), '4.4.0', true );
 	wp_enqueue_script ( 'bootbox-js' );
 	
 	// Main functions js file
-	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array (
-			'jquery',
-			'datatables-js' 
-	), '0.1.2', true );
+	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.2', true );
 	wp_enqueue_script ( 'js-functions' );
 	
 	// register template-specific scripts
-	wp_register_script ( 'js-orders', get_template_directory_uri () . '/assets/js/orders.js', array (
-			'jquery',
-			'datatables-js' 
-	), '0.1', true );
-	wp_register_script ( 'js-new-order', get_template_directory_uri () . '/assets/js/new-order.js', array (
-			'jquery' 
-	), '0.1', true );
-	wp_register_script ( 'js-portal', get_template_directory_uri () . '/assets/js/portal.js', array (
-			'jquery' 
-	), '0.1', true );
+	wp_register_script ( 'js-orders', get_template_directory_uri () . '/assets/js/orders.js', array ('jquery','datatables-js'), '0.1', true );
+	wp_register_script ( 'js-new-order', get_template_directory_uri () . '/assets/js/new-order.js', array ('jquery'), '0.1', true );
+	wp_register_script ( 'js-portal', get_template_directory_uri () . '/assets/js/portal.js', array ('jquery'), '0.1', true );
+	wp_register_script ( 'chart-js', '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js', array (), '2.7.0', true );		//Chart JS
 	
 	// conditional load
-	if (is_page ( array (
-			'orders' 
-	) )) {
-		wp_enqueue_script ( 'js-orders' );
-		// wp_localize_script('js-orders', 'DennisAjax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
-	}
-	if (is_page ( array (
-			'add-manual-order' 
-	) )) {
-		wp_enqueue_script ( 'js-new-order' );
-		// wp_localize_script('js-new-order', 'DennisAjax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
-	}
-	if (is_page ( array (
-			'portal' 
-	) )) {
-		wp_enqueue_script ( 'js-portal' );
-	}
+	if (is_page ( array ('orders') )) { wp_enqueue_script ( 'js-orders' ); }
+	if (is_page ( array ('add-manual-order') )) { wp_enqueue_script ( 'js-new-order' ); }
+	if (is_page ( array ('portal') )) { wp_enqueue_script ( 'js-portal' ); }
+	if (is_page ( array ('statistics') )) { wp_enqueue_script ( 'chart-js' ); }
 }
 add_action ( 'wp_enqueue_scripts', 'mytheme_enqueue_scripts' );
 
