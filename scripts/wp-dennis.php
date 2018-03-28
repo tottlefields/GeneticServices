@@ -7,7 +7,7 @@ if (! isset ( $MAX_ID ) || $MAX_ID == 'NULL') {
 }
 $post_ids = array ();
 
-echo "MAX ID = " . $MAX_ID . "\n";
+//echo "MAX ID = " . $MAX_ID . "\n";
 
 // Get all the IDs you want to choose from
 $sql = $wpdb->prepare ( "SELECT ID FROM $wpdb->posts WHERE ID > %d", $MAX_ID );
