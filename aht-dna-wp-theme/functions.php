@@ -106,12 +106,15 @@ function mytheme_enqueue_scripts() {
 	// Main functions js file
 	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.2', true );
 	wp_enqueue_script ( 'js-functions' );
+	// Main utils js file
+	wp_register_script ( 'js-utils', get_template_directory_uri () . '/assets/js/utils.js', array (), '0.1.2', false );
+	wp_enqueue_script ( 'js-utils' );
 	
 	// register template-specific scripts
 	wp_register_script ( 'js-orders', get_template_directory_uri () . '/assets/js/orders.js', array ('jquery','datatables-js'), '0.1', true );
 	wp_register_script ( 'js-new-order', get_template_directory_uri () . '/assets/js/new-order.js', array ('jquery'), '0.1', true );
 	wp_register_script ( 'js-portal', get_template_directory_uri () . '/assets/js/portal.js', array ('jquery'), '0.1', true );
-	wp_register_script ( 'chart-js', '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js', array (), '2.7.0', true );		//Chart JS
+	wp_register_script ( 'chart-js', '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js', array (), '2.7.0', false );		//Chart JS
 	
 	// conditional load
 	if (is_page ( array ('orders') )) { wp_enqueue_script ( 'js-orders' ); }

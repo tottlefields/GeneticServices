@@ -62,7 +62,15 @@ if (isset($_REQUEST['client-submitted'])){
 				$client_data[$new_key] = implode(', ', $address);
 			}
 			elseif (preg_match('/^Shipping/', $new_key)){
-				$order_data[$new_key] = $value;
+				if (preg_match('/^ShippingAddress/', $new_key)){
+					$shipping_address = array_pad(explode(', ', $value), 3, '');
+					$order_data[$new_key."3"] = array_pop($shipping_address);
+					$order_data[$new_key."2"] = array_pop($shipping_address);
+					$order_data[$new_key] = implode(', ', $shipping_address);
+				}
+				else{
+					$order_data[$new_key] = $value;
+				}
 			}
 			else{
 				$client_data[$new_key] = $value;
