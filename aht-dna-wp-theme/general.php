@@ -54,10 +54,12 @@ function clientSearch($search_terms){
 			//$sql .= "($field <> ''  AND $field = '$term')";
 			//if($field != $last) { $sql .= ' OR '; }
 		}
-		$sql .= implode(" AND ", $where);
-		$sql .= ")";
-		$clients = $wpdb->get_results($sql, OBJECT );
-		//echo $wpdb->last_query."\n";
+		if (count($where) > 0){
+			$sql .= implode(" AND ", $where);
+			$sql .= ")";
+			$clients = $wpdb->get_results($sql, OBJECT );
+			//echo $wpdb->last_query."\n";
+		}
 	}
 	return $clients;
 }
@@ -77,13 +79,15 @@ function animalSearch($search_terms, $client_id=0){
 			//$sql .= "($field <> ''  AND $field = '$term')";
 			//if($field != $last) { $sql .= ' OR '; }
 		}
-		$sql .= implode(" AND ", $where);
-		$sql .= ")";
-		if (isset($client_id) && $client_id > 0){
-			$sql .= " AND client_id=$client_id";
+		if (count($where) > 0){
+			$sql .= implode(" AND ", $where);
+			$sql .= ")";
+				if (isset($client_id) && $client_id > 0){
+				$sql .= " AND client_id=$client_id";
+			}
+			$animals = $wpdb->get_results($sql, OBJECT );
+			//echo $wpdb->last_query."\n";
 		}
-		$animals = $wpdb->get_results($sql, OBJECT );
-		//echo $wpdb->last_query."\n";
 	}
 	return $animals;
 	
