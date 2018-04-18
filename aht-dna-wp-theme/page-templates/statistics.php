@@ -1,4 +1,5 @@
 <?php /* Template Name: Statistics */ ?>
+<?php global $wpdb; ?>
 <?php get_header(); ?>
 					<h1><?php wp_title('', true,''); ?>
 						<span style="font-size:50%"><ul class="breadcrumb pull-right">
@@ -42,41 +43,52 @@
 						<div class="col-md-4">
 							<canvas id="myChart" height="400"></canvas>
 							<?php
-							$sql = "select date_format(OrderDate, '%Y-%m') as OrderMonth, count(*) from orders inner join order_tests on orders.id=order_id where cancelled_date is null group by 1";
-						/*	+------------+----------+
-							| OrderMonth | count(*) |
-							+------------+----------+
-							| 2017-01    |      554 |
-							| 2017-02    |      609 |
-							| 2017-03    |      601 |
-							| 2017-04    |      466 |
-							| 2017-05    |      517 |
-							| 2017-06    |      501 |
-							| 2017-07    |      495 |
-							| 2017-08    |      475 |
-							| 2017-09    |      894 |
-							| 2017-10    |     1513 |
-							| 2017-11    |       32 |
-							+------------+----------+  */
+							$sql = "select date_format(OrderDate, '%Y') as OrderYear, date_format(OrderDate, '%m') as OrderMonth, count(*) as month_count 
+							from orders inner join order_tests on orders.id=order_id where cancelled_date is null group by 1,2";
+						/*	+-----------+------------+----------+
+							| OrderYear | OrderMonth | count(*) |
+							+-----------+------------+----------+
+							| 2017      | 01         |      553 |
+							| 2017      | 02         |      608 |
+							| 2017      | 03         |      601 |
+							| 2017      | 04         |      466 |
+							| 2017      | 05         |      517 |
+							| 2017      | 06         |      501 |
+							| 2017      | 07         |      495 |
+							| 2017      | 08         |      474 |
+							| 2017      | 09         |      894 |
+							| 2017      | 10         |     1512 |
+							| 2017      | 11         |      690 |
+							| 2017      | 12         |      483 |
+							| 2018      | 01         |     1384 |
+							| 2018      | 02         |     1044 |
+							| 2018      | 03         |     1444 |
+							| 2018      | 04         |      448 |
+							+-----------+------------+----------+ */
+							$results = $wpdb->get_results($sql);
+							$order_counts = array('2017' => array(), '2018' => array());
+							foreach ( $results as $order_date ) {
+								array_push($order_counts[$order_date->OrderYear], $order_date->month_count);
+							}
 							?>
-
 							<script>
 								var ctx = document.getElementById("myChart").getContext('2d');
 								var myChart = new Chart(ctx, {
 									type: 'line',
 									data: {
 										labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-										datasets: [/*{
-											label: '2016',
-											data: [554,609,601,466,517,501,495,475,894,1513,32,0],
-											//backgroundColor: 'rgba(255, 99, 132, 0.2)',
-											borderColor: 'rgba(255,99,132,1)',
-											borderWidth: 1
-										},*/{
+										datasets: [{
 											label: '2017',
-											data: [554,609,601,466,517,501,495,475,894,1513,32],
+											data: [<?php echo implode(',', $order_counts['2017']); ?>],
 											backgroundColor: window.chartColors.purple,
 											borderColor: window.chartColors.purple,
+											borderWidth: 1,
+											fill: false
+										},{
+											label: '2018',
+											data: [<?php echo implode(',', $order_counts['2018']); ?>],
+											backgroundColor: window.chartColors.red,
+											borderColor: window.chartColors.red,
 											borderWidth: 1,
 											fill: false
 										}]
@@ -145,6 +157,12 @@
 												window.chartColors.green,
 												window.chartColors.blue,
 												window.chartColors.purple,
+												window.chartColors.pink
+											],
+										},{
+											label: '2018',
+											data: [552,478,390,362,351,321,299,282,279,244,220,204,167,158,1450],
+											backgroundColor: [
 												window.chartColors.red,
 												window.chartColors.orange,
 												window.chartColors.yellow,
