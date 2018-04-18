@@ -221,7 +221,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
 
 			clientDiv.html(client_panel);
-			console.log(ClientDetails);
+			//console.log(ClientDetails);
 			populateClientModal(ClientDetails);
 			$('#order_id').attr('value', orderId);
 

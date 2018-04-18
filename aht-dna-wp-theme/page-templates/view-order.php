@@ -136,6 +136,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 					foreach ($test->notes as $note){
 						$note_date = DateTime::createFromFormat('Y-m-d H:i:s', $note->note_date);
 						$note->php_date = $note_date->format('jS M Y (H:i)');
+						$note->note_text = base64_decode($note->note_text);
 					}
 					$note_details["notes_".$test->id] = $test->notes;
 					$notes = '<span class="badge notes_badge" id="notes_'.$test->id.'" style="cursor:pointer" data-toggle="modal" data-target="#notesModal">'.$test->note_count.'</span>';
@@ -158,6 +159,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle'.$class_disabled.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
+								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="fa fa-file-text-o link"></i>&nbsp;Add Note</a></li>
 								<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
 								'.$next_action.'
 								<!--<li><a href="#">Something else here</a></li>
@@ -221,6 +223,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 <?php get_template_part('part-templates/modal', 'clientDelivery'); ?>
 <?php get_template_part('part-templates/modal', 'animal'); ?>
 <?php get_template_part('part-templates/modal', 'notes'); ?>
+<?php get_template_part('part-templates/modal', 'addNote'); ?>
 
 <?php
 function footer_js(){
@@ -229,6 +232,11 @@ function footer_js(){
 jQuery(document).ready(function($) {
 	   
 	var noteDetails = <?php echo json_encode($note_details); ?>;	
+	
+	$('.notes').click(function(){
+			$("#note_test_id").val(($(this).attr('id')).replace('note', ''));
+	});
+			
 	$(".notes_badge").on("click", function(e) {
 			var swabId = $(this).attr("id");
 			$('#all_test_notes').empty();
@@ -238,11 +246,19 @@ jQuery(document).ready(function($) {
 	});
 	
 	$('#addNoteModal').on('show.bs.modal', function(e) {
-			console.log("add note modal shown");
-			$('#summernote').summernote({dialogsInBody: true});
+			$('#summernote').summernote({
+				dialogsInBody: true,
+				height: 200,
+				toolbar: [
+					['style', ['bold', 'italic', 'underline', 'clear']],
+					['font', ['strikethrough', 'superscript', 'subscript']],
+					['color', ['color']],
+					['para', ['ul', 'ol', 'paragraph']],
+					['misc', ['codeview']]
+				]
+			});
 	});
 			
-	
 	var table = $('#orderDetails').DataTable({
 		select : true,
 		order : [ [ 1, 'desc' ] ],
