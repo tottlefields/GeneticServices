@@ -262,6 +262,19 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 	});
 }
 
+function populateNotesModal(Notes){
+	var html = '';
+	for (var i = 0; i < Notes.length; ++i) {
+		var note = Notes[i];
+		html += '<em>Posted by </em><strong>'+note.note_by+'</strong><em> on </em><strong>'+note.php_date+'</strong>';
+		html += '<div style="border-left:2px solid #ff850d; padding-left:10px;">'+note.note_text+'</div>';
+		if (i != (Notes.length - 1)){
+			html += "<hr />";
+		}
+	}
+	$('#all_test_notes').html(html);
+}
+
 function populateClientModal(ClientDetails){
 	clientAddress = [ ClientDetails.Address ];
 	if (ClientDetails.Address2 !== null && ClientDetails.Address2 !== "")

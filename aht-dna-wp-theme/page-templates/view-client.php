@@ -11,6 +11,7 @@ $clients = clientSearch(array('id' => $client_id));
 $client_details = $clients[0];
 
 $test_details = getTestsByClient($client_id);
+$note_details = array();
 ?>
 <?php get_header(); ?>
 
@@ -61,6 +62,7 @@ $test_details = getTestsByClient($client_id);
 					<th>Breed</th>
 					<th>Animal</th>
 					<th class="text-center">Status</th>
+					<th class="text-center">Notes</th>
 					<th class="text-center">Result</th>
 					<th class="text-center">Actions</th>
 				</thead>
@@ -88,6 +90,15 @@ $test_details = getTestsByClient($client_id);
 						$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
 						break;
 				}
+				$notes = '';
+				if ($test->note_count > 0){
+					foreach ($test->notes as $note){
+						$note_date = DateTime::createFromFormat('Y-m-d H:i:s', $note->note_date);
+						$note->php_date = $note_date->format('jS M Y (H:i)');
+					}
+					$note_details["notes_".$test->id] = $test->notes;
+					$notes = '<span class="badge notes_badge" id="notes_'.$test->id.'" style="cursor:pointer" data-toggle="modal" data-target="#notesModal">'.$test->note_count.'</span>';
+				}
 				
 				echo '
 				<tr>
@@ -98,6 +109,7 @@ $test_details = getTestsByClient($client_id);
 					<td>'.$test->breed.'</td>
 					<td>'.$animal.'</td>
 					<td class="text-center">'.$status_label.'</td>
+					<td class="text-center">'.$notes.'</td>
 					<td></td>
 					<td class="text-center">
 						<div class="btn-group">
@@ -126,15 +138,26 @@ $test_details = getTestsByClient($client_id);
 	</section>
 	
 <?php get_template_part('part-templates/modal', 'client'); ?>
+<?php get_template_part('part-templates/modal', 'notes'); ?>
 
 <?php
 function footer_js(){ 
 	global $client_details;
+	global $note_details;
 ?>
 <script>
 jQuery(document).ready(function($) {
 		
 	populateClientModal(<?php echo json_encode($client_details); ?>);
+
+	var noteDetails = <?php echo json_encode($note_details); ?>;	
+	$(".notes_badge").on("click", function(e) {
+			var swabId = $(this).attr("id");
+			$('#all_test_notes').empty();
+			if (noteDetails[swabId].length > 0){
+				populateNotesModal(noteDetails[swabId]);
+			}
+	});
 	
 	var table = $('#orderDetails').DataTable({
 		order : [ [ 0, 'desc' ] ],

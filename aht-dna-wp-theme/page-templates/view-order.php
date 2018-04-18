@@ -95,6 +95,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 					<th>Animal</th>
 					<th>Client</th>
 					<th class="text-center">Status</th>
+					<th class="text-center">Notes</th>
 					<th class="text-center">Result</th>
 					<th class="text-center">Actions</th>
 				</thead>
@@ -130,6 +131,15 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 						$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
 						break;
 				}
+				$notes = '';
+				if ($test->note_count > 0){
+					foreach ($test->notes as $note){
+						$note_date = DateTime::createFromFormat('Y-m-d H:i:s', $note->note_date);
+						$note->php_date = $note_date->format('jS M Y (H:i)');
+					}
+					$note_details["notes_".$test->id] = $test->notes;
+					$notes = '<span class="badge notes_badge" id="notes_'.$test->id.'" style="cursor:pointer" data-toggle="modal" data-target="#notesModal">'.$test->note_count.'</span>';
+				}
 				
 				echo '
 				<tr>
@@ -141,6 +151,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 					<td>'.$animal.'</td>
 					<td>'.$client.'</td>
 					<td class="text-center">'.$status_label.'</td>
+					<td class="text-center">'.$notes.'</td>
 					<td></td>
 					<td class="text-center">
 						<div class="btn-group">
@@ -209,12 +220,29 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 	
 <?php get_template_part('part-templates/modal', 'clientDelivery'); ?>
 <?php get_template_part('part-templates/modal', 'animal'); ?>
+<?php get_template_part('part-templates/modal', 'notes'); ?>
 
 <?php
-function footer_js(){ ?>
+function footer_js(){
+	global $note_details; ?>
 <script>
 jQuery(document).ready(function($) {
 	   
+	var noteDetails = <?php echo json_encode($note_details); ?>;	
+	$(".notes_badge").on("click", function(e) {
+			var swabId = $(this).attr("id");
+			$('#all_test_notes').empty();
+			if (noteDetails[swabId].length > 0){
+				populateNotesModal(noteDetails[swabId]);
+			}
+	});
+	
+	$('#addNoteModal').on('show.bs.modal', function(e) {
+			console.log("add note modal shown");
+			$('#summernote').summernote({dialogsInBody: true});
+	});
+			
+	
 	var table = $('#orderDetails').DataTable({
 		select : true,
 		order : [ [ 1, 'desc' ] ],

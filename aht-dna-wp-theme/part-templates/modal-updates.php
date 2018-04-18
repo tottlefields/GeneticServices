@@ -9,38 +9,6 @@ if(empty($_REQUEST)){
 
 global $wpdb;
 
-/*if (isset($_REQUEST['client-submitted'])){
-	
-	$data = array();
-	$where = array();
-	foreach ($_REQUEST as $key => $value){
-		if (preg_match('/^client_/', $key)){
-			$new_key = str_replace('client_', '', $key);
-			if ($new_key === 'id'){ $where['id'] = $value;}
-			elseif (preg_match('/Address/', $new_key)){
-				$address = array_pad(explode(', ', $value), 3, '');
-				$data[$new_key."3"] = array_pop($address);
-				$data[$new_key."2"] = array_pop($address);
-				$data[$new_key] = implode(', ', $address);
-			}
-			else{
-				$data[$new_key] = $value;
-			}
-		}
-	}
-	if ($_REQUEST['client_id'] > 0){ $wpdb->update('client', $data, $where); }
-	else{
-		$wpdb->insert('client', $data);
-		$client_id = $wpdb->insert_id;
-		$wpdb->update('orders', array('client_id' => $client_id), array('id' => $_REQUEST['id']));
-	}
-	debug_array($data);
-	debug_array($where);
-	wp_safe_redirect($referer);
-	//wp_safe_redirect(get_site_url().'/orders/view/?id='.$_REQUEST['id']);
-	exit;	
-}*/
-
 if (isset($_REQUEST['client-submitted'])){
 	
 	unset($_REQUEST['id']);
@@ -118,5 +86,15 @@ if (isset($_REQUEST['animal-submitted'])){
 	//wp_safe_redirect(get_site_url().'/orders/view/?id='.$_REQUEST['id']);
 	exit;	
 	
+}
+if (isset($_REQUEST['note-submitted'])){
+	$data = array(
+		'test_id'	=> $_REQUEST['order_test_id'],
+		'note_by'	=> $_REQUEST['username'],
+		'note_text'	=> base64_encode(stripslashes($_REQUEST['note_content']))
+	);
+	$wpdb->insert('order_test_notes', $data);
+	wp_safe_redirect($referer);
+	exit;	
 }
 ?>
