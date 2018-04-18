@@ -103,6 +103,10 @@ function mytheme_enqueue_scripts() {
 	wp_register_script ( 'bootbox-js', '//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js', array ('jquery','bootstrap-js'), '4.4.0', true );
 	wp_enqueue_script ( 'bootbox-js' );
 	
+	// Summernote JS
+	wp_register_script ( 'summernote-js', '//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote.min.js', array ('jquery','bootstrap-js'), '0.8.10', true);
+	wp_enqueue_script ( 'summernote-js' );
+	
 	// Main functions js file
 	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.2', true );
 	wp_enqueue_script ( 'js-functions' );

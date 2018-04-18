@@ -11,6 +11,7 @@ $clients = clientSearch(array('id' => $client_id));
 $client_details = $clients[0];
 
 $test_details = getTestsByClient($client_id);
+$note_details = array();
 ?>
 <?php get_header(); ?>
 
@@ -61,6 +62,7 @@ $test_details = getTestsByClient($client_id);
 					<th>Breed</th>
 					<th>Animal</th>
 					<th class="text-center">Status</th>
+					<th class="text-center">Notes</th>
 					<th class="text-center">Result</th>
 					<th class="text-center">Actions</th>
 				</thead>
@@ -88,6 +90,16 @@ $test_details = getTestsByClient($client_id);
 						$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
 						break;
 				}
+				$notes = '';
+				if ($test->note_count > 0){
+					foreach ($test->notes as $note){
+						$note_date = DateTime::createFromFormat('Y-m-d H:i:s', $note->note_date);
+						$note->php_date = $note_date->format('jS M Y (H:i)');
+						$note->note_text = base64_decode($note->note_text);
+					}
+					$note_details["notes_".$test->id] = $test->notes;
+					$notes = '<span class="badge notes_badge" id="notes_'.$test->id.'" style="cursor:pointer" data-toggle="modal" data-target="#notesModal">'.$test->note_count.'</span>';
+				}
 				
 				echo '
 				<tr>
@@ -98,12 +110,14 @@ $test_details = getTestsByClient($client_id);
 					<td>'.$test->breed.'</td>
 					<td>'.$animal.'</td>
 					<td class="text-center">'.$status_label.'</td>
+					<td class="text-center">'.$notes.'</td>
 					<td></td>
 					<td class="text-center">
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle'.$class_disabled.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
+								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="fa fa-file-text-o link"></i>&nbsp;Add Note</a></li>
 								<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
 								'.$next_action.'
 								<!--<li><a href="#">Something else here</a></li>
@@ -126,15 +140,46 @@ $test_details = getTestsByClient($client_id);
 	</section>
 	
 <?php get_template_part('part-templates/modal', 'client'); ?>
+<?php get_template_part('part-templates/modal', 'notes'); ?>
+<?php get_template_part('part-templates/modal', 'addNote'); ?>
 
 <?php
 function footer_js(){ 
 	global $client_details;
+	global $note_details;
 ?>
 <script>
 jQuery(document).ready(function($) {
 		
 	populateClientModal(<?php echo json_encode($client_details); ?>);
+
+	var noteDetails = <?php echo json_encode($note_details); ?>;
+	
+	$('.notes').click(function(){
+			$("#note_test_id").val(($(this).attr('id')).replace('note', ''));
+	});
+	
+	$(".notes_badge").on("click", function(e) {
+			var swabId = $(this).attr("id");
+			$('#all_test_notes').empty();
+			if (noteDetails[swabId].length > 0){
+				populateNotesModal(noteDetails[swabId]);
+			}
+	});
+	
+	$('#addNoteModal').on('show.bs.modal', function(e) {
+			$('#summernote').summernote({
+				dialogsInBody: true,
+				height: 200,
+				toolbar: [
+					['style', ['bold', 'italic', 'underline', 'clear']],
+					['font', ['strikethrough', 'superscript', 'subscript']],
+					['color', ['color']],
+					['para', ['ul', 'ol', 'paragraph']],
+					['misc', ['codeview']]
+				]
+			});
+	});
 	
 	var table = $('#orderDetails').DataTable({
 		order : [ [ 0, 'desc' ] ],

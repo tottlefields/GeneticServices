@@ -98,7 +98,7 @@ function do_return_sample(){
 		 foreach ($test_details as $test){
 		 	foreach ($test as $key => $value){
 			 	if($value === null){ $test->$key = ""; }
-			 	elseif (preg_match('/\d{4}-\d{1,2}-\d{1,2}/', $value)){
+			 	elseif(is_string($value) && preg_match('/\d{4}-\d{1,2}-\d{1,2}/', $value)){
 			 		$test->$key = SQLToDate($value);
 			 	}
 		 	}

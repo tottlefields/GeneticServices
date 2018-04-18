@@ -24,7 +24,8 @@ function dateToSQL($date){
 
 function SQLToDate($date){
 	if ($date == ""){ return ""; }
-	return date_format(DateTime::createFromFormat('Y-m-d', $date), 'd/m/Y');
+	if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)){ return date_format(DateTime::createFromFormat('Y-m-d', $date), 'd/m/Y'); }
+	else { return date_format(DateTime::createFromFormat('Y-m-d H:i:s', $date), 'd/m/Y'); }
 }
 
 function countOrders($status){
@@ -119,7 +120,7 @@ function orderSearch($search_terms){
 	return $orders;
 }
 
-function getTestsByOrder($order_id, $pending){
+function getTestsByOrder($order_id, $pending=0){
 	global $wpdb;	
 	$tests = array();
 	
@@ -132,6 +133,7 @@ function getTestsByOrder($order_id, $pending){
 	}
 	return $tests;	
 }
+
 
 function getTestsByAnimal($animal_id){
 	global $wpdb;	
@@ -176,10 +178,21 @@ function getTestDetails($swab_id){
 #	echo $wpdb->last_query."\n";
 #	echo $wpdb->last_result."\n";
 #	echo $wpdb->last_error."\n";
+	$notes = getTestNotes($swab_id);
+	$test_details[0]->notes = $notes;
+	$test_details[0]->note_count = count($notes);
 	return $test_details[0];	
 }
 
+function getTestNotes($swab_id){
+	global $wpdb;
+	$notes = array();
+	
+	$sql = "select * from order_test_notes where test_id=".$swab_id." order by note_date";
+	$notes = $wpdb->get_results($sql, OBJECT );
 
+	return $notes;
+}
 function addNewClient($client){
 	//| id | ClientID | Tel | Fax | Email | FullName | Address | Address2 | Address3 | Town | County | Postcode | Country |
 	//| ShippingName | ShippingCompany | ShippingAddress | ShippingAddress2 | ShippingAddress3 | ShippingTown | ShippingCounty | ShippingPostcode | ShippingCountry |
