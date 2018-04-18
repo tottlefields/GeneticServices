@@ -246,8 +246,8 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			// order_panel += '<h3>Progress</h3>';
 			order_panel += '<table class="table table-striped table-condensed"><tbody>';
 			order_panel += '<tr><th>Ordered</th><td>' + OrderDetails.OrderDate + '</td><td><span style="color:#BBBBBB">N/A</span></td></tr>';
-			order_panel += '<tr><th>Dispatched</th><td>' + TestDetails.kit_sent + '</td><td>' + TestDetails.sent_by + '</td></tr>';
-			order_panel += '<tr><th>Returned</th><td>' + TestDetails.returned_date + '</td><td>' + TestDetails.received_by + '</td></tr>';
+			order_panel += '<tr><th>Dispatched</th><td>' + TestDetails.date_sent + '</td><td>' + TestDetails.sent_by + '</td></tr>';
+			order_panel += '<tr><th>Returned</th><td>' + TestDetails.date_returned + '</td><td>' + TestDetails.received_by + '</td></tr>';
 			order_panel += '<tr><th>Processed</th><td></td><td></td></tr>';
 			order_panel += '<tr><th>Analysed</th><td></td><td></td></tr>';
 			order_panel += '<tr><th>Resulted</th><td></td><td></td></tr>';
