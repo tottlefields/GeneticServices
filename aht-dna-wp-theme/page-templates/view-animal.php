@@ -184,7 +184,6 @@ jQuery(document).ready(function($) {
 					['font', ['strikethrough', 'superscript', 'subscript']],
 					['color', ['color']],
 					['para', ['ul', 'ol', 'paragraph']],
-					['misc', ['codeview']]
 				]
 			});
 	});
