@@ -71,17 +71,21 @@ $note_details = array();
 			<?php
 			$test_count = 0;
 			foreach ( $test_details as $test){
+				$class_disabled = '';
+				
 				$test->order_status = $order_steps[0];
 				if($test->kit_sent != ''){$test->order_status = $order_steps[1];}
 				if($test->returned_date != ''){$test->order_status = $order_steps[2];}				
 				if($test->cancelled_date != ''){ $test->order_status = 'Cancelled'; }
 				
 				$status_label = '<span class="label label-info">'.str_replace('(s)', '', $test->order_status).'</span>';
-				if ($test->order_status == 'Cancelled'){ $status_label = '<span class="label label-danger">'.str_replace('(s)', '', $test->order_status).'</span>'; $class_disabled = ' disabled'; }
-							
-				$animal = '<a href="'.get_site_url().'/animals/view?id='.$test->animal_id.'"><i class="fa fa-paw" aria-hidden="true"></i>'.$test->RegisteredName.'</a>';
-								
-				$next_action = '';
+				if ($test->order_status == 'Cancelled'){
+					if (isset($test->repeat_swab) && $test->repeat_swab > 0){ $status_label = '<span class="label label-warning">Repeated (#'.$test->repeat_swab.')</span>'; }
+					else { $status_label = '<span class="label label-danger">'.str_replace('(s)', '', $test->order_status).'</span>'; }
+					$class_disabled = ' disabled'; 
+				}
+				
+				$next_action = '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fa fa-repeat link"></i>&nbsp;Request Repeat</a></li>';
 				switch ($test->order_status) {
 					case 'Order Placed':
 						$next_action = '<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="fa fa-paper-plane-o link"></i>&nbsp;Dispatch Sample</a></li>';
@@ -117,12 +121,11 @@ $note_details = array();
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle'.$class_disabled.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
-								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="fa fa-file-text-o link"></i>&nbsp;Add Note</a></li>
 								<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
 								'.$next_action.'
-								<!--<li><a href="#">Something else here</a></li>
+								<!--<li><a href="#">Something else here</a></li>-->
 								<li role="separator" class="divider"></li>
-								<li><a href="#">Separated link</a></li>-->
+								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="fa fa-file-text-o link"></i>&nbsp;Add Note</a></li>
 							</ul>
 						</div>
 					</td>

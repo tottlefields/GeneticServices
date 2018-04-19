@@ -6,6 +6,9 @@ add_action( 'wp_ajax_nopriv_order_details', 'get_order_details' );
 add_action( 'wp_ajax_cancel_test', 'do_cancel_test' );
 add_action( 'wp_ajax_nopriv_cancel_test', 'do_cancel_test' );
 
+add_action( 'wp_ajax_request_repeat', 'do_request_repeat' );
+add_action( 'wp_ajax_nopriv_request_repeat', 'do_request_repeat' );
+
 add_action( 'wp_ajax_send_sample', 'do_send_sample' );
 add_action( 'wp_ajax_nopriv_send_sample', 'do_send_sample' );
 
@@ -29,6 +32,46 @@ function do_cancel_test(){
 	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
 
 	echo json_encode(array('results' => 'Successfully cancelled test with id of '.$swabId));
+	
+	wp_die();
+}
+
+function do_request_repeat(){
+	global $wpdb, $current_user; // this is how you get access to the database
+	
+	$swabId = intval( $_POST['swabId'] );
+	
+	$old_data = $wpdb->get_row('select OrderID,PortalID,AnimalID,TestCode,Quantity,SampleType,order_id,animal_id,test_code,bundle from order_tests where id='.$swabId);
+	$new_data = array(
+		'OrderID' => $old_data->OrderID,
+		'PortalID' => $old_data->PortalID,
+		'AnimalID' => $old_data->AnimalID,
+		'TestCode' => $old_data->TestCode,
+		'Quantity' => $old_data->Quantity,
+		'SampleType' => $old_data->SampleType,
+		'order_id' => $old_data->order_id,
+		'animal_id' => $old_data->animal_id,
+		'test_code' => $old_data->test_code,
+		'bundle' => $old_data->bundle
+	);	
+	$wpdb->insert('order_tests', $new_data);	
+	$new_swab = $wpdb->insert_id;	
+	
+	$update_args = array(
+			'cancelled_by' => $current_user->user_login,
+			'cancelled_date' => date('Y-m-d'),
+			'repeat_swab' => $new_swab
+	);	
+	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
+		
+	$note_data = array(
+		'test_id'	=> $swabId,
+		'note_by'	=> $current_user->user_login,
+		'note_text'	=> base64_encode(stripslashes("Repeat swab requested for this test - replacement test ID is $new_swab."))
+	);
+	$wpdb->insert('order_test_notes', $note_data);
+
+	echo json_encode(array('results' => 'Successfully requested a repeat sample with id of '.$new_swab));
 	
 	wp_die();
 }
