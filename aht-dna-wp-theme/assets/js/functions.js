@@ -99,6 +99,24 @@ function generatePDFs(order_ids, swabID, pending) {
 	});
 }
 
+function repeatTest(swabID){
+
+	var data = {
+		'action'  : 'request_repeat',
+		'swabId'  : swabID
+	};
+
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(results) {
+			location.reload();
+		}
+	});
+}
+
 function cancelTest(swabID){
 
 	var data = {
