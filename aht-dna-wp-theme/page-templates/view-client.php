@@ -78,6 +78,9 @@ $note_details = array();
 				if($test->returned_date != ''){$test->order_status = $order_steps[2];}				
 				if($test->cancelled_date != ''){ $test->order_status = 'Cancelled'; }
 				
+				$animal_name = ($test->RegisteredName && $test->RegisteredName != '') ? $test->RegisteredName : '<em>'.$test->PetName.'</em>';	
+				$animal = '<a href="'.get_site_url().'/animals/view?id='.$test->animal_id.'"><i class="fa fa-paw" aria-hidden="true"></i>'.$animal_name.'</a>';
+								
 				$status_label = '<span class="label label-info">'.str_replace('(s)', '', $test->order_status).'</span>';
 				if ($test->order_status == 'Cancelled'){
 					if (isset($test->repeat_swab) && $test->repeat_swab > 0){ $status_label = '<span class="label label-warning">Repeated (#'.$test->repeat_swab.')</span>'; }
