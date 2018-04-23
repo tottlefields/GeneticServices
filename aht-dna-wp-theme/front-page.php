@@ -125,9 +125,9 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 						</div>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="statbox red">
-								<div class="number"><?php echo countOrders($order_steps[3]); ?></div>
-								<div class="title">LIST 3</div>
-								<div class="footer"><a href="#"> FOOTER</a></div>
+								<div class="number"><i class="fa fa-repeat"></i>&nbsp;<?php echo countRepeats(); ?></div>
+								<div class="title">Pending Repeats</div>
+								<div class="footer"><a href="#"> View list</a></div>
 							</div>
 						</div>
 						<div class="col-md-3 col-sm-6 placeholder">
