@@ -108,6 +108,25 @@ $note_details = array();
 					$notes = '<span class="badge notes_badge" id="notes_'.$test->id.'" style="cursor:pointer" data-toggle="modal" data-target="#notesModal">'.$test->note_count.'</span>';
 				}
 				
+				$result = '';
+				if ($test->test_result){
+					switch ($test->test_result) {
+						case 'Failed':
+							$label_class = 'default';
+							break;
+						case 'Affected':
+							$label_class = 'danger';
+							break;
+						case 'Carrier':
+							$label_class = 'warning';
+							break;
+						case 'Normal':
+							$label_class = 'success';
+							break;
+					}
+					$result = '<span class="label label-'.$label_class.'">'.$test->test_result.'</span>';
+				}
+				
 				echo '
 				<tr>
 					<td>'.$test->id.'</td>
@@ -118,7 +137,7 @@ $note_details = array();
 					<td>'.$animal.'</td>
 					<td class="text-center">'.$status_label.'</td>
 					<td class="text-center">'.$notes.'</td>
-					<td></td>
+					<td class="text-center">'.$result.'</td>
 					<td class="text-center">
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle'.$class_disabled.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></button>
