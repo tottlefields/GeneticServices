@@ -109,25 +109,28 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 					</div>
 
 					<section class="row text-center placeholders">
+						<?php $count = countOrders($order_steps[0]); ?>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="statbox purple">
-								<div class="number"><i class="fa fa-shopping-basket"></i>&nbsp;<?php echo countOrders($order_steps[0]); ?></div>
+								<div class="number"><i class="fa fa-shopping-basket"></i>&nbsp;<?php echo $count; ?></div>
 								<div class="title">Pending Orders</div>
-								<div class="footer"><a href="<?php echo get_site_url(); ?>/orders/"> View list</a></div>
+								<?php if ($count>0){ ?><div class="footer"><a href="<?php echo get_site_url(); ?>/orders/"> View list</a></div><?php } ?>
 							</div>
 						</div>
+						<?php $count = countUntested(); ?>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="statbox yellow">
-								<div class="number"><i class="fa fa-flask"></i>&nbsp;<?php echo countOrders($order_steps[2]); ?></div>
+								<div class="number"><i class="fa fa-flask"></i>&nbsp;<?php echo $count; ?></div>
 								<div class="title">Untested Samples</div>
-								<div class="footer"><a href="<?php echo get_site_url(); ?>/samples/"> View list</a></div>
+								<?php if ($count>0){ ?><div class="footer"><a href="<?php echo get_site_url(); ?>/samples/"> View list</a></div><?php } ?>
 							</div>
 						</div>
+						<?php $count = countRepeats(); ?>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="statbox red">
-								<div class="number"><?php echo countOrders($order_steps[3]); ?></div>
-								<div class="title">LIST 3</div>
-								<div class="footer"><a href="#"> FOOTER</a></div>
+								<div class="number"><i class="fa fa-repeat"></i>&nbsp;<?php echo $count; ?></div>
+								<div class="title">Pending Repeats</div>
+								<?php if ($count>0){ ?><div class="footer"><a href="#"> View list</a></div><?php } ?>
 							</div>
 						</div>
 						<div class="col-md-3 col-sm-6 placeholder">
