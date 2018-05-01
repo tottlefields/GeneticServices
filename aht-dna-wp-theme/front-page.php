@@ -119,11 +119,11 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 								<?php if ($count>0){ ?><div class="footer"><a href="<?php echo get_site_url(); ?>/orders/"> View list</a></div><?php } ?>
 							</div>
 						</div>
-						<?php $count = countUntested(); ?>
+						<?php $count = countUnextracted(); ?>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="statbox yellow">
 								<div class="number"><i class="fa fa-flask"></i>&nbsp;<?php echo $count; ?></div>
-								<div class="title">Untested Samples</div>
+								<div class="title">Unextracted Samples</div>
 								<?php if ($count>0){ ?><div class="footer"><a href="<?php echo get_site_url(); ?>/samples/"> View list</a></div><?php } ?>
 							</div>
 						</div>

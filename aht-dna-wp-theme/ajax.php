@@ -1,5 +1,8 @@
 <?php
 
+add_action( 'wp_ajax_plate_details', 'get_plate_details' );
+add_action( 'wp_ajax_nopriv_plate_details', 'get_plate_details' );
+
 add_action( 'wp_ajax_order_details', 'get_order_details' );
 add_action( 'wp_ajax_nopriv_order_details', 'get_order_details' );
 
@@ -111,7 +114,30 @@ function do_return_sample(){
 	wp_die();
 }
 
- function get_order_details() {
+function get_plate_details(){
+	global $wpdb;
+	$return = array();
+	
+	$plate_id = $_POST['pid'];
+	$plate_type = $_POST['ptype'];
+	
+	if ($plate_type == 'extraction'){
+		$sql = "select distinct t.order_id, s.test_id as test_id, t.test_code, s.extraction_well as well 
+		from test_swabs s inner join order_tests t on s.test_id=t.id where s.extraction_plate='".$plate_id."'
+		order by 4";
+	}
+	else{
+		$sql = "select distinct t.order_id, r.test_id, t.test_code, r.test_plate_well as well 
+		from test_swab_results r inner join order_tests t on t.id=test_id where test_plate='".$plate_id."'
+		order by 4";
+	}
+	$return = $wpdb->get_results($sql, OBJECT);	 
+	echo json_encode($return);
+	
+	wp_die();	
+}
+
+function get_order_details() {
 	global $wpdb; // this is how you get access to the database
 	
 	$return = array();
