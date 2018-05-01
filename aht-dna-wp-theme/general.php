@@ -42,7 +42,7 @@ function countOrders($status){
 
 function countUntested(){
 	global $wpdb;
-	$sql = "SELECT count(distinct order_tests.id) from order_tests left join test_swabs on order_tests.id=test_id where cancelled_date is null and returned_date is not null and swab is null";
+	$sql = "SELECT count(distinct order_tests.id) from order_tests left outer join test_swab_results on order_tests.id=test_id where returned_date is not null and cancelled_date is null and cert_code is null";
 	$count = $wpdb->get_var($sql);
 	return $count;	
 }	
@@ -179,24 +179,39 @@ function getTestDetails($swab_id){
 	global $wpdb;	
 	$test_details = array();
 	
-	$sql = "select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, date_format(o.OrderDate, \"%d/%m/%Y\") as order_date,
+	$sql = 'select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, date_format(o.OrderDate, "%d/%m/%Y") as order_date,
 		a.*, t.*, date(kit_sent) as date_sent, date(returned_date) as date_returned, date(cancelled_date) as date_cancelled,
-		test_name, no_results, no_swabs, sub_tests, max(test_result) as test_result, count(s.id) as swab_count,
-		date_format(a.BirthDate, \"%d/%m/%Y\") as DOB, case when Sex='f' then 'Female' else 'Male' end as sex
+		test_name, no_results, no_swabs, sub_tests, sum(swab_failed), extraction_plate, extraction_well,
+		r.test_code, test_plate, test_plate_well, test_result, result_entered_by, result_entered_date, result_authorised_by, resultauthorised_date, cert_code,
+		date_format(a.BirthDate, "%d/%m/%Y") as DOB, case when Sex="f" then "Female" else "Male" end as sex
 		from orders o inner join order_tests t on o.id=order_id 
 		left outer join animal a on animal_id=a.id 
 		left outer join breed_list b on a.breed_id=b.id 
 		left outer join test_codes using(test_code) 
 		left outer join test_swabs s on t.id=test_id
-		where (a.breed_id is NULL or b.is_primary=1) and t.id=".$swab_id;
+		left outer join test_swab_results r on t.id=r.test_id
+		where (a.breed_id is NULL or b.is_primary=1) and t.id='.$swab_id;
 	$test_details = $wpdb->get_results($sql, OBJECT );
 #	echo $wpdb->last_query."\n";
 #	echo $wpdb->last_result."\n";
 #	echo $wpdb->last_error."\n";
 	$notes = getTestNotes($swab_id);
+	//$results = getTestResults($swab_id);
 	$test_details[0]->notes = $notes;
 	$test_details[0]->note_count = count($notes);
+	//$test_details[0]->results = $results;
 	return $test_details[0];	
+}
+
+function getTestResults($swab_id){
+	global $wpdb;	
+	$results = array();
+	
+	$sql = "select test_code, test_plate, test_plate_well, test_result, result_entered_by, result_entered_date, result_authorised_by, resultauthorised_date, cert_code
+	from test_swab_results WHERE test_id=".$swab_id;
+	$results = $wpdb->get_results($sql, OBJECT );
+	
+	return $results;
 }
 
 function getTestNotes($swab_id){
@@ -292,6 +307,11 @@ function orderStats($year=null, $month=0){
 	}
 	$test_count = $wpdb->get_var($sql);
 	return $test_count;
+}
+
+function createSwabs($test_id){
+	global $wpdb;
+	$wpdb->insert( 'test_swabs', array('test_id' => $test_id, 'swab' => 'A'));	
 }
 
 
