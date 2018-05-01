@@ -40,6 +40,13 @@ function countOrders($status){
 	return $count;	
 }
 
+function countUnextracted(){
+	global $wpdb;
+	$sql = "SELECT count(distinct order_tests.id) from order_tests left outer join test_swabs on order_tests.id=test_id where returned_date is not null and cancelled_date is null and extraction_plate is null";
+	$count = $wpdb->get_var($sql);
+	return $count;	
+}	
+
 function countUntested(){
 	global $wpdb;
 	$sql = "SELECT count(distinct order_tests.id) from order_tests left outer join test_swab_results on order_tests.id=test_id where returned_date is not null and cancelled_date is null and cert_code is null";
