@@ -9,6 +9,7 @@ $client_id = $_REQUEST['id'];
 
 $clients = clientSearch(array('id' => $client_id));
 $client_details = $clients[0];
+$client_details->client_id = $client_details->id;
 
 $test_details = getTestsByClient($client_id);
 $note_details = array();
@@ -114,13 +115,13 @@ $note_details = array();
 						case 'Failed':
 							$label_class = 'default';
 							break;
-						case 'Affected':
+						case 'AFFECTED':
 							$label_class = 'danger';
 							break;
-						case 'Carrier':
+						case 'CARRIER':
 							$label_class = 'warning';
 							break;
-						case 'Normal':
+						case 'CLEAR':
 							$label_class = 'success';
 							break;
 					}
@@ -142,7 +143,7 @@ $note_details = array();
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle'.$class_disabled.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
+								<li><a href="javascript:generatePDFs(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
 								<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
 								'.$next_action.'
 								<!--<li><a href="#">Something else here</a></li>-->
