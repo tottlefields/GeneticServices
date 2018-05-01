@@ -1,4 +1,4 @@
-var address = 'Genetic Services, Animal Health Trust, Lanwades Park, Kentford, Newmarket, Suffolk, CB8 7UU';
+var address = 'Genetic Services, Animal Health Trust, Lanwades Park, Kentford, Newmarket, Suffolk, CB8 7UU, UK';
 
 function addVetDetails() {
 	var vetDetails;
@@ -78,7 +78,7 @@ function generatePDFs(order_ids, swabID, pending) {
 				for (i = 0; i < OrderDetails.test_details.length; i++) {
 					var test = OrderDetails.test_details[i];
 					for (j = 0; j < test.no_swabs; j++) {
-						ddLetter.content.push(letterHeader(), testDetails(test, j), instructionsSection(), vetSection(), labelsSection(ClientDetails, test));
+						ddLetter.content.push(letterHeader('AHT DNA TESTING', 'Registered Charity No. 209642'), testDetails(test, j), instructionsSection(), vetSection(), labelsSection(ClientDetails, test));
 						if (i === (OrderDetails.test_details.length - 1) && j === (test.no_swabs - 1) && x === (results.length - 1)) {
 							ddLetter.content.push({
 								text : '',
@@ -94,6 +94,133 @@ function generatePDFs(order_ids, swabID, pending) {
 					}
 				}
 			}
+			pdfMake.createPdf(ddLetter).open();
+		}
+	});
+}
+
+function viewCert(orderId, swabID, certCode) {
+
+	var data = {
+		'action' : 'order_details',
+		'orderId' : orderId,
+		'swabId' : swabID
+	};
+
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(results) {	
+			details = results[0];
+			OrderDetails = details.order;
+			TestDetails = details.order.test_details[0];
+			ClientDetails = details.client;
+			console.log(TestDetails);
+			
+			ddLetter.content = [];
+			ddLetter.content.push(letterHeader('DNA TEST CERTIFICATE', 'AHT'+OrderDetails.ID+'/'+TestDetails.id));
+						
+			clientAddress = [ ClientDetails.Address ];
+			if (ClientDetails.Address2 !== null && ClientDetails.Address2 !== "")
+				clientAddress.push(ClientDetails.Address2);
+			if (ClientDetails.Address3 !== null && ClientDetails.Address3 !== "")
+				clientAddress.push(ClientDetails.Address3);
+			
+			ddLetter.content.push({
+					columns: [
+						{ 
+							stack: [ { 
+								text: ClientDetails.FullName, style: 'strong', margin: [ 0, 40, 0, 5 ]
+							}, {
+								text: clientAddress.join(', ')
+							}, {
+								text: ClientDetails.Town
+							}, {
+								text: ClientDetails.County
+							}, {
+								text: ClientDetails.Postcode
+							}, {
+								text: ClientDetails.Country
+							} ]
+						},
+						{
+							stack: [ { 
+								text: [
+									{ text: 'Registered Name: ' },
+									{ text: TestDetails.RegisteredName, style: 'h1', margin: [ 0, 0, 0, 0 ] }
+								],
+								margin: [ 0,0,0,20]
+							}, { 
+								text: [
+									{ text: 'Registration Number: ' },
+									{ text: TestDetails.RegistrationNo, style: 'strong' }
+								]
+							}, { 
+								text: [
+									{ text: 'Identification Number: ' },
+									{ text: TestDetails.TattooOrChip, style: 'strong' }
+								]
+							}, { 
+								text: [
+									{ text: 'Breed: ' },
+									{ text: TestDetails.breed, style: 'strong' }
+								]
+							}, { 
+								text: [
+									{ text: 'Sample Type: ', style: 'vet' },
+									{ text: TestDetails.SampleType, style: 'vetStrong' }
+								],
+								margin: [ 0,20,0,0]
+							}, { 
+								text: [
+									{ text: 'Sample Received: ', style: 'vet' },
+									{ text: TestDetails.date_returned, style: 'vetStrong' }
+								]
+							}, { 
+								text: [
+									{ text: 'Test Completed: ', style: 'vet' },
+									{ text: TestDetails.date_completed, style: 'vetStrong' }
+								]
+							}, { 
+								text: [
+									{ text: 'Authentication Code: ', style: 'vet' },
+									{ text: TestDetails.cert_code, style: 'vetStrong' }
+								]
+							}, { 
+								text: [
+									{ text: 'Authorised By: ', style: 'vet' },
+									{ text: TestDetails.result_authorised_by, style: 'vetStrong' }
+								]
+							} ]
+						}
+					],
+					margin: [ 0, 20, 0, 20 ]
+			});
+			
+			ddLetter.content.push({
+					text: TestDetails.test_name+' ('+TestDetails.test_code+')',
+					style: 'h1',
+					alignment: 'center',
+					margins: [ 0, 100, 0, 0]
+			});
+			ddLetter.content.push(resultsTable(TestDetails));
+			
+			ddLetter.footer = [{
+				text: 'Animal Health Trust',
+				style: 'vet',
+				alignment: 'center'
+			},{
+				text: 'Landwades Park, Kentford, Newmarket, Suffolk, CB8 7UU, UK - Tel: +44(0)1638 555621 - Fax: +44(0)1638 555666',
+				style: 'small',
+				alignment: 'center'
+			},{
+				text: 'www.ahtdnatesting.co.uk - dnatesting@aht.org.uk',
+				style: 'small',
+				alignment: 'center'
+			}];
+			
 			pdfMake.createPdf(ddLetter).open();
 		}
 	});
@@ -189,12 +316,14 @@ function getOrders(orderId, div) {
 			order_panel = '';
 			for (i in OrderDetails.test_details) {
 				test = OrderDetails.test_details[i];
-				if (test.RegisteredName !== "") {
-					order_panel += '<strong><a href="/animals/view?id=' + test.animal_id + '">' + test.RegisteredName + '</a></strong> - ' + test.test_name
-							+ '<br />';
-				} else {
-					order_panel += '<em><a href="/animals/view?id=' + test.animal_id + '">' + test.PetName + '</a></em> - ' + test.test_name + '<br />';
-				}
+				if (test.date_cancelled === ""){
+					if (test.RegisteredName !== "") {
+						order_panel += '<strong><a href="/animals/view?id=' + test.animal_id + '">' + test.RegisteredName + '</a></strong> - ' + test.test_name
+								+ '<br />';
+					} else {
+						order_panel += '<em><a href="/animals/view?id=' + test.animal_id + '">' + test.PetName + '</a></em> - ' + test.test_name + '<br />';
+					}
+					}
 			}
 
 			client_panel = createClientPanel(ClientDetails);
@@ -372,7 +501,7 @@ pdfMake.fonts = {
 	}
 }
 
-function letterHeader() {
+function letterHeader(title, subTitle) {
 	return {
 		table : {
 			widths : [ 'auto', '*' ],
@@ -384,10 +513,10 @@ function letterHeader() {
 				alignment : 'center',
 				stack : [ {
 					style : 'h1',
-					text : 'AHT DNA TESTING'
+					text : title
 				}, {
 					style : 'h2',
-					text : 'Registered Charity No. 209642'
+					text : subTitle
 				} ]
 			} ] ]
 		},
@@ -512,6 +641,20 @@ function vetSection() {
 				return (i === 0 || i === node.table.widths.length) ? 1 : 0;
 			},
 		}
+	};
+}
+
+function resultsTable(testDetails){
+	return {
+		table : {
+			widths : [ 'auto', '*' ],
+			body : [ 
+				[ { text : 'Result', margin : [ 0, 5, 0, 5 ]}, { text : testDetails.test_result, style : 'strong'} ],
+				[ { text :  'Interpretation', style : 'vet' }, { text : 'This dog has 2 normal copies of DNA at the mutation point for '+testDetails.test_code+'. This dog will not develop '+testDetails.test_code+' as a result of the known '+testDetails.test_code+' mutation. Please note, we cannot exclude the possibility that the dog may devlop a clincally similar but genetically different disorder due to other mutations that are not detected by this test.', style : 'vet' } ]
+			]
+		},
+		margin : [ 0, 10, 0, 0 ],
+		layout : 'noBorders'
 	};
 }
 
@@ -692,7 +835,7 @@ function labelsSection(client, test) {
 var ddLetter = {
 	pageSize : 'A4',
 	pageOrientation : 'portrait',
-	pageMargins : [ 30, 30, 30, 20 ],
+	pageMargins : [ 30, 30, 30, 40 ],
 	content : [],
 	defaultStyle : {
 		font : 'Tahoma',
