@@ -71,6 +71,8 @@ $test_details = getTestsByAnimal($animal_id);
 			<?php
 			$test_count = 0;
 			foreach ( $test_details as $test){
+				$class_disabled = '';
+				
 				$test->order_status = $order_steps[0];
 				if($test->kit_sent != ''){$test->order_status = $order_steps[1];}
 				if($test->returned_date != ''){$test->order_status = $order_steps[2];}				
@@ -122,17 +124,22 @@ $test_details = getTestsByAnimal($animal_id);
 						case 'Failed':
 							$label_class = 'default';
 							break;
-						case 'Affected':
+						case 'AFFECTED':
 							$label_class = 'danger';
 							break;
-						case 'Carrier':
+						case 'CARRIER':
 							$label_class = 'warning';
 							break;
-						case 'Normal':
+						case 'CLEAR':
 							$label_class = 'success';
 							break;
 					}
 					$result = '<span class="label label-'.$label_class.'">'.$test->test_result.'</span>';
+				}
+				
+				$cert = '';
+				if ($test->cert_code && preg_match('/AC\d+/',$test->cert_code)){
+					$cert = '<li><a href="javascript:viewCert(\''.$test->order_id.'\', \''.$test->id.'\',\''.$test->cert_code.'\')"><i class="fa fa-certificate" aria-hidden="true"></i>&nbsp;View Certificate</a></li>';
 				}
 				
 				echo '
@@ -150,12 +157,13 @@ $test_details = getTestsByAnimal($animal_id);
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle'.$class_disabled.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
+								<li><a href="javascript:generatePDFs(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
 								<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
 								'.$next_action.'
 								<!--<li><a href="#">Something else here</a></li>-->
 								<li role="separator" class="divider"></li>
 								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="fa fa-file-text-o link"></i>&nbsp;Add Note</a></li>
+								'.$cert.'
 							</ul>
 						</div>
 					</td>

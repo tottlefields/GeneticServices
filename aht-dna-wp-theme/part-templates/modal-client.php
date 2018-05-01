@@ -49,7 +49,6 @@
 					</div>
 					<div class="modal-footer">
 						<input type="hidden" id="client_id" name="client_id" value="">
-						<input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						<button type="submit" class="btn btn-primary" name="client-submitted">Update</button>
 					</div>

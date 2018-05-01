@@ -148,18 +148,18 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 				}
 				
 				$result = '';
-				if ($test->test_result){
+				if ($test->swab_failed > 1){
+					$result = '<span class="label label-default">Failed</span>';
+				}
+				elseif ($test->test_result){
 					switch ($test->test_result) {
-						case 'Failed':
-							$label_class = 'default';
-							break;
-						case 'Affected':
+						case 'AFFECTED':
 							$label_class = 'danger';
 							break;
-						case 'Carrier':
+						case 'CARRIER':
 							$label_class = 'warning';
 							break;
-						case 'Normal':
+						case 'CLEAR':
 							$label_class = 'success';
 							break;
 					}
