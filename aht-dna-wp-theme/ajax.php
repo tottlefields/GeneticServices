@@ -104,6 +104,7 @@ function do_return_sample(){
 	);
 	
 	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
+	createSwabs($swabId);
 
 	echo json_encode(array('results' => 'Successfully logged return of sample with id of '.$swabId));
 	

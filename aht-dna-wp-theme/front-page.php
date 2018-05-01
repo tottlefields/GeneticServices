@@ -59,6 +59,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 				$results = $wpdb->get_results($sql);
 				if (count($results) == 1){
 					$wpdb->update('order_tests', $update_args, array('id' => $results[0]->id));
+					createSwabs($results[0]->id);
 					$samples_updated++;
 				}
 				else{
@@ -72,6 +73,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 				$results = $wpdb->get_results($sql);
 				if (count($results) == 1){
 					$wpdb->update('order_tests', $update_args, array('id' => $results[0]->id));
+					createSwabs($results[0]->id);
 					$samples_updated++;
 				}
 				else{
