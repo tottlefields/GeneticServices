@@ -100,10 +100,13 @@ function do_return_sample(){
 	global $wpdb, $current_user; // this is how you get access to the database
 	
 	$swabId = intval( $_POST['swabId'] );
+	$date = new DateTime();
+	$date->add(new DateInterval('P14D'));
 	
 	$update_args = array(
 			'received_by' => $current_user->user_login,
-			'returned_date' => date('Y-m-d')
+			'returned_date' => date('Y-m-d'),
+			'due_date' => $date->format('Y-m-d')
 	);
 	
 	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
