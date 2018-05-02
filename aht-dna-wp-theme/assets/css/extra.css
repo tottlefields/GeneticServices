@@ -1,6 +1,7 @@
 @media print {
 	.no-print, .no-print * { display: none !important; }
 	a[href]:after { content: none }
+	main { width:100% !important; margin-left: 0px !important; }
 }
 
 .top-logo { padding:0px; }
