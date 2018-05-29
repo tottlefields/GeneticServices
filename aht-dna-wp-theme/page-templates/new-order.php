@@ -1,14 +1,25 @@
 <?php /* Template Name: Manual Order */ ?>
 <?php 
 if (isset($_POST['new-order-submitted'])) {
+
+	//debug_array($_REQUEST);
 	
 	$clients = clientSearch(array(
-		'Postcode'			=> $_REQUEST['owner-postcode'],
+		'Postcode'		=> $_REQUEST['owner-postcode'],
 		'ShippingPostcode'	=> $_REQUEST['owner-postcode'],
-		'FullName'			=> $_REQUEST['owner-name'],
-		'Email'				=> $_REQUEST['owner-email']
+		'FullName'		=> $_REQUEST['owner-name'],
+		'Email'			=> $_REQUEST['owner-email']
 	));
-	if (count($clients) == 0){ $client_id = addNewClient(); }
+	if (count($clients) == 0){ $client_id = addNewClient(array(
+		'FullName'	=> $_REQUEST['owner-name'],
+		'Email'		=> $_REQUEST['owner-email'],
+		'Tel'		=> $_REQUEST['owner-phone'],
+		'Address'	=> $_REQUEST['owner-address'],
+//		'Town'		=> $_REQUEST['owner-town'],
+//		'County'	=> $_REQUEST['owner-county'],
+//		'Country'	=> $_REQUEST['owner-country'],
+		'Postcode'	=> $_REQUEST['owner-postcode'],
+	) ); }
 	elseif (count($clients) == 1) { $client_id = $clients[0]->id; }
 	else { echo "ERROR - multiple clients match"; exit; }
 	
@@ -19,23 +30,23 @@ if (isset($_POST['new-order-submitted'])) {
 	), $client_id);
 	if (count($animals) == 0){
 		$animal_id = addNewAnimal(array(
-				'RegisteredName'	=> $_REQUEST['registered-name'],
-				'RegistrationNo'	=> $_REQUEST['registration-number'],
-				'Sex'				=> substr($_REQUEST['sex'],0,1),
-				'BirthDate'			=> dateToSQL($_REQUEST['dog-birth-date']),
-				'TattooOrChip'		=> $_REQUEST['microchip'],
-				'PetName'			=> $_REQUEST['pet-name'],
-				'Colour'			=> $_REQUEST['colour'],
-				'breed_id'			=> $_REQUEST['breed'],
-				'client_id'			=> $client_id
+				'RegisteredName'=> $_REQUEST['registered-name'],
+				'RegistrationNo'=> $_REQUEST['registration-number'],
+				'Sex'		=> substr($_REQUEST['sex'],0,1),
+				'BirthDate'	=> dateToSQL($_REQUEST['dog-birth-date']),
+				'TattooOrChip'	=> $_REQUEST['microchip'],
+				'PetName'	=> $_REQUEST['pet-name'],
+				'Colour'	=> $_REQUEST['colour'],
+				'breed_id'	=> $_REQUEST['breed'],
+				'client_id'	=> $client_id
 		));
 	}
 	elseif (count($animals) == 1) { $animal_id = $animals[0]->id; }
 	else { echo "ERROR - multiple animals match"; exit; }
 	
 	$order_id = addNewOrder(array(
-			'client_id'			=> $client_id,
-			'OrderDate'			=> date('Y-m-d'),
+			'client_id'		=> $client_id,
+			'OrderDate'		=> date('Y-m-d'),
 			'ReportFormat'		=> $_REQUEST['format'],
 			'VetReportFormat'	=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['format'] : NULL,
 			'AgreeResearch'		=> ($_REQUEST['research'] == 'on') ? 1 : 0
@@ -45,7 +56,7 @@ if (isset($_POST['new-order-submitted'])) {
 		addOrderTest(array(
 				'order_id'	=> $order_id,
 				'animal_id'	=> $animal_id,
-				'test_code' => $test,
+				'test_code'	=> $test,
 				'VetID'		=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['vet-select'] : NULL
 		));
 	}

@@ -62,6 +62,7 @@ $test_details = getTestsByAnimal($animal_id);
 					<th>Test</th>
 					<th>Client</th>
 					<th class="text-center">Status</th>
+					<th class="text-center">Notes</th>
 					<th class="text-center">Result</th>
 					<th class="text-center">Actions</th>
 				</thead>
@@ -70,6 +71,8 @@ $test_details = getTestsByAnimal($animal_id);
 			<?php
 			$test_count = 0;
 			foreach ( $test_details as $test){
+				$class_disabled = '';
+				
 				$test->order_status = $order_steps[0];
 				if($test->kit_sent != ''){$test->order_status = $order_steps[1];}
 				if($test->returned_date != ''){$test->order_status = $order_steps[2];}				
@@ -88,7 +91,14 @@ $test_details = getTestsByAnimal($animal_id);
 				if (isset($test->PortalID)){ $other_id = $test->PortalID; }
 				elseif (isset($test->OrderID)) { $other_id = $test->OrderID; }
 				
-				$next_action = '';
+				$status_label = '<span class="label label-info">'.str_replace('(s)', '', $test->order_status).'</span>';
+				if ($test->order_status == 'Cancelled'){
+					if (isset($test->repeat_swab) && $test->repeat_swab > 0){ $status_label = '<span class="label label-warning">Repeated (#'.$test->repeat_swab.')</span>'; }
+					else { $status_label = '<span class="label label-danger">'.str_replace('(s)', '', $test->order_status).'</span>'; }
+					$class_disabled = ' disabled'; 
+				}
+				
+				$next_action = '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fa fa-repeat link"></i>&nbsp;Request Repeat</a></li>';
 				switch ($test->order_status) {
 					case 'Order Placed':
 						$next_action = '<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="fa fa-paper-plane-o link"></i>&nbsp;Dispatch Sample</a></li>';
@@ -96,6 +106,40 @@ $test_details = getTestsByAnimal($animal_id);
 					case 'Kit(s) Dispatched':
 						$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
 						break;
+				}
+				$notes = '';
+				if ($test->note_count > 0){
+					foreach ($test->notes as $note){
+						$note_date = DateTime::createFromFormat('Y-m-d H:i:s', $note->note_date);
+						$note->php_date = $note_date->format('jS M Y (H:i)');
+						$note->note_text = base64_decode($note->note_text);
+					}
+					$note_details["notes_".$test->id] = $test->notes;
+					$notes = '<span class="badge notes_badge" id="notes_'.$test->id.'" style="cursor:pointer" data-toggle="modal" data-target="#notesModal">'.$test->note_count.'</span>';
+				}
+				
+				$result = '';
+				if ($test->test_result){
+					switch ($test->test_result) {
+						case 'Failed':
+							$label_class = 'default';
+							break;
+						case 'AFFECTED':
+							$label_class = 'danger';
+							break;
+						case 'CARRIER':
+							$label_class = 'warning';
+							break;
+						case 'CLEAR':
+							$label_class = 'success';
+							break;
+					}
+					$result = '<span class="label label-'.$label_class.'">'.$test->test_result.'</span>';
+				}
+				
+				$cert = '';
+				if ($test->cert_code && preg_match('/AC\d+/',$test->cert_code)){
+					$cert = '<li><a href="javascript:viewCert(\''.$test->order_id.'\', \''.$test->id.'\',\''.$test->cert_code.'\')"><i class="fa fa-certificate" aria-hidden="true"></i>&nbsp;View Certificate</a></li>';
 				}
 				
 				echo '
@@ -107,17 +151,19 @@ $test_details = getTestsByAnimal($animal_id);
 					<td>'.$test->test_name.'</td>
 					<td>'.$client.'</td>
 					<td class="text-center">'.$status_label.'</td>
-					<td></td>
+					<td class="text-center">'.$notes.'</td>
+					<td class="text-center">'.$result.'</td>
 					<td class="text-center">
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle'.$class_disabled.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
+								<li><a href="javascript:generatePDFs(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
 								<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
 								'.$next_action.'
-								<!--<li><a href="#">Something else here</a></li>
+								<!--<li><a href="#">Something else here</a></li>-->
 								<li role="separator" class="divider"></li>
-								<li><a href="#">Separated link</a></li>-->
+								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="fa fa-file-text-o link"></i>&nbsp;Add Note</a></li>
+								'.$cert.'
 							</ul>
 						</div>
 					</td>
@@ -135,15 +181,45 @@ $test_details = getTestsByAnimal($animal_id);
 	</section>
 	
 <?php get_template_part('part-templates/modal', 'animal'); ?>
+<?php get_template_part('part-templates/modal', 'notes'); ?>
+<?php get_template_part('part-templates/modal', 'addNote'); ?>
 
 <?php
 function footer_js(){
 	global $animal_details;
+	global $note_details;
 ?>
 <script>
 jQuery(document).ready(function($) {
 		
 	populateAnimalModal(<?php echo json_encode($animal_details); ?>);
+
+	var noteDetails = <?php echo json_encode($note_details); ?>;
+	
+	$('.notes').click(function(){
+			$("#note_test_id").val(($(this).attr('id')).replace('note', ''));
+	});
+			
+	$(".notes_badge").on("click", function(e) {
+			var swabId = $(this).attr("id");
+			$('#all_test_notes').empty();
+			if (noteDetails[swabId].length > 0){
+				populateNotesModal(noteDetails[swabId]);
+			}
+	});
+	
+	$('#addNoteModal').on('show.bs.modal', function(e) {
+			$('#summernote').summernote({
+				dialogsInBody: true,
+				height: 200,
+				toolbar: [
+					['style', ['bold', 'italic', 'underline', 'clear']],
+					['font', ['strikethrough', 'superscript', 'subscript']],
+					['color', ['color']],
+					['para', ['ul', 'ol', 'paragraph']],
+				]
+			});
+	});
 	   
 	var table = $('#orderDetails').DataTable({
 		order : [ [ 0, 'desc' ] ],
