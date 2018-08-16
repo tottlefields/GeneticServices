@@ -726,7 +726,7 @@ function testDetails(test, swab_no) {
 function generateBarcode(value) {
 	var canvas = document.createElement('canvas');
 	canvas.setAttribute("id", "canvasBarcode");
-	canvas.setAttribute("width", "350px");
+	canvas.setAttribute("width", "450px");
 	canvas.setAttribute("height", "75px");
 	document.body.appendChild(canvas);
 
