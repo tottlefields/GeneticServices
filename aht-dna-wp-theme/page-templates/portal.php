@@ -12,19 +12,20 @@ if (isset($_REQUEST['submit'])){
 	if ($_FILES["portal_file"]["error"] == 0){ // && preg_match('/text/', $_FILES["portal_file"]["type"])){
 		$fh = fopen($_FILES['portal_file']['tmp_name'], 'rb');
 		$first_line = fgets($fh);
-		if (count(explode(',', $first_line)) > 1){ $error = "File is comma-separated. Please re-save as tab-delimited and try uploading again."; }
+		if (count(explode(',', $first_line)) > 1){ $error .= "File is comma-separated. Please re-save as tab-delimited and try uploading again."; }
 		else{
 			while (($line = fgetcsv($fh, 1000, "\t")) !== false){
 				# [0] => Returned? // [1] => Swab# [2] => Test // [3] => Vet Verified? // [4] => Report?
 				# [5] => Registered Name // [6] => Pet Name // [7] => Reg No. // [8] => Microchip // [9] => DOB // [10] => Breed // [11] => Colour // [12] => Sex
-				# [13] => Owner // [14] => Email // [15] => Phone // [16] => Fax // [17] => Address // [18] => Postcode
-				# [19] => Vet // [20] => Vet Email // [21] => Vet Phone // [22] => Vet Fax // [23] => Vet Address // [24] => Vet Postcode
-				# [25] => Research?
+				# [13] => Owner // [14] => Email // [15] => Phone // [16] => Address // [17] => Town // [18] => County // [19] => Country // [20] => Postcode
+				# [21] => Vet // [22] => Vet Email // [23] => Vet Phone // [24] => Vet Fax // [25] => Vet Address // [26] => Vet Town // [27] => Vet Postcode
+				# [28] => Research?
 				
 				if ($line[0] === 'Returned?'){ continue; }
 				
+				$client_id = 0;				
 				$clients = clientSearch(array(
-						'Postcode'	=> $line[18],
+						'Postcode'	=> $line[20],
 						'FullName'	=> $line[13],
 						'Email'		=> $line[14],
 				));
@@ -32,13 +33,18 @@ if (isset($_REQUEST['submit'])){
 						'FullName'	=> $line[13],
 						'Email'		=> $line[14],
 						'Tel'		=> $line[15],
-						'Fax'		=> $line[16],
-						'Address'	=> $line[17],
-						'Postcode'	=> $line[18],
+						'Address'	=> $line[16],
+						'Town'		=> $line[17],
+						'County'	=> $line[18],
+						'Country'	=> $line[19],
+						'Postcode'	=> $line[20],
 				)); }
 				elseif (count($clients) == 1) { $client_id = $clients[0]->id; }
-				else { $error = "multiple clients match : ".$line[13]. '/ '.$line[14]; break; }
-		
+				else { $error .= "multiple clients match : ".$line[13]. '/ '.$line[14]; break; }
+				
+				if ($client_id == 0){ $error .= "Something has gone wrong with getting a client id : ".$line[13]. '/ '.$line[14]; break; }
+
+				$animal_id = 0;
 				$animals = animalSearch(array(
 						'RegisteredName'	=> $line[5],
 						'RegistrationNo'	=> $line[7],
@@ -59,7 +65,8 @@ if (isset($_REQUEST['submit'])){
 				}
 				elseif (count($animals) == 1) { $animal_id = $animals[0]->id; }
 				else {  $error = "multiple animals match : ".$line[5]." / ".$line[7]." / ".$line[8]; break; }
-	
+				
+				if ($animal_id == 0){ $error .= "Something has gone wrong with getting an animal id : ".$line[5]. '/ '.$line[7]; break; }	
 	
 				$orders = orderSearch(array(
 						'OrderDate'	=> date('Y-m-d'),
@@ -71,31 +78,32 @@ if (isset($_REQUEST['submit'])){
 							'OrderDate'			=> date('Y-m-d'),
 							'ReportFormat'		=> $line[4],
 							'VetReportFormat'	=> ($line[3] == 'Yes') ? $line[4] : NULL,
-							'AgreeResearch'		=> ($line[25] == 'Yes') ? 1 : 0,
+							'AgreeResearch'		=> ($line[28] == 'Yes') ? 1 : 0,
 							'Paid'				=> 1
 					));
 				}
 				elseif (count($orders) == 1) { $order_id = $orders[0]->ID; }
-				else {  $error = "multiple orders match : ".$line[13].' ('.$client_id.') / '.date('Y-m-d'); break; }
+				else {  $error .= "multiple orders match : ".$line[13].' ('.$client_id.') / '.date('Y-m-d'); break; }
 				
 				$vet_id = NULL;
 				if ($line[3] == 'Yes'){
 					$vets = vetSearch(array(
-							'FullName'	=> $line[19],
-							'Email'		=> $line[20],
+							'FullName'	=> $line[21],
+							'Email'		=> $line[22],
 					));
 					if (count($vets) == 0) { 
 						$vet_id = addNewVet(array(
-								'FullName'	=> $line[19],
-								'Email'		=> $line[20],
-								'Tel'		=> $line[21],
-								'Fax'		=> $line[22],
-								'Address'	=> $line[23],
-								'Postcode'	=> $line[24],
+								'FullName'	=> $line[21],
+								'Email'		=> $line[22],
+								'Tel'		=> $line[23],
+								'Fax'		=> $line[24],
+								'Address'	=> $line[25],
+								'Town'		=> $line[26],
+								'Postcode'	=> $line[27],
 						));
 					}
 					elseif (count($vets) == 1) { $vet_id = $vets[0]->id; }
-					else {  $error = "multiple vets match : ".$line[19].' / '.$line[20]; break; }
+					else {  $error .= "multiple vets match : ".$line[21].' / '.$line[22]; break; }
 				}
 	
 				$results = $wpdb->get_results("SELECT * from order_tests WHERE PortalID='".$line[1]."'", OBJECT );
@@ -113,7 +121,7 @@ if (isset($_REQUEST['submit'])){
 					if($swab_id > 0){
 						$tests_loaded++;
 					}
-					else {  $error = "test hasn't loaded correctly : ".$line[1]; break; }
+					else {  $error .= "test hasn't loaded correctly : ".$line[1]; break; }
 				}
 			}
 		}
@@ -133,9 +141,9 @@ if (isset($_REQUEST['submit'])){
 <?php
 	global $wpdb;
 
-	$sql = "select concat('\"', breed, '\":{', group_concat(concat('\"',test_code, '\":\"', test_name,'\"')), '}') as row 
+	$sql = "select concat('\"', breed, '\":{', group_concat(concat('\"',test_code, '\":\"', test_name,'\"') order by test_name), '}') as row 
     		from breed_test_lookup inner join test_codes using (test_code) 
-    		inner join breed_list on ID=breed_id group by breed_id order by breed";
+    		inner join breed_list on ID=breed_id where no_swabs=1 group by breed order by breed";
 	$results = $wpdb->get_results($sql, OBJECT );
 	
 	if ( $results ){

@@ -1,10 +1,16 @@
 <?php
 
+add_action( 'wp_ajax_plate_details', 'get_plate_details' );
+add_action( 'wp_ajax_nopriv_plate_details', 'get_plate_details' );
+
 add_action( 'wp_ajax_order_details', 'get_order_details' );
 add_action( 'wp_ajax_nopriv_order_details', 'get_order_details' );
 
 add_action( 'wp_ajax_cancel_test', 'do_cancel_test' );
 add_action( 'wp_ajax_nopriv_cancel_test', 'do_cancel_test' );
+
+add_action( 'wp_ajax_request_repeat', 'do_request_repeat' );
+add_action( 'wp_ajax_nopriv_request_repeat', 'do_request_repeat' );
 
 add_action( 'wp_ajax_send_sample', 'do_send_sample' );
 add_action( 'wp_ajax_nopriv_send_sample', 'do_send_sample' );
@@ -33,6 +39,46 @@ function do_cancel_test(){
 	wp_die();
 }
 
+function do_request_repeat(){
+	global $wpdb, $current_user; // this is how you get access to the database
+	
+	$swabId = intval( $_POST['swabId'] );
+	
+	$old_data = $wpdb->get_row('select OrderID,PortalID,AnimalID,TestCode,Quantity,SampleType,order_id,animal_id,test_code,bundle from order_tests where id='.$swabId);
+	$new_data = array(
+		'OrderID' => $old_data->OrderID,
+		'PortalID' => $old_data->PortalID,
+		'AnimalID' => $old_data->AnimalID,
+		'TestCode' => $old_data->TestCode,
+		'Quantity' => $old_data->Quantity,
+		'SampleType' => $old_data->SampleType,
+		'order_id' => $old_data->order_id,
+		'animal_id' => $old_data->animal_id,
+		'test_code' => $old_data->test_code,
+		'bundle' => $old_data->bundle
+	);	
+	$wpdb->insert('order_tests', $new_data);	
+	$new_swab = $wpdb->insert_id;	
+	
+	$update_args = array(
+			'cancelled_by' => $current_user->user_login,
+			'cancelled_date' => date('Y-m-d'),
+			'repeat_swab' => $new_swab
+	);	
+	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
+		
+	$note_data = array(
+		'test_id'	=> $swabId,
+		'note_by'	=> $current_user->user_login,
+		'note_text'	=> base64_encode(stripslashes("Repeat swab requested for this test - replacement test ID is $new_swab."))
+	);
+	$wpdb->insert('order_test_notes', $note_data);
+
+	echo json_encode(array('results' => 'Successfully requested a repeat sample with id of '.$new_swab));
+	
+	wp_die();
+}
+
 function do_send_sample(){
 	global $wpdb, $current_user; // this is how you get access to the database
 	
@@ -54,24 +100,52 @@ function do_return_sample(){
 	global $wpdb, $current_user; // this is how you get access to the database
 	
 	$swabId = intval( $_POST['swabId'] );
+	$date = new DateTime();
+	$date->add(new DateInterval('P14D'));
 	
 	$update_args = array(
 			'received_by' => $current_user->user_login,
-			'returned_date' => date('Y-m-d')
+			'returned_date' => date('Y-m-d'),
+			'due_date' => $date->format('Y-m-d')
 	);
 	
 	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
+	createSwabs($swabId);
 
 	echo json_encode(array('results' => 'Successfully logged return of sample with id of '.$swabId));
 	
 	wp_die();
 }
 
- function get_order_details() {
+function get_plate_details(){
+	global $wpdb;
+	$return = array();
+	
+	$plate_id = $_POST['pid'];
+	$plate_type = $_POST['ptype'];
+	
+	if ($plate_type == 'extraction'){
+		$sql = "select distinct t.order_id, s.test_id as test_id, t.test_code, s.extraction_well as well 
+		from test_swabs s inner join order_tests t on s.test_id=t.id where s.extraction_plate='".$plate_id."'
+		order by 4";
+	}
+	else{
+		$sql = "select distinct t.order_id, r.test_id, t.test_code, r.test_plate_well as well 
+		from test_swab_results r inner join order_tests t on t.id=test_id where test_plate='".$plate_id."'
+		order by 4";
+	}
+	$return = $wpdb->get_results($sql, OBJECT);	 
+	echo json_encode($return);
+	
+	wp_die();	
+}
+
+function get_order_details() {
 	global $wpdb; // this is how you get access to the database
 	
 	$return = array();
 	$swabId = intval( $_POST['swabId'] );
+	$pending = isset( $_POST['pending'] ) ? intval( $_POST['pending'] ) : 0;
 	
 	$order_ids = (is_array($_POST['orderId'])) ? $_POST['orderId'] : explode(',', trim($_POST['orderId']));		
 	foreach ($order_ids as $orderId){
@@ -93,11 +167,11 @@ function do_return_sample(){
 		 }
 		 
 		 if (isset($swabId) && $swabId > 0){ $test_details = [getTestDetails($swabId)]; }
-		 else{ $test_details = getTestsByOrder($orderId); }
+		 else{ $test_details = getTestsByOrder($orderId, $pending); }
 		 foreach ($test_details as $test){
 		 	foreach ($test as $key => $value){
 			 	if($value === null){ $test->$key = ""; }
-			 	elseif (preg_match('/\d{4}-\d{1,2}-\d{1,2}/', $value)){
+			 	elseif(is_string($value) && preg_match('/\d{4}-\d{1,2}-\d{1,2}/', $value)){
 			 		$test->$key = SQLToDate($value);
 			 	}
 		 	}

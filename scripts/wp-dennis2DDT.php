@@ -3,7 +3,7 @@ global $wpdb;
 
 $sex_lookup = array('m' => 'Male', 'f' => 'Female');
 
-$results = $wpdb->get_results("select t2.OrderId as webshopID, t2.id as orderId, t4.id as clientID, t3.id as animalID, Quantity, test_name, t1.test_code, Breed, RegisteredName, RegistrationNo,
+$results = $wpdb->get_results("select t1.id as swabId, t2.OrderId as webshopID, t2.id as orderId, t4.id as clientID, t3.id as animalID, Quantity, test_name, t1.test_code, Breed, RegisteredName, RegistrationNo,
 	Sex, DATE_FORMAT(BirthDate, '%d/%m/%Y') as BirthDate, TattooOrChip, t4.Tel as clientTel, t4.Fax as clientFax, t4.Email as clientEmail, t4.FullName as clientName,
 	t4.Address as clientAddress, t4.Town as clientTown, t4.county as clientCounty, t4.Postcode as clientPostcode, t4.Country as clientCountry,
 	AgreeResearch, PetName, Colour, DATE_FORMAT(OrderDate, '%d/%m/%Y') as OrderDate, PortalID, DATE_FORMAT(returned_date, '%d/%m/%Y') as returned_date, 
@@ -69,7 +69,7 @@ if(count($results > 0)){
 		array_push($ddt_row, $row->clientEmail);
 		array_push($ddt_row, $row->clientName);
 		array_push($ddt_row, "");
-		array_push($ddt_row, $row->clientAddress);
+		array_push($ddt_row, preg_replace( "/\r|\n/", ", ", $row->clientAddress));
 		array_push($ddt_row, $row->clientTown);
 		array_push($ddt_row, $row->clientCounty);
 		array_push($ddt_row, $row->clientPostcode);
@@ -91,12 +91,12 @@ if(count($results > 0)){
 		array_push($ddt_row, $row->Colour);
 		array_push($ddt_row, $row->OrderDate);
 		array_push($ddt_row, "TRUE");
-		array_push($ddt_row, $order_id);
+		array_push($ddt_row, $row->swabId);
 		array_push($ddt_row, "");
 		array_push($ddt_row, $row->returned_date);
 		array_push($ddt_row, ($row->ShippingName == "") ? $row->clientName : $row->ShippingName);
 		array_push($ddt_row, ($row->ShippingCompany == "") ? "" : $row->ShippingCompany);
-		array_push($ddt_row, (($row->ShippingAddress == "") ? $row->clientAddress : $row->ShippingAddress));
+		array_push($ddt_row, ($row->ShippingAddress == "") ? preg_replace( "/\r|\n/", ", ", $row->clientAddress) : preg_replace( "/\r|\n/", ", ", $row->ShippingAddress));
 		array_push($ddt_row, ($row->ShippingTown == "") ? $row->clientTown : $row->ShippingTown);
 		array_push($ddt_row, ($row->ShippingCounty == "") ? $row->clientCounty : $row->ShippingCounty);
 		array_push($ddt_row, ($row->ShippingPostcode == "") ? $row->clientPostcode : $row->ShippingPostcode);

@@ -7,12 +7,12 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 	$query = $_REQUEST['q'];
 	$allResults = array();
 	
-	if (preg_match('/^AHT\d{1,5}$/', $query)){
+	if (preg_match('/^AHT\d{1,5}$/', strtoupper($query))){
 		//Dennis (AHT) ID - between 1 & 5 digits [OrderID] pre-pended by 'AHT'
 		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, orders.ShippingCountry, count(*) as TestCount 
 				from orders left outer join client on client.id=client_id 
 				left outer join order_tests on orders.id=order_id
-				WHERE orders.id='".str_replace('AHT', '', $query)."'
+				WHERE orders.id='".str_replace('AHT', '', strtoupper($query))."'
 				GROUP BY orders.id";
 		$results = $wpdb->get_results($sql);
 		if (count($results) == 1 && $results[0]->ID > 0){

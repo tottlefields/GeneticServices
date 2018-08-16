@@ -67,7 +67,7 @@ foreach( $posts as $post ) {
 				'tests' => array()
 		);
 	}
-	
+
 	//Test Data
 	$testDataPost = get_post($postMeta['test-id-pm'][0]);
 	$testDataMeta = get_post_custom($postMeta['test-id-pm'][0]);

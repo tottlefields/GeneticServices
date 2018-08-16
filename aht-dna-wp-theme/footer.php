@@ -21,6 +21,9 @@
 			$('.datepick').datepicker({
 				format: 'dd/mm/yyyy'
 			});
+			$('.summernote').summernote({
+					dialogsInBody: true
+			});
 		});
 		<!-- <script src="<?php echo get_template_directory_uri() . '/assets/js/custom.js';?>"></script> -->
 		<!-- end: JavaScript-->
