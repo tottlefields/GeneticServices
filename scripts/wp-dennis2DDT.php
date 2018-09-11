@@ -6,7 +6,7 @@ $sex_lookup = array('m' => 'Male', 'f' => 'Female');
 $results = $wpdb->get_results("select t1.id as swabId, t2.OrderId as webshopID, t2.id as orderId, t4.id as clientID, t3.id as animalID, Quantity, test_name, t1.test_code, Breed, RegisteredName, RegistrationNo,
 	Sex, DATE_FORMAT(BirthDate, '%d/%m/%Y') as BirthDate, TattooOrChip, t4.Tel as clientTel, t4.Fax as clientFax, t4.Email as clientEmail, t4.FullName as clientName,
 	t4.Address as clientAddress, t4.Town as clientTown, t4.county as clientCounty, t4.Postcode as clientPostcode, t4.Country as clientCountry,
-	AgreeResearch, PetName, Colour, DATE_FORMAT(OrderDate, '%d/%m/%Y') as OrderDate, PortalID, DATE_FORMAT(returned_date, '%d/%m/%Y') as returned_date, 
+	t2.ReportFormat, t2.VetReportFormat, AgreeResearch, PetName, Colour, DATE_FORMAT(OrderDate, '%d/%m/%Y') as OrderDate, PortalID, DATE_FORMAT(returned_date, '%d/%m/%Y') as returned_date, 
 	t2.ShippingName, t2.ShippingCompany, t2.ShippingAddress, t2.ShippingAddress2, t2.ShippingAddress3, t2.ShippingTown, t2.ShippingCounty, t2.ShippingPostcode, t2.ShippingCountry, 
 	t1.VetID, t6.FullName as vetName, t6.Tel as vetTel, t6.Fax as vetFax, t6.Email as vetEmail, t6.Address as vetAddress, t6.Address2 as vetAddress2, t6.Address3 as vetAddress3, 
 	t6.Town as vetTown, t6.County as vetCounty, t6.Postcode as vetPostcode, t6.Country as vetCountry
@@ -15,7 +15,7 @@ $results = $wpdb->get_results("select t1.id as swabId, t2.OrderId as webshopID, 
 	inner join client t4 on t2.client_id=t4.id 
 	inner join test_codes t5 on t1.test_code=t5.test_code
 	left outer join vet t6 on t1.VetID=t6.id 
-	where returned_date =date(NOW())"
+	where returned_date =date(NOW()) and cancelled_date is NULL"
 );
 if(count($results > 0)){
 	echo "OrderID\tClientID\tAnimalID\tQuantity\tTestDescription\tTestCode\tBloodTestRequired\tSwabRequired\tSpecies\tBreed\tRegistryName\tRegisteredName\tRegistration\tSex\tBirthDate\tTattooOrChip\tClientCode\tReportByEmail\tReportByPost\tReportByFax\tTel\tFax\tEmail\tFullName\tOrganisation\tAddress1\tTown\tCounty\tPostcode\tCountry\tAgreeToResearch\tVetPracticeName\tVetSurgeonName\tVetAddressLine1\tVetAddressLine2\tVetAddressLine3\tVetTown\tVetPostcode\tVetCounty\tVetCountry\tVetEmail\tVetFaxNumber\tVetReportByEmail\tVetReportByPost\tVetReportByFax\tPetName\tColour\tOrderDate\tSwabReceived\tSwabKitNumber\tSampleType\tSampleReceivedDate\tDeliveryFullName\tDeliveryOrganisation\tDeliveryAddress1\tDeliveryTown\tDeliveryCounty\tDeliveryPostcode\tDeliveryCountry\tVerifiedByVet\n";
