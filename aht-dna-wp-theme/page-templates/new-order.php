@@ -197,7 +197,13 @@ if (isset($_POST['new-order-submitted'])) {
 										<input type="email" class="form-control required" value="" name="owner-email" id="owner-email"/>
 									</div>
 									<label class="col-sm-2 control-label">Town</label>
-									<label class="col-sm-2 control-label">County</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" value="" placeholder="Town" name="owner-town" id="owner-town" tabindex="2" />
+									</div>
+									<label class="col-sm-1 control-label">County</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" value="" placeholder="County" name="owner-county" id="owner-county" tabindex="2" />
+									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Phone</label>
@@ -205,10 +211,20 @@ if (isset($_POST['new-order-submitted'])) {
 										<input type="tel" class="form-control" value="" name="owner-phone" id="owner-phone"/>
 									</div>
 									<label class="col-sm-2 control-label">Country</label>
-									<label class="col-sm-2 control-label">Postcode</label>
+									<div class="col-sm-2">
+										<select id="owner-country" class="form-control required" name="owner-country" tabindex="2">
+											<option value="">Select Country...</option>
+											<option value="GB">United Kingdom</option>
+										</select>
+									</div>
+									<label class="col-sm-1 control-label">Postcode</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" value="" placeholder="Postcode" name="owner-postcode" id="owner-postcode" tabindex="2" />
+									</div>
 								</div>
 							</div>
-						</div>					
+						</div>
+					</div>				
 						
 <!-- 						<div class="panel panel-primary">
 							<div class="panel-heading">
@@ -221,9 +237,31 @@ if (isset($_POST['new-order-submitted'])) {
 						
 						<input type="submit" value="Record Details" id="form_submission_but" name="submit" class="btn btn-primary pull-right" disabled="disabled"/>
  -->
+ 					<div class="row">
+						<div class="col-sm-12">
+							<div class="panel panel-primary">
+								<div class="panel-heading">
+									<h3 class="panel-title">3. Dog and Test Details</h3>
+								</div>
+								<div class="panel-body">
+									<div class="col-xs-3 col-md-2 col-lg-1"
+										style="text-align: center">
+										How many dogs do you wish to order tests for?<br> 
+										<input class="form-control" type="text" size="2" value="0" id="noDogs" name="noDogs" style="text-align: center; font-weight: bold; font-size: 1.5em;">
+									</div>
+									<div class="col-xs-9 col-md-10 col-lg-11">
+										<table class="table table-condensed table-responsive table-striped" id="dogsTable" style="display: none">
+											<thead></thead>
+											<tbody></tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>
-			</form>
+					<input type="submit" value="Record Details" id="form_submission_but" name="submit" class="btn btn-primary pull-right" disabled="disabled" />
+				</form>
+			</div>
 		</div>
 	</section>
 	
