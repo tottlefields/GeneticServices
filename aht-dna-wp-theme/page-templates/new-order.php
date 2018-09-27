@@ -183,17 +183,17 @@ if (isset($_POST['new-order-submitted'])) {
 							<div class="panel-body">
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Name</label>
-									<div class="col-sm-4">
+									<div class="col-sm-3">
 										<input type="text" class="form-control required" value="" name="owner-name" id="owner-name"/>
 									</div>
 									<label class="col-sm-2 control-label">Address</label>
-									<div class="col-sm-4">
+									<div class="col-sm-5">
 									 	<input type="text" class="form-control" value="" name="owner-address" id="owner-address"/>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Email</label>
-									<div class="col-sm-4">
+									<div class="col-sm-3">
 										<input type="email" class="form-control required" value="" name="owner-email" id="owner-email"/>
 									</div>
 									<label class="col-sm-2 control-label">Town</label>
@@ -201,7 +201,7 @@ if (isset($_POST['new-order-submitted'])) {
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Phone</label>
-									<div class="col-sm-4">
+									<div class="col-sm-3">
 										<input type="tel" class="form-control" value="" name="owner-phone" id="owner-phone"/>
 									</div>
 									<label class="col-sm-2 control-label">Country</label>
