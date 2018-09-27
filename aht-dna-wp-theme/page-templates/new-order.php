@@ -121,13 +121,6 @@ if (isset($_POST['new-order-submitted'])) {
 								  	<div class="col-sm-9">
 								  		<select id="breed-select" class="form-control required" name="breed">
 								  			<option value="">Select Breed of your Dog...</option>
-								  			<?php 
-								  			$sql = "select ID, breed from breed_list order by breed";
-								  			$results = $wpdb->get_results($sql, OBJECT );
-											foreach ( $results as $breedObj ){
-												echo '<option value="'.$breedObj->ID.'">'.$breedObj->breed.'</option>'."\n";
-											}
-								  			?>
 								  		</select>
 								  	</div>
 								</div>
@@ -224,44 +217,33 @@ if (isset($_POST['new-order-submitted'])) {
 								</div>
 							</div>
 						</div>
-					</div>				
-						
-<!-- 						<div class="panel panel-primary">
+					</div>
+				</div>				
+
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="panel panel-primary">
 							<div class="panel-heading">
-								<h3 class="panel-title">4. Tests Available</h3>
+								<h3 class="panel-title">3. Dog and Test Details</h3>
 							</div>
-							<div class="panel-body" id="available_tests">
-								<p>Please first select your dog breed from the dropdown list in DOG DETAILS section to view the list of tests available.</p>
-							</div>
-						</div>
-						
-						<input type="submit" value="Record Details" id="form_submission_but" name="submit" class="btn btn-primary pull-right" disabled="disabled"/>
- -->
- 					<div class="row">
-						<div class="col-sm-12">
-							<div class="panel panel-primary">
-								<div class="panel-heading">
-									<h3 class="panel-title">3. Dog and Test Details</h3>
+							<div class="panel-body">
+								<div class="col-xs-3 col-md-2 col-lg-1"
+									style="text-align: center">
+									How many dogs do you wish to order tests for?<br> 
+									<input class="form-control" type="text" size="2" value="0" id="noDogs" name="noDogs" style="text-align: center; font-weight: bold; font-size: 1.5em;">
 								</div>
-								<div class="panel-body">
-									<div class="col-xs-3 col-md-2 col-lg-1"
-										style="text-align: center">
-										How many dogs do you wish to order tests for?<br> 
-										<input class="form-control" type="text" size="2" value="0" id="noDogs" name="noDogs" style="text-align: center; font-weight: bold; font-size: 1.5em;">
-									</div>
-									<div class="col-xs-9 col-md-10 col-lg-11">
-										<table class="table table-condensed table-responsive table-striped" id="dogsTable" style="display: none">
-											<thead></thead>
-											<tbody></tbody>
-										</table>
-									</div>
+								<div class="col-xs-9 col-md-10 col-lg-11">
+									<table class="table table-condensed table-responsive table-striped" id="dogsTable" style="display: none">
+										<thead></thead>
+										<tbody></tbody>
+									</table>
 								</div>
 							</div>
 						</div>
 					</div>
-					<input type="submit" value="Record Details" id="form_submission_but" name="submit" class="btn btn-primary pull-right" disabled="disabled" />
-				</form>
-			</div>
+				</div>
+				<input type="submit" value="Record Details" id="form_submission_but" name="submit" class="btn btn-primary pull-right" disabled="disabled" />
+			</form>
 		</div>
 	</section>
 	
