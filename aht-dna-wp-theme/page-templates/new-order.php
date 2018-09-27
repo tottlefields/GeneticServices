@@ -67,7 +67,6 @@ if (isset($_POST['new-order-submitted'])) {
 <?php get_header(); ?>
 <?php
 	global $post;
-	$post_slug=$post->post_name;
 	
 	?>
 	<h1><?php wp_title('', true,''); ?><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
@@ -76,7 +75,7 @@ if (isset($_POST['new-order-submitted'])) {
 			<form class="form-horizontal" id="swab_details_form" method="post">					
                 <input type="hidden" name="new-order-submitted" value="1" />
 				<div class="row">
-					<div class="col-sm-6">
+					<div class="col-sm-5">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title">1. Sample Details</h3>
@@ -87,7 +86,7 @@ if (isset($_POST['new-order-submitted'])) {
 									<div class="col-sm-4">
 										<label class="radio-inline"><input type="radio" class="radiorequired" value="Email" name="format" checked="checked"/> Email</label>
 										<label class="radio-inline"><input type="radio" class="radiorequired" value="Post" name="format"/> Post</label>
-										<label class="radio-inline"><input type="radio" class="radiorequired" value="Fax" name="format"/> Fax</label>
+										<!-- <label class="radio-inline"><input type="radio" class="radiorequired" value="Fax" name="format"/> Fax</label> -->
 									</div>
 									
 									<label class="col-sm-2 control-label">Vertification</label>
@@ -109,9 +108,10 @@ if (isset($_POST['new-order-submitted'])) {
 									</div>
 								</div> 
 							</div>
-						</div>					
+						</div>
+					</div>			
 						
-						<div class="panel panel-primary">
+<!-- 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title">2. Dog Details</h3>
 							</div>
@@ -173,50 +173,44 @@ if (isset($_POST['new-order-submitted'])) {
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 			
-					<div class="col-sm-6">
+					<div class="col-sm-7">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
-								<h3 class="panel-title">3. Owner Details</h3>
+								<h3 class="panel-title">2. Client Details</h3>
 							</div>
 							<div class="panel-body">
 								<div class="form-group">
-									<label class="col-sm-3 control-label">Owner's Name</label>
-									<div class="col-sm-9">
+									<label class="col-sm-2 control-label">Name</label>
+									<div class="col-sm-4">
 										<input type="text" class="form-control required" value="" name="owner-name" id="owner-name"/>
 									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">Address</label>
-									<div class="col-sm-9">
+									<label class="col-sm-2 control-label">Address</label>
+									<div class="col-sm-4">
 									 	<input type="text" class="form-control" value="" name="owner-address" id="owner-address"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">Postcode</label>
-									<div class="col-sm-3">
-										<input type="text" class="form-control" value="" name="owner-postcode" id="owner-postcode"/>
-									</div>
 									<label class="col-sm-2 control-label">Email</label>
 									<div class="col-sm-4">
 										<input type="email" class="form-control required" value="" name="owner-email" id="owner-email"/>
 									</div>
+									<label class="col-sm-2 control-label">Town</label>
+									<label class="col-sm-2 control-label">County</label>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">Phone</label>
-									<div class="col-sm-3">
+									<label class="col-sm-2 control-label">Phone</label>
+									<div class="col-sm-4">
 										<input type="tel" class="form-control" value="" name="owner-phone" id="owner-phone"/>
 									</div>
-									<label class="col-sm-2 control-label">Fax</label>
-									<div class="col-sm-4">
-										<input type="tel" class="form-control" value="" name="owner-fax" id="owner-fax"/>
-									</div>
+									<label class="col-sm-2 control-label">Country</label>
+									<label class="col-sm-2 control-label">Postcode</label>
 								</div>
 							</div>
 						</div>					
 						
-						<div class="panel panel-primary">
+<!-- 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title">4. Tests Available</h3>
 							</div>
@@ -226,6 +220,7 @@ if (isset($_POST['new-order-submitted'])) {
 						</div>
 						
 						<input type="submit" value="Record Details" id="form_submission_but" name="submit" class="btn btn-primary pull-right" disabled="disabled"/>
+ -->
 					</div>
 				</div>
 			</form>
