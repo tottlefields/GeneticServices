@@ -311,7 +311,6 @@ $results = $wpdb->get_results($sql, OBJECT );
 $allBreeds = array();
 $breedTests = array("all" => array("CP" => "Canine DNA profiles (ISAG 2006)"));
 foreach ( $results as $breedObj ){
-    //array_push($allBreeds, $breedObj->breed);
     $allBreeds[$breedObj->ID] = $breedObj->breed;
     $sql2 = "SELECT test_code, test_name, concat('\"',test_code, '\":\"', test_name,'\"') as test
     from breed_test_lookup inner join test_codes using (test_code) 
@@ -321,7 +320,7 @@ foreach ( $results as $breedObj ){
     if (count($results2) > 0){
         $breedTests[$breedObj->breed] = array();
         foreach ( $results2 as $testObj ){
-		$breedTests[$breedObj->breed][$testObj->test_code] = $testObj->test_name;
+            $breedTests[$breedObj->ID][$testObj->test_code] = $testObj->test_name;
         }
     }
 }
