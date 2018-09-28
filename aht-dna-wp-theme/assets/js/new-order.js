@@ -47,6 +47,7 @@ jQuery(document).ready(function($) {
 			$('.datepicker-me').datepicker({ format : 'dd/mm/yyyy' });
 
 			$('.breed-select').change(function(event) {
+				console.log(breedTests);
 				selectedBreed = $('#'+$(this).attr("id")+' option:selected').val();
 				var a = $(this).attr("id").split("_");
 				if (selectedBreed !== "") {
