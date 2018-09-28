@@ -3,6 +3,7 @@
 if (isset($_POST['new-order-submitted'])) {
 
 	//debug_array($_REQUEST);
+	//exit;
 	
 	$clients = clientSearch(array(
 		'Postcode'		=> $_REQUEST['owner-postcode'],
@@ -15,9 +16,9 @@ if (isset($_POST['new-order-submitted'])) {
 		'Email'		=> $_REQUEST['owner-email'],
 		'Tel'		=> $_REQUEST['owner-phone'],
 		'Address'	=> $_REQUEST['owner-address'],
-//		'Town'		=> $_REQUEST['owner-town'],
-//		'County'	=> $_REQUEST['owner-county'],
-//		'Country'	=> $_REQUEST['owner-country'],
+		'Town'		=> $_REQUEST['owner-town'],
+		'County'	=> $_REQUEST['owner-county'],
+		'Country'	=> $_REQUEST['owner-country'],
 		'Postcode'	=> $_REQUEST['owner-postcode'],
 	) ); }
 	elseif (count($clients) == 1) { $client_id = $clients[0]->id; }
@@ -45,11 +46,17 @@ if (isset($_POST['new-order-submitted'])) {
 	else { echo "ERROR - multiple animals match"; exit; }
 	
 	$order_id = addNewOrder(array(
-			'client_id'		=> $client_id,
-			'OrderDate'		=> date('Y-m-d'),
-			'ReportFormat'		=> $_REQUEST['format'],
-			'VetReportFormat'	=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['format'] : NULL,
-			'AgreeResearch'		=> ($_REQUEST['research'] == 'on') ? 1 : 0
+	    'client_id'		=> $client_id,
+	    'OrderDate'		=> date('Y-m-d'),
+	    'ReportFormat'		=> $_REQUEST['format'],
+	    'VetReportFormat'	=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['format'] : NULL,
+	    'AgreeResearch'		=> ($_REQUEST['research'] == 'on') ? 1 : 0,
+	    'ShippingName'      => $_REQUEST['owner-name'],
+	    'ShippingAddress'   => $_REQUEST['owner-address'],
+	    'ShippingTown'      => $_REQUEST['owner-town'],
+	    'ShippingCounty'    => $_REQUEST['owner-county'],
+	    'ShippingPostcode'  => $_REQUEST['owner-postcode'],
+	    'ShippingCountry'   => $_REQUEST['owner-country']	    
 	));
 	
 	foreach ($_REQUEST['breed_tests'] as $test){
