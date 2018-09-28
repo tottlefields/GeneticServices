@@ -319,6 +319,6 @@ $js_for_footer = '
 	var allBreeds = '.json_encode($allBreeds).';
 </script>';
 ?> 
-								  			
+		
+<?php echo $js_for_footer; ?>						  			
 <?php get_footer(); ?>
-<?php echo $js_for_footer; ?>
