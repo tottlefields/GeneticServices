@@ -305,4 +305,20 @@ if (isset($_POST['new-order-submitted'])) {
 		</div>
 	</div>
 
+<?php 
+$sql = "select ID, breed from breed_list order by breed";
+$results = $wpdb->get_results($sql, OBJECT );
+$allBreeds = array();
+foreach ( $results as $breedObj ){
+    //array_push($allBreeds, $breedObj->breed);
+    $allBreeds[$breedObj->ID] = $breedObj->breed;
+}
+
+$js_for_footer = '
+<script type="text/javascript">
+	var allBreeds = '.json_encode($allBreeds).';
+</script>';
+?> 
+								  			
 <?php get_footer(); ?>
+<?php echo $js_for_footer; ?>
