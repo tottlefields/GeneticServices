@@ -53,12 +53,12 @@ jQuery(document).ready(function($) {
 					var html = '';
 					var testAll = breedTests['all'];
 					for ( var key in testAll) {
-						html += '<div class="checkbox input-sm"><label><input type="checkbox" class="test_checkbox" name="breed_tests_'+a[1]+'" value="'+key+'">'+ testAll[key]+ '</label></div>';
+						html += '<div class="checkbox input-sm"><label><input type="checkbox" class="test_checkbox" name="breed_tests_'+a[1]+'[]" value="'+key+'">'+ testAll[key]+ '</label></div>';
 					}
 					var testList = breedTests[selectedBreed];
 					if (testList && Object.keys(testList).length > 0) {
 						for ( var key in testList) {
-							html += '<div class="checkbox input-sm"><label><input type="checkbox" class="test_checkbox" name="breed_tests_'+a[1]+'" value="'+key+'">'+ testList[key]+ '</label></div>';
+							html += '<div class="checkbox input-sm"><label><input type="checkbox" class="test_checkbox" name="breed_tests_'+a[1]+'[]" value="'+key+'">'+ testList[key]+ '</label></div>';
 						}
 					}
 					$('#available_tests_'+a[1]).html(html);
