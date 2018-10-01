@@ -2,8 +2,8 @@
 <?php 
 if (isset($_POST['new-order-submitted'])) {
 
-	debug_array($_REQUEST);
-	exit;
+	//debug_array($_REQUEST);
+	//exit;
 	
 	$clients = clientSearch(array(
 		'Postcode'		=> $_REQUEST['owner-postcode'],
@@ -23,49 +23,52 @@ if (isset($_POST['new-order-submitted'])) {
 	) ); }
 	elseif (count($clients) == 1) { $client_id = $clients[0]->id; }
 	else { echo "ERROR - multiple clients match"; exit; }
-	
-	$animals = animalSearch(array(
-			'RegisteredName'	=> $_REQUEST['registered-name'],
-			'RegistrationNo'	=> $_REQUEST['registration-number'],
-			'TattooOrChip'		=> $_REQUEST['microchip']
-	), $client_id);
-	if (count($animals) == 0){
-		$animal_id = addNewAnimal(array(
-				'RegisteredName'=> $_REQUEST['registered-name'],
-				'RegistrationNo'=> $_REQUEST['registration-number'],
-				'Sex'		=> substr($_REQUEST['sex'],0,1),
-				'BirthDate'	=> dateToSQL($_REQUEST['dog-birth-date']),
-				'TattooOrChip'	=> $_REQUEST['microchip'],
-				'PetName'	=> $_REQUEST['pet-name'],
-				'Colour'	=> $_REQUEST['colour'],
-				'breed_id'	=> $_REQUEST['breed'],
-				'client_id'	=> $client_id
-		));
-	}
-	elseif (count($animals) == 1) { $animal_id = $animals[0]->id; }
-	else { echo "ERROR - multiple animals match"; exit; }
-	
+
 	$order_id = addNewOrder(array(
-	    'client_id'		=> $client_id,
-	    'OrderDate'		=> date('Y-m-d'),
-	    'ReportFormat'		=> $_REQUEST['format'],
-	    'VetReportFormat'	=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['format'] : NULL,
-	    'AgreeResearch'		=> ($_REQUEST['research'] == 'on') ? 1 : 0,
-	    'ShippingName'      => $_REQUEST['owner-name'],
-	    'ShippingAddress'   => $_REQUEST['owner-address'],
-	    'ShippingTown'      => $_REQUEST['owner-town'],
-	    'ShippingCounty'    => $_REQUEST['owner-county'],
-	    'ShippingPostcode'  => $_REQUEST['owner-postcode'],
-	    'ShippingCountry'   => $_REQUEST['owner-country']	    
+			'client_id'		=> $client_id,
+			'OrderDate'		=> date('Y-m-d'),
+			'ReportFormat'		=> $_REQUEST['format'],
+			'VetReportFormat'	=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['format'] : NULL,
+			'AgreeResearch'		=> ($_REQUEST['research'] == 'on') ? 1 : 0,
+			'ShippingName'      => $_REQUEST['owner-name'],
+			'ShippingAddress'   => $_REQUEST['owner-address'],
+			'ShippingTown'      => $_REQUEST['owner-town'],
+			'ShippingCounty'    => $_REQUEST['owner-county'],
+			'ShippingPostcode'  => $_REQUEST['owner-postcode'],
+			'ShippingCountry'   => $_REQUEST['owner-country']
 	));
 	
-	foreach ($_REQUEST['breed_tests'] as $test){
-		addOrderTest(array(
-				'order_id'	=> $order_id,
-				'animal_id'	=> $animal_id,
-				'test_code'	=> $test,
-				'VetID'		=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['vet-select'] : NULL
-		));
+	for ($i=1; $i<=$_REQUEST['noDogs']; $i++){
+		
+		$animals = animalSearch(array(
+				'RegisteredName'	=> $_REQUEST['registered-name_'.$i],
+				'RegistrationNo'	=> $_REQUEST['registration-number_'.$i],
+				'TattooOrChip'		=> $_REQUEST['microchip_'.$i]
+		), $client_id);
+		if (count($animals) == 0){
+			$animal_id = addNewAnimal(array(
+					'RegisteredName'=> $_REQUEST['registered-name_'.$i],
+					'RegistrationNo'=> $_REQUEST['registration-number_'.$i],
+					'Sex'		=> substr($_REQUEST['sex_'.$i],0,1),
+					'BirthDate'	=> dateToSQL($_REQUEST['dog-birth-date_'.$i]),
+					'TattooOrChip'	=> $_REQUEST['microchip_'.$i],
+					'PetName'	=> $_REQUEST['pet-name_'.$i],
+					'Colour'	=> $_REQUEST['colour_'.$i],
+					'breed_id'	=> $_REQUEST['breed_'.$i],
+					'client_id'	=> $client_id
+			));
+		}
+		elseif (count($animals) == 1) { $animal_id = $animals[0]->id; }
+		else { echo "ERROR - multiple animals match"; exit; }
+	
+		foreach ($_REQUEST['breed_tests_'.$i] as $test){
+			addOrderTest(array(
+					'order_id'	=> $order_id,
+					'animal_id'	=> $animal_id,
+					'test_code'	=> $test,
+					'VetID'		=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['vet-select'] : NULL
+			));
+		}
 	}
 	
 	wp_redirect(get_site_url().'/orders/');
