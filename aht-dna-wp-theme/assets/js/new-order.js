@@ -80,7 +80,7 @@ jQuery(document).ready(function($) {
 	$('input[class="radiorequired"]').rules("add", "required");
 	
 	$('#swab_details_form input').on('keyup blur', function () { // fires on every keyup & blur
-			if ($('#swab_details_form').valid()) {                   // checks form for validity
+			if ($("#noDogs").val() > 0 && $('#swab_details_form').valid()) { // checks form for validity
 				$('#form_submission_but').prop('disabled', false);        // enables button
 			} else {
 				$('#form_submission_but').prop('disabled', 'disabled');   // disables button
@@ -149,7 +149,7 @@ jQuery(document).ready(function($) {
 		}
 	});
 	
-	$('#breed-select').change(
+/*	$('#breed-select').change(
 			function(event) {
 				selectedBreed = $('#breed-select option:selected').val();
 				if (selectedBreed !== "") {
@@ -177,11 +177,11 @@ jQuery(document).ready(function($) {
 					.html(
 					'<p>Please first select your dog breed from the dropdown list in DOG DETAILS section to view the list of tests available.</p>');
 				}
-	});
+	});*/
 	
 	$('#swab_details_form').submit(function(event) {
 		//event.preventDefault();
-		if($('input:checkbox[name="breed_tests[]"]:checked').length === 0){
+		if($('input:checkbox[class="test_checkbox"]:checked').length === 0){
 			alert("You need to select one or more tests for your dog.");
 			return false;
 		}

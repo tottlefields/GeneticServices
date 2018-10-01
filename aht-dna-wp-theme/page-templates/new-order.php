@@ -2,8 +2,8 @@
 <?php 
 if (isset($_POST['new-order-submitted'])) {
 
-	//debug_array($_REQUEST);
-	//exit;
+	debug_array($_REQUEST);
+	exit;
 	
 	$clients = clientSearch(array(
 		'Postcode'		=> $_REQUEST['owner-postcode'],
