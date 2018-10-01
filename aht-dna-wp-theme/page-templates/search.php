@@ -270,7 +270,33 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 						</table>
 					</div>
 					<div role="tabpanel" class="tab-pane" id="tab-orders">
-						<pre><?php print_r($allResults['orders']); ?></pre>
+						<table id="results-orders" class="table table-striped table-bordered table-responsive searchResults">
+							<thead>
+								<th>ID</th>
+								<th>Webshop</th>
+								<th>Date</th>
+								<th>Name</th>
+								<th>Email</th>
+								<th>Country</th>
+								<th>#Swabs</th>
+							</thead>
+							<tbody>
+							<?php 
+							foreach ($allResults['orders'] as $row){
+								echo '
+								<tr>
+									<td>'.$row->ID.'</td>
+									<td>'.$row->webshop_id.'</td>
+									<td>'.$row->OrderDate.'</td>
+									<td>'.$row->FullName.'</td>
+									<td>'.$row->Email.'</td>
+									<td>'.$row->ShippingCountry.'</td>
+									<td>'.$row->TestCount.'</td>
+								</tr>';
+							}						
+							?>
+							</tbody>
+						</table>
 					</div>
 				</div>	
 		<?php } ?>	
