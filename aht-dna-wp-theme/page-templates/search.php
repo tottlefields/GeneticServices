@@ -283,11 +283,12 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 							<tbody>
 							<?php 
 							foreach ($allResults['orders'] as $row){
+								$order_date = new DateTime($row->OrderDate);
 								echo '
 								<tr>
 									<td>'.$row->ID.'</td>
 									<td>'.$row->webshop_id.'</td>
-									<td>'.$row->OrderDate.'</td>
+									<td>'.$order_date->format('d/m/Y').'</td>
 									<td>'.$row->FullName.'</td>
 									<td>'.$row->Email.'</td>
 									<td>'.$row->ShippingCountry.'</td>
