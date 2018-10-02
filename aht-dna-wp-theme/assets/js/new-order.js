@@ -1,4 +1,76 @@
 jQuery(document).ready(function($) {
+	
+	$.each(countryList, function(key, value) {
+		$("#owner-country").append($('<option>').text(value).attr('value', key));
+	});
+	
+	$("#noDogs").keyup(function() {
+		if ($("#noDogs").val() == 0)
+			$("#dogsTable").hide();
+		else if ($("#noDogs").val() > 0) {
+			$("#dogsTable > thead").html("");
+			$("#dogsTable > tbody").html("");
+			$("#dogsTable").show();
+			var noDogs = $("#noDogs").val();
+			
+			var headerRowContent = '<tr><th style="width:30px;">&nbsp;</th>';
+			headerRowContent += '<th style="width:10%;">Breed</th>';
+			headerRowContent += '<th style="width:15%;">Registered Name</th>';
+			headerRowContent += '<th style="width:10%;">Registration No.</th>';
+			headerRowContent += '<th style="width:10%;">Pet Name</th>';
+			headerRowContent += '<th style="width:10%;">Birth Date</th>';
+			headerRowContent += '<th style="width:5%;">Sex</th>';
+			headerRowContent += '<th style="width:10%;">Colour</th>';
+			headerRowContent += '<th style="width:10%;">Microchip</th>';
+			headerRowContent += '<th>Tests Available</th></tr>';
+			$("#dogsTable thead").append(headerRowContent);
+			
+			for (i = 1; i <= noDogs; i++) {
+				var newRowContent = '<tr><td style="vertical-align:top">'+ i + '</td>';
+				newRowContent += '<td><select id="breed-select_'+i+'" class="form-control required input-sm breed-select" name="breed_'+i+'"><option value="">Select Breed...</option>';
+				for (breedID in allBreeds){
+					newRowContent += '<option value="'+breedID+'">'+ allBreeds[breedID]+ '</option>';
+				}
+				newRowContent += '</select></td>';
+				newRowContent += '<td><input type="text" class="form-control input-sm" placeholder="Registered Name" value="" name="registered-name_'+i+'" id="registered-name_'+i+'"/></td>';
+				newRowContent += '<td><input type="text" class="form-control input-sm" style="text-transform:uppercase" placeholder="Registration No." value="" name="registration-number_'+i+'" id="registration-number_'+i+'"/></td>';
+				newRowContent += '<td><input type="text" class="form-control input-sm required" placeholder="Pet Name" value="" name="pet-name_'+i+'" id="pet-name_'+i+'"/></td>';
+				newRowContent += '<td><input type="text" class="form-control input-sm datepicker-me num" value="" name="birth-date_'+i+'" id="birth-date_'+i+'" autocomplete="off" placeholder="dd/mm/yyyy" /></td>';
+				newRowContent += '<td><select id="sex_'+i+'" class="form-control input-sm" name="sex_'+i+'"><option value="">Unknown</option><option value="Male">Male</option><option value="Female">Female</option></select></td>';
+				newRowContent += '<td><input type="text" class="form-control input-sm" placeholder="Colour" value="" name="colour_'+i+'" id="colour_'+i+'"/></td>';
+				newRowContent += '<td><input type="text" class="form-control input-sm" placeholder="Microchip" value="" name="microchip_'+i+'" id="microchip_'+i+'"/></td>';
+				newRowContent += '<td id="available_tests_'+i+'"></td></tr>';
+				$("#dogsTable tbody").append(newRowContent);
+			}
+
+			$('.datepicker-me').datepicker("destroy");
+			$('.datepicker-me').datepicker({ format : 'dd/mm/yyyy' });
+
+			$('.breed-select').change(function(event) {
+				selectedBreed = $('#'+$(this).attr("id")+' option:selected').val();
+				var a = $(this).attr("id").split("_");
+				if (selectedBreed !== "") {
+					var html = '';
+					var testAll = breedTests['all'];
+					for ( var key in testAll) {
+						html += '<div class="checkbox input-sm"><label><input type="checkbox" class="test_checkbox" name="breed_tests_'+a[1]+'[]" value="'+key+'">'+ testAll[key]+ '</label></div>';
+					}
+					var testList = breedTests[selectedBreed];
+					if (testList && Object.keys(testList).length > 0) {
+						for ( var key in testList) {
+							html += '<div class="checkbox input-sm"><label><input type="checkbox" class="test_checkbox" name="breed_tests_'+a[1]+'[]" value="'+key+'">'+ testList[key]+ '</label></div>';
+						}
+					}
+					$('#available_tests_'+a[1]).html(html);
+				}
+
+				$('.test_checkbox').change(function(e) {
+					if ($('#swab_details_form').valid()) { $('#form_submission_but').prop('disabled', false); }
+					else { $('#form_submission_but').prop('disabled', 'disabled'); }
+				});
+			});
+		}
+	});
 
 	$("#swab_details_form").validate({
 			errorPlacement: function(error, element){
@@ -8,7 +80,7 @@ jQuery(document).ready(function($) {
 	$('input[class="radiorequired"]').rules("add", "required");
 	
 	$('#swab_details_form input').on('keyup blur', function () { // fires on every keyup & blur
-			if ($('#swab_details_form').valid()) {                   // checks form for validity
+			if ($("#noDogs").val() > 0 && $('#swab_details_form').valid()) { // checks form for validity
 				$('#form_submission_but').prop('disabled', false);        // enables button
 			} else {
 				$('#form_submission_but').prop('disabled', 'disabled');   // disables button
@@ -48,6 +120,14 @@ jQuery(document).ready(function($) {
 			addVetDetails();
 	});
 	
+	$('#swab_details_form input').on('keyup blur',function() { // fires on every keyup & blur
+		if ($("#noDogs").val() > 0 && $('#swab_details_form').valid()) { // checks form for validity
+			$('#form_submission_but').prop('disabled', false); // enables button
+		} else {
+			$('#form_submission_but').prop('disabled', 'disabled'); // disables button
+		}
+	});
+	
 	$('input[name="format"]').change(function() {
 		if($(this).val() == 'Email') {
 			$("#vet-email").addClass("required");
@@ -57,19 +137,6 @@ jQuery(document).ready(function($) {
 			$('#vet-postcode').removeClass("error required");
 			$('#owner-postcode').removeClass("error required");
 			$('#owner-phone').removeClass("error required");
-			$('#vet-fax').removeClass("error required");
-			$('#owner-fax').removeClass("error required");
-		}
-		else if ($(this).val() == 'Fax') {
-			$('#vet-fax').addClass("required");
-			$('#owner-fax').addClass("required");
-			$("#vet-email").removeClass("error required");
-			$("#owner-email").removeClass("error required");
-			$('#vet-address').removeClass("error required");
-			$('#owner-address').removeClass("error required");	
-			$('#vet-postcode').removeClass("error required");
-			$('#owner-postcode').removeClass("error required");	
-			$('#owner-phone').removeClass("error required");				
 		}
 		else if ($(this).val() == 'Post') {
 			$('#vet-address').addClass("required");
@@ -78,13 +145,11 @@ jQuery(document).ready(function($) {
 			$('#owner-postcode').addClass("required");
 			$('#owner-phone').addClass("required");
 			$("#vet-email").removeClass("error required");
-			$("#owner-email").removeClass("error required");
-			$('#vet-fax').removeClass("error required");
-			$('#owner-fax').removeClass("error required");						
+			$("#owner-email").removeClass("error required");				
 		}
 	});
 	
-	$('#breed-select').change(
+/*	$('#breed-select').change(
 			function(event) {
 				selectedBreed = $('#breed-select option:selected').val();
 				if (selectedBreed !== "") {
@@ -112,11 +177,11 @@ jQuery(document).ready(function($) {
 					.html(
 					'<p>Please first select your dog breed from the dropdown list in DOG DETAILS section to view the list of tests available.</p>');
 				}
-	});
+	});*/
 	
 	$('#swab_details_form').submit(function(event) {
 		//event.preventDefault();
-		if($('input:checkbox[name="breed_tests[]"]:checked').length === 0){
+		if($('input:checkbox[class="test_checkbox"]:checked').length === 0){
 			alert("You need to select one or more tests for your dog.");
 			return false;
 		}
