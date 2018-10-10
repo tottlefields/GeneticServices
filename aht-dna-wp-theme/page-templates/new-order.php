@@ -3,6 +3,7 @@
 if (isset($_POST['new-order-submitted'])) {
 
 	//debug_array($_REQUEST);
+	//exit;
 	
 	$clients = clientSearch(array(
 		'Postcode'		=> $_REQUEST['owner-postcode'],
@@ -15,50 +16,59 @@ if (isset($_POST['new-order-submitted'])) {
 		'Email'		=> $_REQUEST['owner-email'],
 		'Tel'		=> $_REQUEST['owner-phone'],
 		'Address'	=> $_REQUEST['owner-address'],
-//		'Town'		=> $_REQUEST['owner-town'],
-//		'County'	=> $_REQUEST['owner-county'],
-//		'Country'	=> $_REQUEST['owner-country'],
+		'Town'		=> $_REQUEST['owner-town'],
+		'County'	=> $_REQUEST['owner-county'],
+		'Country'	=> $_REQUEST['owner-country'],
 		'Postcode'	=> $_REQUEST['owner-postcode'],
 	) ); }
 	elseif (count($clients) == 1) { $client_id = $clients[0]->id; }
 	else { echo "ERROR - multiple clients match"; exit; }
-	
-	$animals = animalSearch(array(
-			'RegisteredName'	=> $_REQUEST['registered-name'],
-			'RegistrationNo'	=> $_REQUEST['registration-number'],
-			'TattooOrChip'		=> $_REQUEST['microchip']
-	), $client_id);
-	if (count($animals) == 0){
-		$animal_id = addNewAnimal(array(
-				'RegisteredName'=> $_REQUEST['registered-name'],
-				'RegistrationNo'=> $_REQUEST['registration-number'],
-				'Sex'		=> substr($_REQUEST['sex'],0,1),
-				'BirthDate'	=> dateToSQL($_REQUEST['dog-birth-date']),
-				'TattooOrChip'	=> $_REQUEST['microchip'],
-				'PetName'	=> $_REQUEST['pet-name'],
-				'Colour'	=> $_REQUEST['colour'],
-				'breed_id'	=> $_REQUEST['breed'],
-				'client_id'	=> $client_id
-		));
-	}
-	elseif (count($animals) == 1) { $animal_id = $animals[0]->id; }
-	else { echo "ERROR - multiple animals match"; exit; }
-	
+
 	$order_id = addNewOrder(array(
 			'client_id'		=> $client_id,
 			'OrderDate'		=> date('Y-m-d'),
 			'ReportFormat'		=> $_REQUEST['format'],
 			'VetReportFormat'	=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['format'] : NULL,
-			'AgreeResearch'		=> ($_REQUEST['research'] == 'on') ? 1 : 0
+			'AgreeResearch'		=> ($_REQUEST['research'] == 'on') ? 1 : 0,
+			'ShippingName'      => $_REQUEST['owner-name'],
+			'ShippingAddress'   => $_REQUEST['owner-address'],
+			'ShippingTown'      => $_REQUEST['owner-town'],
+			'ShippingCounty'    => $_REQUEST['owner-county'],
+			'ShippingPostcode'  => $_REQUEST['owner-postcode'],
+			'ShippingCountry'   => $_REQUEST['owner-country']
 	));
 	
-	foreach ($_REQUEST['breed_tests'] as $test){
-		addOrderTest(array(
-				'order_id'	=> $order_id,
-				'animal_id'	=> $animal_id,
-				'test_code'	=> $test,
-				'VetID'		=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['vet-select'] : NULL
-		));
+	for ($i=1; $i<=$_REQUEST['noDogs']; $i++){
+		
+		$animals = animalSearch(array(
+				'RegisteredName'	=> $_REQUEST['registered-name_'.$i],
+				'RegistrationNo'	=> $_REQUEST['registration-number_'.$i],
+				'TattooOrChip'		=> $_REQUEST['microchip_'.$i]
+		), $client_id);
+		if (count($animals) == 0){
+			$animal_id = addNewAnimal(array(
+					'RegisteredName'=> $_REQUEST['registered-name_'.$i],
+					'RegistrationNo'=> $_REQUEST['registration-number_'.$i],
+					'Sex'		=> substr($_REQUEST['sex_'.$i],0,1),
+					'BirthDate'	=> dateToSQL($_REQUEST['dog-birth-date_'.$i]),
+					'TattooOrChip'	=> $_REQUEST['microchip_'.$i],
+					'PetName'	=> $_REQUEST['pet-name_'.$i],
+					'Colour'	=> $_REQUEST['colour_'.$i],
+					'breed_id'	=> $_REQUEST['breed_'.$i],
+					'client_id'	=> $client_id
+			));
+		}
+		elseif (count($animals) == 1) { $animal_id = $animals[0]->id; }
+		else { echo "ERROR - multiple animals match"; exit; }
+	
+		foreach ($_REQUEST['breed_tests_'.$i] as $test){
+			addOrderTest(array(
+					'order_id'	=> $order_id,
+					'animal_id'	=> $animal_id,
+					'test_code'	=> $test,
+					'VetID'		=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['vet-select'] : NULL
+			));
+		}
 	}
 	
 	wp_redirect(get_site_url().'/orders/');
@@ -67,7 +77,6 @@ if (isset($_POST['new-order-submitted'])) {
 <?php get_header(); ?>
 <?php
 	global $post;
-	$post_slug=$post->post_name;
 	
 	?>
 	<h1><?php wp_title('', true,''); ?><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
@@ -76,7 +85,7 @@ if (isset($_POST['new-order-submitted'])) {
 			<form class="form-horizontal" id="swab_details_form" method="post">					
                 <input type="hidden" name="new-order-submitted" value="1" />
 				<div class="row">
-					<div class="col-sm-6">
+					<div class="col-sm-5">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title">1. Sample Details</h3>
@@ -87,7 +96,7 @@ if (isset($_POST['new-order-submitted'])) {
 									<div class="col-sm-4">
 										<label class="radio-inline"><input type="radio" class="radiorequired" value="Email" name="format" checked="checked"/> Email</label>
 										<label class="radio-inline"><input type="radio" class="radiorequired" value="Post" name="format"/> Post</label>
-										<label class="radio-inline"><input type="radio" class="radiorequired" value="Fax" name="format"/> Fax</label>
+										<!-- <label class="radio-inline"><input type="radio" class="radiorequired" value="Fax" name="format"/> Fax</label> -->
 									</div>
 									
 									<label class="col-sm-2 control-label">Vertification</label>
@@ -109,9 +118,10 @@ if (isset($_POST['new-order-submitted'])) {
 									</div>
 								</div> 
 							</div>
-						</div>					
+						</div>
+					</div>			
 						
-						<div class="panel panel-primary">
+<!-- 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title">2. Dog Details</h3>
 							</div>
@@ -121,13 +131,6 @@ if (isset($_POST['new-order-submitted'])) {
 								  	<div class="col-sm-9">
 								  		<select id="breed-select" class="form-control required" name="breed">
 								  			<option value="">Select Breed of your Dog...</option>
-								  			<?php 
-								  			$sql = "select ID, breed from breed_list order by breed";
-								  			$results = $wpdb->get_results($sql, OBJECT );
-											foreach ( $results as $breedObj ){
-												echo '<option value="'.$breedObj->ID.'">'.$breedObj->breed.'</option>'."\n";
-											}
-								  			?>
 								  		</select>
 								  	</div>
 								</div>
@@ -173,61 +176,83 @@ if (isset($_POST['new-order-submitted'])) {
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 			
-					<div class="col-sm-6">
+					<div class="col-sm-7">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
-								<h3 class="panel-title">3. Owner Details</h3>
+								<h3 class="panel-title">2. Client Details</h3>
 							</div>
 							<div class="panel-body">
 								<div class="form-group">
-									<label class="col-sm-3 control-label">Owner's Name</label>
-									<div class="col-sm-9">
+									<label class="col-sm-2 control-label">Name</label>
+									<div class="col-sm-3">
 										<input type="text" class="form-control required" value="" name="owner-name" id="owner-name"/>
 									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">Address</label>
-									<div class="col-sm-9">
+									<label class="col-sm-2 control-label">Address</label>
+									<div class="col-sm-5">
 									 	<input type="text" class="form-control" value="" name="owner-address" id="owner-address"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">Postcode</label>
-									<div class="col-sm-3">
-										<input type="text" class="form-control" value="" name="owner-postcode" id="owner-postcode"/>
-									</div>
 									<label class="col-sm-2 control-label">Email</label>
-									<div class="col-sm-4">
+									<div class="col-sm-3">
 										<input type="email" class="form-control required" value="" name="owner-email" id="owner-email"/>
+									</div>
+									<label class="col-sm-2 control-label">Town</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" value="" placeholder="Town" name="owner-town" id="owner-town" tabindex="2" />
+									</div>
+									<label class="col-sm-1 control-label">County</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" value="" placeholder="County" name="owner-county" id="owner-county" tabindex="2" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">Phone</label>
+									<label class="col-sm-2 control-label">Phone</label>
 									<div class="col-sm-3">
 										<input type="tel" class="form-control" value="" name="owner-phone" id="owner-phone"/>
 									</div>
-									<label class="col-sm-2 control-label">Fax</label>
-									<div class="col-sm-4">
-										<input type="tel" class="form-control" value="" name="owner-fax" id="owner-fax"/>
+									<label class="col-sm-2 control-label">Country</label>
+									<div class="col-sm-2">
+										<select id="owner-country" class="form-control required" name="owner-country" tabindex="2">
+											<option value="">Select Country...</option>
+											<option value="GB">United Kingdom</option>
+										</select>
+									</div>
+									<label class="col-sm-1 control-label">Postcode</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" value="" placeholder="Postcode" name="owner-postcode" id="owner-postcode" tabindex="2" />
 									</div>
 								</div>
 							</div>
-						</div>					
-						
+						</div>
+					</div>
+				</div>				
+
+				<div class="row">
+					<div class="col-sm-12">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
-								<h3 class="panel-title">4. Tests Available</h3>
+								<h3 class="panel-title">3. Dog and Test Details</h3>
 							</div>
-							<div class="panel-body" id="available_tests">
-								<p>Please first select your dog breed from the dropdown list in DOG DETAILS section to view the list of tests available.</p>
+							<div class="panel-body">
+								<div class="col-xs-3 col-md-2 col-lg-1"
+									style="text-align: center">
+									How many dogs do you wish to order tests for?<br> 
+									<input class="form-control" type="text" size="2" value="0" id="noDogs" name="noDogs" style="text-align: center; font-weight: bold; font-size: 1.5em;">
+								</div>
+								<div class="col-xs-9 col-md-10 col-lg-11">
+									<table class="table table-condensed table-responsive table-striped" id="dogsTable" style="display: none">
+										<thead></thead>
+										<tbody></tbody>
+									</table>
+								</div>
 							</div>
 						</div>
-						
-						<input type="submit" value="Record Details" id="form_submission_but" name="submit" class="btn btn-primary pull-right" disabled="disabled"/>
 					</div>
 				</div>
+				<input type="submit" value="Record Details" id="form_submission_but" name="submit" class="btn btn-primary pull-right" disabled="disabled" />
 			</form>
 		</div>
 	</section>
@@ -290,4 +315,32 @@ if (isset($_POST['new-order-submitted'])) {
 		</div>
 	</div>
 
+<?php 
+$sql = "select ID, breed from breed_list WHERE is_primary=1 order by breed";
+$results = $wpdb->get_results($sql, OBJECT );
+$allBreeds = array();
+$breedTests = array("all" => array("CP" => "Canine DNA profiles (ISAG 2006)"));
+foreach ( $results as $breedObj ){
+    $allBreeds[$breedObj->ID] = $breedObj->breed;
+    $sql2 = "SELECT test_code, test_name, concat('\"',test_code, '\":\"', test_name,'\"') as test
+    from breed_test_lookup inner join test_codes using (test_code) 
+    WHERE breed_id={$breedObj->ID}
+    order by test_name";
+    $results2 = $wpdb->get_results($sql2, OBJECT );
+    if (count($results2) > 0){
+        $breedTests[$breedObj->breed] = array();
+        foreach ( $results2 as $testObj ){
+            $breedTests[$breedObj->ID][$testObj->test_code] = $testObj->test_name;
+        }
+    }
+}
+
+$js_for_footer = '
+<script type="text/javascript">
+	var allBreeds = '.json_encode($allBreeds).';
+    var breedTests = '.json_encode($breedTests).';
+</script>';
+?> 
+		
+<?php echo $js_for_footer; ?>						  			
 <?php get_footer(); ?>
