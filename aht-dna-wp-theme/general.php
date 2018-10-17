@@ -54,7 +54,7 @@ function countUntested(){
 	return $count;	
 }	
 
-function countRepeats($status){
+function countRepeats(){
 	global $wpdb;
 	$sql = "select count(*) as repeatCount from order_tests t1 inner join order_tests t2 on t1.repeat_swab=t2.id where t1.repeat_swab is not null and t2.repeat_swab is null and t2.returned_date is null";
 	$count = $wpdb->get_var($sql);
