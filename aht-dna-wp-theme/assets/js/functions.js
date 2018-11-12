@@ -772,7 +772,7 @@ function labelsSection(client, test) {
 			body : [ [
 					{
 						stack : [ client.ShippingName, client.ShippingCompany, client.ShippingAddress, client.ShippingAddress2, client.ShippingAddress3,
-								client.ShippingTown, client.ShippingPostcode, client.ShippingCounty, client.ShippingCountry ],
+								client.ShippingTown, client.ShippingCounty, client.ShippingPostcode, client.ShippingCountry ],
 						margin : [ 40, 30, 40, 30 ]
 					}, {
 						stack : [ {
