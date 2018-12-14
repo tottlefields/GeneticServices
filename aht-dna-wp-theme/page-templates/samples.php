@@ -42,8 +42,8 @@ $results = $wpdb->get_results($sql, OBJECT );
 	if ( count($results) > 0 ){ ?>
 			<table id="samples" class="table table-striped table-bordered table-responsive table-condensed" cellspacing="0" style="width:100%; font-size:0.9em;">
 				<thead>
-					<!--<th></th>-->
-					<td class="text-center"><input type="checkbox" id="checkAll" /></td>
+					<th style="padding-right:10px; padding-left:10px;"></th>
+					<!--<td class="text-center"><input type="checkbox" id="checkAll" /></td>-->
 					<th class="text-center">OrderID</th>
 					<th class="text-center">Barcode</th>
 					<th class="text-center">Date Due</th>
@@ -70,9 +70,9 @@ $results = $wpdb->get_results($sql, OBJECT );
 			$due_date = new DateTime($swab->due_date);
 			
 			echo '
-			<tr class="type-'.$swab->test_type.' test-'.$swab->test_code.' breed-'.$swab->breed_id.'">
-				<!--<td class="text-center"></td>-->
-				<td class="text-center"><input type="checkbox" class="checkboxRow" name="sampleList[]" value="'.$swab->ID.'" /></td>
+			<tr id="row'.$swab->ID.'" class="type-'.$swab->test_type.' test-'.$swab->test_code.' breed-'.$swab->breed_id.'">
+				<td>'.$swab->ID.'</td>
+				<!--<td class="text-center"><input type="checkbox" class="checkboxRow" name="sampleList[]" value="'.$swab->ID.'" /></td>-->
 				<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$swab->order_id.'">AHT'.$swab->order_id.'</a></td>
 				<td class="text-center">'.$swab->barcode.'</td>
 					<td class="text-center">'.$due_date->format('d/m/Y').'</td>
