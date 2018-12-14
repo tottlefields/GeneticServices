@@ -4,7 +4,7 @@ Theme URI:
 Description: A demo theme built to accompany the Treehouse blog post <a href="http://teamtreehouse.com/wordpress-bootstrap-theme-tutorial">How to Build a WordPress Theme with Bootstrap</a>.
 Author: PawPrints Design
 Author URI: https://www.pawprintsdesign.co.uk
-Version: 1.0
+Version: 1.1
 Tags: responsive, bootstrap
 
 License: GNU General Public License v2 or later
@@ -20,6 +20,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 @import url('//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote.css');
 
 .datepicker { z-index: 1200 !important; }
+.btn-block { margin-bottom:5px; }
 
 /* Main Colors
 =================================================================== */

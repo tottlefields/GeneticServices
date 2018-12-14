@@ -27,26 +27,27 @@ foreach ($test_details as $test){
 
 	$test->order_status = $order_steps[0];
 	
-	if ($test->kit_sent == ''){
-		array_push($kit_sent, $test->kit_sent);
-	}
-	else{
-		$sentDate = new DateTime($test->kit_sent);
-		array_push($kit_sent, $sentDate->format('d/m/y'));
-		$test->order_status = $order_steps[1];
-	}
-	
-	if ($test->returned_date == ''){
-		array_push($returned_date, $test->returned_date);		
-	}
-	else {
-		$returnedDate = new DateTime($test->returned_date);
-		array_push($returned_date, $returnedDate->format('d/m/y'));
-		$test->order_status = $order_steps[2];
-	}
-	
 	if($test->cancelled_date != ''){
 		$test->order_status = 'Cancelled';
+	}
+	else{
+		if ($test->kit_sent == ''){
+			array_push($kit_sent, $test->kit_sent);
+		}
+		else{
+			$sentDate = new DateTime($test->kit_sent);
+			array_push($kit_sent, $sentDate->format('d/m/y'));
+			$test->order_status = $order_steps[1];
+		}
+		
+		if ($test->returned_date == ''){
+			array_push($returned_date, $test->returned_date);		
+		}
+		else {
+			$returnedDate = new DateTime($test->returned_date);
+			array_push($returned_date, $returnedDate->format('d/m/y'));
+			$test->order_status = $order_steps[2];
+		}
 	}
 }
 

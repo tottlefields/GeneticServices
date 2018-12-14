@@ -42,21 +42,24 @@ function countOrders($status){
 
 function countUnextracted(){
 	global $wpdb;
-	$sql = "SELECT count(distinct order_tests.id) from order_tests left outer join test_swabs on order_tests.id=test_id where returned_date is not null and cancelled_date is null and extraction_plate is null";
+	$sql = "SELECT count(distinct order_tests.id) from order_tests left outer join test_swabs on order_tests.id=test_id 
+	where returned_date is not null and cancelled_date is null and extraction_plate is null and test_code<>'WP'";
 	$count = $wpdb->get_var($sql);
 	return $count;	
 }	
 
 function countUntested(){
 	global $wpdb;
-	$sql = "SELECT count(distinct order_tests.id) from order_tests left outer join test_swab_results on order_tests.id=test_id where returned_date is not null and cancelled_date is null and cert_code is null";
+	$sql = "SELECT count(distinct order_tests.id) from order_tests left outer join test_swab_results on order_tests.id=test_id 
+	where returned_date is not null and cancelled_date is null and cert_code is null and test_code<>'WP'";
 	$count = $wpdb->get_var($sql);
 	return $count;	
 }	
 
 function countRepeats(){
 	global $wpdb;
-	$sql = "select count(*) as repeatCount from order_tests t1 inner join order_tests t2 on t1.repeat_swab=t2.id where t1.repeat_swab is not null and t2.repeat_swab is null and t2.returned_date is null";
+	$sql = "select count(*) as repeatCount from order_tests t1 inner join order_tests t2 on t1.repeat_swab=t2.id 
+	where t1.repeat_swab is not null and t2.repeat_swab is null and t2.returned_date is null";
 	$count = $wpdb->get_var($sql);
 	return $count;	
 }

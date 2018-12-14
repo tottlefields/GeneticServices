@@ -166,7 +166,7 @@ function get_order_details() {
 		 	if($value === null){ $client_details->$key = ""; }
 		 }
 		 
-		 if (isset($swabId) && $swabId > 0){ $test_details = [getTestDetails($swabId)]; }
+		 if (isset($swabId) && $swabId > 0){ $test_details = array(getTestDetails($swabId)); }
 		 else{ $test_details = getTestsByOrder($orderId, $pending); }
 		 foreach ($test_details as $test){
 		 	foreach ($test as $key => $value){

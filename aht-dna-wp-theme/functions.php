@@ -66,17 +66,12 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'bootstrap-js' );
 	
 	// BS DatePicker
-	wp_register_script ( 'datepicker-js', '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', array (
-			'jquery',
-			'bootstrap-js' 
-	), '1.6.4', true );
+	wp_register_script ( 'datepicker-js', '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', array ('jquery', 'bootstrap-js' ), '1.6.4', true );
 	wp_enqueue_script ( 'datepicker-js' );
 	
 	// PDF Make
 	wp_register_script ( 'pdfmake-js', get_template_directory_uri () . '/assets/js/pdfmake.min.js', false, '0.1.31', true );
-	wp_register_script ( 'pdfmake-fonts-js', get_template_directory_uri () . '/assets/js/vfs_fonts.js', array (
-			'pdfmake-js' 
-	), '0.1.31', true );
+	wp_register_script ( 'pdfmake-fonts-js', get_template_directory_uri () . '/assets/js/vfs_fonts.js', array ('pdfmake-js' ), '0.1.31', true );
 	wp_enqueue_script ( 'pdfmake-js' );
 	wp_enqueue_script ( 'pdfmake-fonts-js' );
 	
@@ -116,6 +111,7 @@ function mytheme_enqueue_scripts() {
 	
 	// register template-specific scripts
 	wp_register_script ( 'js-orders', get_template_directory_uri () . '/assets/js/orders.js', array ('jquery','datatables-js'), '0.1', true );
+	wp_register_script ( 'js-samples', get_template_directory_uri () . '/assets/js/samples.js', array ('jquery','datatables-js'), '0.1', true );
 	wp_register_script ( 'js-new-order', get_template_directory_uri () . '/assets/js/new-order.js', array ('jquery'), '0.1', true );
 	wp_register_script ( 'js-portal', get_template_directory_uri () . '/assets/js/portal.js', array ('jquery'), '0.1', true );
 	wp_register_script ( 'chart-js', '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js', array (), '2.7.0', false );		//Chart JS
@@ -123,6 +119,7 @@ function mytheme_enqueue_scripts() {
 	
 	// conditional load
 	if (is_page ( array ('orders') )) { wp_enqueue_script ( 'js-orders' ); }
+	if (is_page ( array ('samples') )) { wp_enqueue_script ( 'js-samples' ); }
 	if (is_page ( array ('add-manual-order') )) { wp_enqueue_script ( 'js-new-order' ); }
 	if (is_page ( array ('portal') )) { wp_enqueue_script ( 'js-portal' ); }
 	if (is_page ( array ('statistics') )) { wp_enqueue_script ( 'chart-js' ); }

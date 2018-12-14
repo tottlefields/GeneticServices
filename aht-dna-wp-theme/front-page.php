@@ -46,10 +46,13 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 		$samples = explode("\n", str_replace("\r", "", $_REQUEST['samples']));
 		$error = '';
 		$samples_updated = 0;
+		$date = new DateTime();
+		$date->add(new DateInterval('P14D'));
 	
 		$update_args = array(
 			'received_by' => $current_user->user_login,
-			'returned_date' => date('Y-m-d')
+			'returned_date' => date('Y-m-d'),
+			'due_date' => $date->format('Y-m-d')
 		);
 		
 		foreach ($samples as $swabID){
