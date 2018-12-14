@@ -44,6 +44,7 @@ if(!is_user_logged_in()) {
 		<!-- start: CSS -->
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
 		<link href="<?php bloginfo('stylesheet_url');?>" rel="stylesheet" type='text/css'>
+		<link rel="stylesheet" href="<?php echo get_template_directory_uri() . '/assets/css/dataTables.checkboxes.css'; ?>" type='text/css'>
 		<link id="base-style-responsive" href="<?php echo get_template_directory_uri() . '/assets/css/style-responsive.css'; ?>" rel="stylesheet">
 		<link rel="stylesheet" href="<?php echo get_template_directory_uri() . '/assets/css/extra.css'; ?>" type='text/css'>
 		<!-- end: CSS -->
