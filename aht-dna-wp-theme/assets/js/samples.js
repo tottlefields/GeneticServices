@@ -5,7 +5,7 @@ jQuery(document).ready(function($) {
 		paging: false,
 //		ordering: false,
 		lengthChange: false,
-		order: [[ 3, "asc" ], [6, "asc"]],
+		order: [[ 4, "asc" ], [7, "asc"]],
 		select: { 
 			style: 'multi',
 //			//selector: 'td:first-child'
@@ -15,7 +15,7 @@ jQuery(document).ready(function($) {
 			orderable: false,
             checkboxes: { selectRow: true }
          }, {
-			targets: [ 0, 2 ],
+			targets: [ 0, 2, 3 ],
 			orderable: false
 		}, {
 			type: 'date-uk',
@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
 	$("#exportSampleList").on('click', function(e){
 		var orderIds = [];
 		var rows_selected = table.column(0).checkboxes.selected();
-		console.log(rows_selected);
+		alert(rows_selected.join());
 		//generatePDFs(orderIds, null, 1);
 	});
 	
