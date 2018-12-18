@@ -17,9 +17,6 @@
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-sm-12"><?php debug_array($plates); ?></div>
-						</div>
 					</div>
 					<div class="modal-footer">
 						<input type="hidden" id="note_test_id" name="order_test_id" value="">
