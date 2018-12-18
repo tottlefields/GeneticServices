@@ -37,20 +37,21 @@ jQuery(document).ready(function($) {
 		
 		$('#plate_type').change(function(e){
 				var plateType = $(this).val();
+				console.log(plateJSON);
 				var plateIDs = plateJSON[plateType];
+				console.log(plateIDs);
 				if (plateIDs.length > 0){
 					var last = plateIDs.pop();
-					console.log(last);
 					var plateID = "";
-					if (plateType == 'Extraction'){	
+					if (plateType == 'extraction'){	
 						var id = parseInt(last.replace("Q", ""));
 						plateID = "Q"+(id+1);
 					}
-					else if (plateType == 'TaqMan'){	
+					else if (plateType == 'taqman'){	
 						var id = parseInt(last.replace("TaqMan", ""));
 						plateID = "TaqMan"+(id+1);
 					}
-					else if (plateType == 'Genotype'){	
+					else if (plateType == 'genotype'){	
 						var id = parseInt(last.replace("G", ""));
 						plateID = (id+1)+"G";
 					}
@@ -66,6 +67,7 @@ function clearPlate(){
 	
 
 var postPlateForm = function() {
-	console.log(get_code);
-	return false;
+	var plateType = $('#plate_type').val();
+	var plateID = $('#new_plate').val();
+	console.log(plateType+" - "+plateID);
 }
