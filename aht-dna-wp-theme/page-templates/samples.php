@@ -2,35 +2,11 @@
 <?php get_header(); ?>
 
 	<h1><?php wp_title('', true,''); ?><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
-	<div class="row" style="margin-bottom:20px;">
-		<div class="col-xs-12 text-center">
-<?php
-/*	global $wpdb;
-	$sql = "select test_code, min(due_date), count(*) as test_count, min(due_date)- date(NOW()) as days 
-	from order_tests t inner join test_swabs s on t.id=s.test_id 
-	where extraction_plate is null and cancelled_date is null group by test_code order by 2,3 desc";
-	$results = $wpdb->get_results($sql, OBJECT );
-	$test_codes = array();
-	
-	if ( $results ){
-		foreach ( $results as $test ){
-			$class = 'success';
-			if ($test->days < 10){ $class = 'warning'; }
-			if ($test->days < 4){ $class = 'danger'; }
-			//echo '<button class="btn btn-'.$class.'" type="button" style="margin-right:10px">'.$test->test_code.' <span class="badge">'.$test->test_count.'</span></button>';
-			array_push($test_codes, $test->test_code);
-			//echo '<span class="label label-success">'.$test->test_code.' <span class="badge">'.$test->test_count.'</span></span>';
-		}
-	}
-*/
-?>
-		</div>
-	</div>
 	<section class="row">
 		<div class="col-md-8">
 	
 <?php	
-$sql = 'select order_id, t.id as ID, concat("AHT",order_id,"/",t.id) as barcode, due_date, due_date-date(NOW()) as days, a.breed_id, b.breed, test_code, test_type, swab 
+$sql = 'select order_id, t.id as ID, concat("AHT",order_id,"/",t.id) as barcode, due_date, datediff(due_date, date(NOW())) as days, a.breed_id, b.breed, test_code, test_type, swab 
 from order_tests t inner join test_swabs s on t.id=s.test_id 
 left outer join test_codes using (test_code) 
 inner join animal a on a.id=animal_id 
@@ -63,6 +39,7 @@ $results = $wpdb->get_results($sql, OBJECT );
 		foreach ( $results as $swab ){
 			$label = '&nbsp;';
 			$repeat = '&nbsp;';
+			$badge = 'badge-info';
 			
 			if ($swab->test_type == 'T'){ $label = '<span class="label label-success" style="font-size:0.8em">TaqMan</span>'; }
 			if ($swab->test_type == 'G'){ $label = '<span class="label label-warning" style="font-size:0.8em">Genotyping</span>'; }
@@ -72,6 +49,7 @@ $results = $wpdb->get_results($sql, OBJECT );
 			if (!isset($types2test[$swab->test_type][$swab->test_code])){ $types2test[$swab->test_type][$swab->test_code] = 1; } else { $types2test[$swab->test_type][$swab->test_code]++; }
 			$due_date = new DateTime($swab->due_date);
 			if ($swab->swab == 'B'){ $repeat = ' <i class="fa fa-repeat" aria-hidden="true"></i>'; }
+			if ($swab->days <=4){ $badge = 'badge-important'; }
 			
 			echo '
 			<tr id="row'.$swab->ID.'" class="type-'.$swab->test_type.' test-'.$swab->test_code.' breed-'.$swab->breed_id.'">
@@ -81,7 +59,7 @@ $results = $wpdb->get_results($sql, OBJECT );
 				<td class="text-center">'.$swab->barcode.'</td>
 				<td class="text-center">'.$repeat.'</td>
 				<td class="text-center">'.$due_date->format('d/m/Y').'</td>
-				<td class="text-center">'.$swab->days.'</td>
+				<td class="text-center"><span class="badge '.$badge.'">'.$swab->days.'</span></td>
 				<td>'.$swab->breed.'</td>
 				<td class="text-center">'.$swab->test_code.'</td>
 				<td class="text-center">'.$label.'</td>

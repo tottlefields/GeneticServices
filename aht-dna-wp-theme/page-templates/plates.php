@@ -1,4 +1,23 @@
-<?php /* Template Name: Plates */ ?>
+<?php /* Template Name: Plates */ 
+global $wpdb;
+?>
+<?php if (isset($_REQUEST['add-plate'])){
+	$result = $wpdb->insert( "plates", array(
+		'plate_type' => $_REQUEST['plate_type'],
+		'test_plate' => $_REQUEST['new_plate'],
+		'created_by' => $_REQUEST['username'],
+		'created_date' => date('Y-m-d H:i:s')
+		));
+	if(!$result){
+		if (preg_match('/Duplicate entry/', $wpdb->last_error)){
+			$error = 'The requested plate ('.$_REQUEST['new_plate'].') has already been added. Please try again, using a new identifier, or select the required plate from one of the dropdown lists below.';
+		}
+	}
+	else{
+		echo "redirect to /plates/add-plate/".$_REQUEST['plate_type']."-".$_REQUEST['new_plate'];
+		wp_die();
+	}
+}?>
 <?php get_header(); ?>
 
 	<h1 class="hidden-print">
@@ -7,19 +26,39 @@
 		<ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?>
 	</h1>
 	<h1 class="visible-print-block" id="plate_id"></h1>
+	<?php if ($error){ ?><div class="alert alert-danger" role="alert"><?php echo $error; ?></div><?php } ?>
 	<section class="row">
 		<div class="col-md-3 hidden-print">
 			<div class="well" id="plate_selection">
 				<ul class="nav nav-tabs nav-justified" role="tablist">
 					<li role="plate_type" class="active"><a href="#extraction" aria-controls="extraction" role="tab" data-toggle="tab">Extraction</a></li>
 					<li role="plate_type"><a href="#taqman" aria-controls="taqman" role="tab" data-toggle="tab">TaqMan</a></li>
-					<li role="plate_type"><a href="#genotyping" aria-controls="genotyping" role="tab" data-toggle="tab">Genotyping</a></li>
+					<li role="plate_type"><a href="#genotype" aria-controls="genotype" role="tab" data-toggle="tab">Genotype</a></li>
 				</ul>
 				<div class="tab-content" style="padding-top:20px;">
-					<div role="tabpanel" class="tab-pane active" id="extraction">
 <?php
-global $wpdb;
-$plates = array('Extraction' => array(), 'TaqMan' => array(), 'Genotype' => array());
+$plates = array('extraction' => array(), 'taqman' => array(), 'genotype' => array());
+foreach (array_keys($plates) as $plate_type){
+	
+	if ($plate_type == array_keys($plates)[0]){  echo '<div role="tabpanel" class="tab-pane active" id="'.$plate_type.'">'; }
+	else { echo '<div role="tabpanel" class="tab-pane" id="'.$plate_type.'">'; }
+	$sql = "select distinct test_plate as plate from plates where test_plate is not null and plate_type='".$plate_type."' order by 1";
+	$results = $wpdb->get_results($sql, OBJECT );
+	if (count($results) > 0){
+		echo '<select class="form-control plate_select" id="'.$plate_type.'_plate"><option value="0">Select '.ucfirst($plate_type).' Plate...</option>';
+		foreach ($results as $plate){
+			echo '<option value="'.$plate->plate.'">'.$plate->plate.'</option>';
+			array_push($plates[$plate_type], $plate->plate);
+		}
+		echo '</select>';
+	}
+	else{
+		echo '<p>No '.ucfirst($plate_type).' plates currently recorded on the system.</p>';	
+	}
+	echo '</div>';
+}
+	
+/*
 //$sql = "select distinct extraction_plate as plate from test_swabs where extraction_plate is not null and extraction_plate<>'dennis' order by extraction_plate";
 $sql = "select distinct test_plate as plate from plates where test_plate is not null and plate_type='Extraction' order by 1";
 $results = $wpdb->get_results($sql, OBJECT );
@@ -27,7 +66,7 @@ if (count($results) > 0){
 	echo '<select class="form-control plate_select" id="extraction_plate"><option value="0">Select Extraction Plate...</option>';
 	foreach ($results as $plate){
 		echo '<option value="'.$plate->plate.'">'.$plate->plate.'</option>';
-		array_push($plates['Extraction'], $plate->plate);
+		array_push($plates['extraction'], $plate->plate);
 	}
 	echo '</select>';
 }
@@ -39,13 +78,13 @@ else{
 					<div role="tabpanel" class="tab-pane" id="taqman">
 <?php
 //$sql = "select distinct test_plate as plate from test_swab_results where test_plate is not null and left(test_plate,6)='TaqMan' order by 1";
-$sql = "select distinct test_plate as plate from plates where test_plate is not null and plate_type='TaqMan' order by 1";
+$sql = "select distinct test_plate as plate from plates where test_plate is not null and plate_type='taqman' order by 1";
 $results = $wpdb->get_results($sql, OBJECT );
 if (count($results) > 0){
 	echo '<select class="form-control plate_select" id="taqman_plate"><option value="0">Select TaqMan Plate...</option>';
 	foreach ($results as $plate){
 		echo '<option value="'.$plate->plate.'">'.$plate->plate.'</option>';
-		array_push($plates['TaqMan'], $plate->plate);
+		array_push($plates['taqman'], $plate->plate);
 	}
 	echo '</select>';
 }
@@ -70,8 +109,8 @@ if (count($results) > 0){
 else{
 	echo '<p>No Genotyping plates currently recorded on the system.</p>';	
 }
+*/
 ?>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -104,7 +143,7 @@ else{
 	<div class="modal fade" id="addPlateModal" tabindex="-1" role="dialog" aria-labelledby="addPlateModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form class="form form-horizontal" role="form" method="post" onsubmit="return postPlateForm()">
+				<form class="form form-horizontal" role="form" method="post">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<h2 class="modal-title" id="platesModalLabel"><i class="fa fa-file-text-o"></i>&nbsp;Add a Plate</h2>
@@ -115,25 +154,22 @@ else{
 								<div class="form-group">
 									<label for="plate_type" class="control-label col-sm-3">Plate Type</label>
 									<div class="col-sm-5">
-										<select class="form-control" id="plate_type">
+										<select class="form-control" id="plate_type" name="plate_type">
 											<option value="0">Select Plate Type...</option>
-											<option value="Extraction">Extraction</option>
-											<option value="TaqMan">TaqMan</option>
-											<option value="Genotype">Genotype</option>
+											<option value="extraction">Extraction</option>
+											<option value="taqman">TaqMan</option>
+											<option value="genotype">Genotype</option>
 										</select>
 									</div>
 									<div class="col-sm-4"><input type="text" class="form-control" id="new_plate" name="new_plate" value="" placeholder="Plate ID"></div>
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-sm-12"><?php debug_array($plates); ?></div>
-						</div>
 					</div>
 					<div class="modal-footer">
 						<input type="hidden" name="username" value="<?php echo $current_user->user_login; ?>">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-						<button type="submit" class="btn btn-primary" name="note-submitted">Add Plate</button>
+						<button type="submit" class="btn btn-primary" name="add-plate">Add Plate</button>
 					</div>
 				</form>
 			</div>

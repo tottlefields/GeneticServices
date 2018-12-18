@@ -19,7 +19,7 @@ jQuery(document).ready(function($) {
 			orderable: false
 		}, {
 			type: 'date-uk',
-			targets: 3
+			targets: 4
 		} ]
 	});
 	
