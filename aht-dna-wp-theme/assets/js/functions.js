@@ -388,16 +388,21 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 
 			/* TEST/ORDER DETAILS */
 			//console.log(TestDetails);
+			var extraction = '&nbsp;';
+			if (TestDetails.extraction_plate != ''){
+				extraction = '<a href="/plate/' + TestDetails.extraction_plate + '">' + TestDetails.extraction_plate + '</a>';
+				if (TestDetails.extraction_well != ''){ extraction += '&nbsp;(' +TestDetails.extraction_well+ ')'; }
+			}
 			order_panel = '';
 			order_panel += '<div class="row"><div class="col-sm-12 small">';
 			// order_panel += '<h3>Progress</h3>';
 			order_panel += '<table class="table table-striped table-condensed"><tbody>';
-			order_panel += '<tr><th>Ordered</th><td>' + OrderDetails.OrderDate + '</td><td><span style="color:#BBBBBB">N/A</span></td></tr>';
-			order_panel += '<tr><th>Dispatched</th><td>' + TestDetails.date_sent + '</td><td>' + TestDetails.sent_by + '</td></tr>';
-			order_panel += '<tr><th>Returned</th><td>' + TestDetails.date_returned + '</td><td>' + TestDetails.received_by + '</td></tr>';
-			order_panel += '<tr><th>Processed</th><td></td><td></td></tr>';
-			order_panel += '<tr><th>Analysed</th><td></td><td></td></tr>';
-			order_panel += '<tr><th>Resulted</th><td></td><td></td></tr>';
+			order_panel += '<tr><th style="width:30%">Ordered</th><td style="width:25%">' + OrderDetails.OrderDate + '</td><td style="width:20%"><span style="color:#BBBBBB">N/A</span></td><td style="width:25%"></td></tr>';
+			order_panel += '<tr><th>Dispatched</th><td>' + TestDetails.date_sent + '</td><td>' + TestDetails.sent_by + '</td><td></td></tr>';
+			order_panel += '<tr><th>Returned</th><td>' + TestDetails.date_returned + '</td><td>' + TestDetails.received_by + '</td><td></td></tr>';
+			order_panel += '<tr><th>Processed</th><td>' + TestDetails.extraction_date + '</td><td>' + TestDetails.extracted_by + '</td><td>' + extraction + '</td></tr>';
+			order_panel += '<tr><th>Analysed</th><td></td><td></td><td></td></tr>';
+			order_panel += '<tr><th>Resulted</th><td></td><td></td><td></td></tr>';
 			order_panel += '</tbody></table/></div></div>';
 			orderDiv.html(order_panel);
 

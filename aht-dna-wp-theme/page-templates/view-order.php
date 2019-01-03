@@ -23,6 +23,7 @@ if (isset($order_details->OrderDate)){
 
 $kit_sent = array();
 $returned_date = array();
+$extracted_date = array();
 foreach ($test_details as $test){
 
 	$test->order_status = $order_steps[0];
@@ -48,11 +49,21 @@ foreach ($test_details as $test){
 			array_push($returned_date, $returnedDate->format('d/m/y'));
 			$test->order_status = $order_steps[2];
 		}
+		
+		if ($test->extraction_date == ''){
+			array_push($extracted_date, $test->extraction_date);		
+		}
+		else {
+			$extractedDate = new DateTime($test->extraction_date);
+			array_push($extracted_date, $extractedDate->format('d/m/y'));
+			$test->order_status = $order_steps[3];
+		}
 	}
 }
 
 if (in_array('', $kit_sent)){ $this_order_status[1] = ''; } else { $this_order_status[1] = max($kit_sent); }
 if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_order_status[2] = max($returned_date); }
+if (in_array('', $extracted_date)){ $this_order_status[3] = ''; } else { $this_order_status[3] = max($extracted_date); }
 	
 ?>
 <?php get_header(); ?>
@@ -149,7 +160,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 				}
 				
 				$result = '';
-				if ($test->swab_failed > 1){
+				if ($test->swab_failed >= 1){
 					$result = '<span class="label label-default">Failed</span>';
 				}
 				elseif ($test->test_result){
