@@ -160,7 +160,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 						case 'CARRIER':
 							$label_class = 'warning';
 							break;
-						case 'CLEAR':
+						case 'NORMAL':
 							$label_class = 'success';
 							break;
 					}
