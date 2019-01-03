@@ -14,21 +14,34 @@ global $wpdb;
 		}
 	}
 	else{
-		echo "redirect to /plates/add-plate/".$_REQUEST['plate_type']."-".$_REQUEST['new_plate'];
-		wp_die();
+		//echo "redirect to /plates/add-plate/".$_REQUEST['plate_type']."-".$_REQUEST['new_plate'];
+		wp_redirect(get_site_url().'/plate/'.$_REQUEST['new_plate']);
+		exit;
 	}
-}?>
-<?php get_header(); ?>
+}
+//if(isset($wp_query->query_vars['plate_type'])) { $plate_type_q = urldecode($wp_query->query_vars['plate_type']); }
+if(isset($wp_query->query_vars['plate'])) { 
+	$plate_q = urldecode($wp_query->query_vars['plate']);
+	$plate_details = getPlateDetails($plate_q);
+	$wells = array();
+	if (count($plate_details->wells) > 0){
+		foreach ($plate_details->wells as $well){
+			$wells[$well->well] = '<a href="'.get_site_url().'/orders/view/?id='.$well->order_id.'">AHT'.$well->order_id.'/'.$well->test_id.'</a><br />'.$well->test_code;
+		}
+	}
+}
+
+get_header(); ?>
 
 	<h1 class="hidden-print">
-		<?php wp_title('', true,''); ?>
+		<?php if(isset($plate_q)){ echo $plate_q; }else{ wp_title('', true,''); } ?>
 		<button type="button" class="btn btn-default btn-sm" style="margin-left:10px;margin-bottom:3px;" id="animal" data-toggle="modal" data-target="#addPlateModal">Add Plate</button>
-		<ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?>
+		<ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs($plate_q); ?>
 	</h1>
-	<h1 class="visible-print-block" id="plate_id"></h1>
+	<h1 class="visible-print-block" id="plate_id"><?php echo $plate_q; ?></h1>
 	<?php if ($error){ ?><div class="alert alert-danger" role="alert"><?php echo $error; ?></div><?php } ?>
 	<section class="row">
-		<div class="col-md-3 hidden-print">
+		<div class="col-md-3 hidden-print"<?php if(isset($plate_q) && $plate_q!=null){ echo ' style="display:none;"'; } ?>>
 			<div class="well" id="plate_selection">
 				<ul class="nav nav-tabs nav-justified" role="tablist">
 					<li role="plate_type" class="active"><a href="#extraction" aria-controls="extraction" role="tab" data-toggle="tab">Extraction</a></li>
@@ -57,64 +70,11 @@ foreach (array_keys($plates) as $plate_type){
 	}
 	echo '</div>';
 }
-	
-/*
-//$sql = "select distinct extraction_plate as plate from test_swabs where extraction_plate is not null and extraction_plate<>'dennis' order by extraction_plate";
-$sql = "select distinct test_plate as plate from plates where test_plate is not null and plate_type='Extraction' order by 1";
-$results = $wpdb->get_results($sql, OBJECT );
-if (count($results) > 0){
-	echo '<select class="form-control plate_select" id="extraction_plate"><option value="0">Select Extraction Plate...</option>';
-	foreach ($results as $plate){
-		echo '<option value="'.$plate->plate.'">'.$plate->plate.'</option>';
-		array_push($plates['extraction'], $plate->plate);
-	}
-	echo '</select>';
-}
-else{
-	echo '<p>No extraction plates currently recorded on the system.</p>';	
-}
-?>
-					</div>
-					<div role="tabpanel" class="tab-pane" id="taqman">
-<?php
-//$sql = "select distinct test_plate as plate from test_swab_results where test_plate is not null and left(test_plate,6)='TaqMan' order by 1";
-$sql = "select distinct test_plate as plate from plates where test_plate is not null and plate_type='taqman' order by 1";
-$results = $wpdb->get_results($sql, OBJECT );
-if (count($results) > 0){
-	echo '<select class="form-control plate_select" id="taqman_plate"><option value="0">Select TaqMan Plate...</option>';
-	foreach ($results as $plate){
-		echo '<option value="'.$plate->plate.'">'.$plate->plate.'</option>';
-		array_push($plates['taqman'], $plate->plate);
-	}
-	echo '</select>';
-}
-else{
-	echo '<p>No TaqMan plates currently recorded on the system.</p>';	
-}
-?>
-					</div>
-					<div role="tabpanel" class="tab-pane" id="genotyping">
-<?php
-//$sql = "select distinct test_plate as plate from test_swab_results where test_plate is not null and right(test_plate,1)='G' order by 1";
-$sql = "select distinct test_plate as plate from plates where test_plate is not null and plate_type='Genotype' order by 1";
-$results = $wpdb->get_results($sql, OBJECT );
-if (count($results) > 0){
-	echo '<select class="form-control plate_select" id="genotpying_plate"><option value="0">Select Genotyping Plate...</option>';
-	foreach ($results as $plate){
-		echo '<option value="'.$plate->plate.'">'.$plate->plate.'</option>';
-		array_push($plates['Genotype'], $plate->plate);
-	}
-	echo '</select>';
-}
-else{
-	echo '<p>No Genotyping plates currently recorded on the system.</p>';	
-}
-*/
 ?>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-9">
+		<div class="<?php if(isset($plate_q) && $plate_q!=null){ echo 'col-md-12'; }else{ echo 'col-md-9'; } ?>">
 			<table width="100%" class="plate_table">
 		<?php
 		$letters = range('A', 'H');
@@ -122,15 +82,18 @@ else{
 			echo '<tr style="height:50px;">';
 			for ($c=0; $c<13; $c++){
 				$cell = $letters[$r-1].($c);
-				if ($r == 0 & $c == 0){ echo '<td style="border:0px">&nbsp;</td>'; }
+				if ($r == 0 & $c == 0){ 
+					if (isset($wp_query->query_vars['plate'])){ 
+						echo '<td style="border:0px"><button type="button" class="btn btn-default btn-xs hidden-print"><i class="fa fa-pencil-square-o"></i>Edit</button></td>';
+					}
+					else { echo '<td style="border:0px">&nbsp;</td>'; }
+				}
 				elseif($r == 0){ echo '<th>'.$c.'</th>'; }
 				elseif($c == 0){ echo '<th>'.$letters[$r-1].'</th>'; }
-				else{
-				echo '<td id="'.$cell.'" width="8%"><small class="cell_id">'.$cell.'</small><small class="contents"></small></td>';
+				else{ 
+					if(isset($wells[$cell])){ echo '<td id="'.$cell.'" width="8%"><small class="cell_id" style="display:none">'.$cell.'</small><small class="contents">'.$wells[$cell].'</small></td>'; }
+					else { echo '<td id="'.$cell.'" width="8%"><small class="cell_id">'.$cell.'</small><small class="contents"></small></td>'; }
 				}
-				//echo '<div class="cell" id="'.$cell.'">
-				//<small>'.$cell.'</small>
-				//</div>';
 			}
 			echo '</tr>';
 		}		
@@ -179,5 +142,18 @@ else{
 	<script type="text/javascript">
 	var plateJSON = <?php echo json_encode($plates); ?>;
 	</script>
+
+<?php 
+function footer_js(){
+	global $plate_type_q; ?>
+<script>
+	jQuery(document).ready(function($) {
+	<?php if (isset($plate_q)){ ?>
+				//onsole.log("Selecting the <?php echo $plate_type_q; ?> tab");
+	<?php } ?>
+});
+</script>
+<?php }
+add_action('wp_footer', 'footer_js', 100, 1); ?>
 
 <?php get_footer(); ?>

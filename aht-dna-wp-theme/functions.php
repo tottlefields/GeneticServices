@@ -55,6 +55,36 @@ function rememberme_checked() {
 	echo "<script>document.getElementById('rememberme').checked = true;</script>";
 }
 
+function add_query_vars($aVars) {
+	//$aVars[] = "plate_type"; // represents the name of the plate type as shown in the URL
+	//$aVars[] = "plate_id"; // represents the name of the plate id as shown in the URL
+	$aVars[] = "plate"; // represents the name of the plate id as shown in the URL
+	return $aVars;
+}
+// hook add_query_vars function into query_vars
+add_filter('query_vars', 'add_query_vars');
+
+function add_rewrite_rules($aRules) {
+	$aNewRules = array(
+//		'plates/add-plate/([^/]+)/([^/]+)/?$' => 'index.php?pagename=add-plate&plate_type=$matches[1]&plate_id=$matches[2]',
+		'plate/([^/]+)/?$' => 'index.php?pagename=plates&plate=$matches[1]',
+//		'plate/([^/]+)/?$' => 'index.php?pagename=plates&plate_type=$matches[1]',
+//		'plate/([^/]+)/([^/]+)/?$' => 'index.php?pagename=plates&plate_type=$matches[1]&plate_id=$matches[2]'
+	);
+	$aRules = $aNewRules + $aRules;
+	return $aRules;
+}
+// hook add_rewrite_rules function into rewrite_rules_array
+add_filter('rewrite_rules_array', 'add_rewrite_rules');
+
+
+
+
+
+
+
+
+
 // Hooking up our functions to WordPress filters
 function mytheme_enqueue_scripts() {
 	wp_deregister_script ( 'jquery' );
@@ -164,7 +194,7 @@ function special_nav_class($classes, $item) {
 	}
 	return $classes;
 }
-function custom_breadcrumbs() {
+function custom_breadcrumbs($sub_page = null) {
 	
 	// Settings
 	$separator = '&gt;';
@@ -194,7 +224,12 @@ function custom_breadcrumbs() {
 				}
 				echo $output;
 			}
-			echo '<li>' . the_title ( '', '', false ) . '</li>';
+			
+			if (isset($sub_page) && $sub_page != null){
+				echo '<li><a href="' . get_permalink() . '">' . the_title ( '', '', false ) . '</a></li>';
+				echo '<li>' . $sub_page . '</li>';
+			}
+			else{ echo '<li>' . the_title ( '', '', false ) . '</li>'; }
 		}
 		echo '
 						</ul>';

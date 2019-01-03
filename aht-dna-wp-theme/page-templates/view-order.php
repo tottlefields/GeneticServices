@@ -23,6 +23,10 @@ if (isset($order_details->OrderDate)){
 
 $kit_sent = array();
 $returned_date = array();
+$extracted_date = array();
+$analysis_date = array();
+$qc_date = array();
+$finished_date = array();
 foreach ($test_details as $test){
 
 	$test->order_status = $order_steps[0];
@@ -48,11 +52,52 @@ foreach ($test_details as $test){
 			array_push($returned_date, $returnedDate->format('d/m/y'));
 			$test->order_status = $order_steps[2];
 		}
+		
+		if ($test->extraction_date == ''){
+			array_push($extracted_date, $test->extraction_date);		
+		}
+		else {
+			$extractedDate = new DateTime($test->extraction_date);
+			array_push($extracted_date, $extractedDate->format('d/m/y'));
+			$test->order_status = $order_steps[3];
+		}
+		
+/*		if ($test->result_entered_date == ''){
+			array_push($analysis_date, $test->result_entered_date);		
+		}
+		else {
+			$analysisDate = new DateTime($test->result_entered_date);
+			array_push($analysis_date, $analysisDate->format('d/m/y'));
+			$test->order_status = $order_steps[4];
+		}
+*/
+		
+		if ($test->result_authorised_date == ''){
+			array_push($qc_date, $test->result_authorised_date);		
+		}
+		else {
+			$qcDate = new DateTime($test->extraction_date);
+			array_push($qc_date, $qcDate->format('d/m/y'));
+			$test->order_status = $order_steps[4];
+		}
+		
+		if ($test->cert_code == ''){
+			array_push($finished_date, '');		
+		}
+		else {
+			$finalDate = new DateTime($test->result_reported_date);
+			array_push($finished_date, $finalDate->format('d/m/y'));
+			$test->order_status = $order_steps[5];
+		}
 	}
 }
 
 if (in_array('', $kit_sent)){ $this_order_status[1] = ''; } else { $this_order_status[1] = max($kit_sent); }
 if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_order_status[2] = max($returned_date); }
+if (in_array('', $extracted_date)){ $this_order_status[3] = ''; } else { $this_order_status[3] = max($extracted_date); }
+//if (in_array('', $analysis_date)){ $this_order_status[4] = ''; } else { $this_order_status[4] = max($analysis_date); }
+if (in_array('', $qc_date)){ $this_order_status[4] = ''; } else { $this_order_status[4] = max($qc_date); }
+if (in_array('', $finished_date)){ $this_order_status[5] = ''; } else { $this_order_status[5] = max($finished_date); }
 	
 ?>
 <?php get_header(); ?>
@@ -128,14 +173,22 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 					$class_disabled = ' disabled'; 
 				}
 				
-				$next_action = '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fa fa-repeat link"></i>&nbsp;Request Repeat</a></li>';
+				$actions = '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fa fa-repeat link"></i>&nbsp;Request Repeat</a></li>';
 				switch ($test->order_status) {
 					case 'Order Placed':
-						$next_action = '<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="fa fa-paper-plane-o link"></i>&nbsp;Dispatch Sample</a></li>';
+						$actions = '
+							<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
+							<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
+							<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="fa fa-paper-plane-o link"></i>&nbsp;Dispatch Sample</a></li>';
 						break;
 					case 'Kit(s) Dispatched':
-						$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
+						$actions = '
+							<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
+							<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
+							<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
 						break;
+					case 'Result(s) Sent':
+						$actions = '<li><a href="javascript:viewCert(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Certificate</a></li>';
 				}
 				$notes = '';
 				if ($test->note_count > 0){
@@ -149,7 +202,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 				}
 				
 				$result = '';
-				if ($test->swab_failed > 1){
+				if ($test->swab_failed >= 1){
 					$result = '<span class="label label-default">Failed</span>';
 				}
 				elseif ($test->test_result){
@@ -160,8 +213,12 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 						case 'CARRIER':
 							$label_class = 'warning';
 							break;
-						case 'CLEAR':
+						case 'NORMAL':
 							$label_class = 'success';
+							break;
+						case 'PROFILE':
+							$test->test_result = 'VIEW';
+							$label_class = 'default';
 							break;
 					}
 					$result = '<span class="label label-'.$label_class.'">'.$test->test_result.'</span>';
@@ -183,9 +240,7 @@ if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_or
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle'.$class_disabled.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
-								<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
-								'.$next_action.'
+								'.$actions.'
 								<!--<li><a href="#">Something else here</a></li>-->
 								<li role="separator" class="divider"></li>
 								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="fa fa-file-text-o link"></i>&nbsp;Add Note</a></li>

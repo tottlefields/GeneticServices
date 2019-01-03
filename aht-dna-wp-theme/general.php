@@ -191,8 +191,8 @@ function getTestDetails($swab_id){
 	
 	$sql = 'select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, date_format(o.OrderDate, "%d/%m/%Y") as order_date,
 		a.*, t.*, date(kit_sent) as date_sent, date(returned_date) as date_returned, date(cancelled_date) as date_cancelled,
-		test_name, no_results, no_swabs, sub_tests, sum(swab_failed), extraction_plate, extraction_well,
-		r.test_code, test_plate, test_plate_well, test_result, result_entered_by, result_entered_date, result_authorised_by, resultauthorised_date, cert_code,
+		test_name, no_results, no_swabs, sub_tests, sum(swab_failed), extraction_plate, extraction_well, date(extraction_date) as extraction_date, extracted_by,
+		r.test_code, test_plate, test_plate_well, test_result, result_entered_by, result_entered_date, result_authorised_by, result_authorised_date, cert_code,
 		date_format(a.BirthDate, "%d/%m/%Y") as DOB, case when Sex="f" then "Female" else "Male" end as sex
 		from orders o inner join order_tests t on o.id=order_id 
 		left outer join animal a on animal_id=a.id 
@@ -217,7 +217,7 @@ function getTestResults($swab_id){
 	global $wpdb;	
 	$results = array();
 	
-	$sql = "select test_code, test_plate, test_plate_well, test_result, result_entered_by, result_entered_date, result_authorised_by, resultauthorised_date, cert_code
+	$sql = "select test_code, test_plate, test_plate_well, test_result, result_entered_by, result_entered_date, result_authorised_by, result_authorised_date, cert_code
 	from test_swab_results WHERE test_id=".$swab_id;
 	$results = $wpdb->get_results($sql, OBJECT );
 	
@@ -233,6 +233,30 @@ function getTestNotes($swab_id){
 
 	return $notes;
 }
+
+function getPlateDetails($plate_id){
+	global $wpdb;
+	$test_details = array();
+	
+	$sql = "select * FROM plates WHERE UPPER(test_plate)='$plate_id'";
+	$plate_details = $wpdb->get_results($sql, OBJECT );
+	
+	if ($plate_details[0]->plate_type == 'extraction'){
+		$sql = "select distinct t.order_id, s.test_id as test_id, t.test_code, s.extraction_well as well 
+		from test_swabs s inner join order_tests t on s.test_id=t.id where s.extraction_plate='".$plate_id."'
+		order by 4";		
+	}
+	else {
+		$sql = "select distinct t.order_id, r.test_id, t.test_code, r.test_plate_well as well 
+		from test_swab_results r inner join order_tests t on t.id=test_id where test_plate='".$plate_id."'
+		order by 4";		
+	}
+	$wells = $wpdb->get_results($sql, OBJECT);	
+	$plate_details[0]->wells = $wells;
+	
+	return $plate_details[0];	
+}
+
 function addNewClient($client){
 	//| id | ClientID | Tel | Fax | Email | FullName | Address | Address2 | Address3 | Town | County | Postcode | Country |
 	//| ShippingName | ShippingCompany | ShippingAddress | ShippingAddress2 | ShippingAddress3 | ShippingTown | ShippingCounty | ShippingPostcode | ShippingCountry |

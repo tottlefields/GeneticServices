@@ -7,6 +7,18 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 	$query = $_REQUEST['q'];
 	$allResults = array();
 	
+	
+	if (preg_match('/^Q\d{1,6}$/', strtoupper($query)) || preg_match('/^\d{1,6}G$/', strtoupper($query)) || preg_match('/^TaqMan\d{1,6}$/', strtoupper($query))){
+		//Plate Record ID - Etraction plate (Q plus 1-6 digits) OR Genotyping plate (1 to 6 digits appended by a G) OR TaqMan plate
+		$sql = "select * FROM plates
+				WHERE UPPER(test_plate)='".strtoupper($query)."'";
+		$results = $wpdb->get_results($sql);
+		if (count($results) == 1 && $results[0]->id > 0){
+			wp_redirect(get_site_url().'/plate/'.$results[0]->test_plate);
+			exit;	
+		}
+	}
+	
 	if (preg_match('/^AHT\d{1,5}$/', strtoupper($query))){
 		//Dennis (AHT) ID - between 1 & 5 digits [OrderID] pre-pended by 'AHT'
 		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, orders.ShippingCountry, count(*) as TestCount 
