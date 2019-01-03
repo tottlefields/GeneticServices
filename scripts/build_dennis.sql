@@ -170,7 +170,7 @@ CREATE TABLE `test_swab_results` (
   `result_entered_by` varchar(50) DEFAULT NULL,
   `result_entered_date` datetime DEFAULT NULL,
   `result_authorised_by` varchar(50) DEFAULT NULL,
-  `resultauthorised_date` datetime DEFAULT NULL,
+  `result_authorised_date` datetime DEFAULT NULL,
   `cert_code` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `test_idx` (`swab_id`,`test_code`),

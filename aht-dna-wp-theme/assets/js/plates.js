@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
 								for (var x=0; x<results.length; x++){
 									var well = results[x].well;
 									$("#"+well+" > small.cell_id").hide();
-									$("#"+well+" > small.contents").html('<a href="/orders/view/?id='+results[x].order_id+'">AHT'+results[x].order_id+"/"+results[x].test_id+'</a><br />'+results[x].test_code);
+									$("#"+well+" > small.contents").html('<a href="'+DennisAjax.site_url+'/orders/view/?id='+results[x].order_id+'">AHT'+results[x].order_id+"/"+results[x].test_id+'</a><br />'+results[x].test_code);
 								}
 						}
 				});

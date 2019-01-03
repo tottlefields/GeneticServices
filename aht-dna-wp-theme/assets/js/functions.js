@@ -99,7 +99,7 @@ function generatePDFs(order_ids, swabID, pending) {
 	});
 }
 
-function viewCert(orderId, swabID, certCode) {
+function viewCert(orderId, swabID) {
 
 	var data = {
 		'action' : 'order_details',
@@ -318,16 +318,16 @@ function getOrders(orderId, div) {
 				test = OrderDetails.test_details[i];
 				if (test.date_cancelled === ""){
 					if (test.RegisteredName !== "") {
-						order_panel += '<strong><a href="/animals/view?id=' + test.animal_id + '">' + test.RegisteredName + '</a></strong> - ' + test.test_name
+						order_panel += '<strong><a href="'+DennisAjax.site_url+'/animals/view?id=' + test.animal_id + '">' + test.RegisteredName + '</a></strong> - ' + test.test_name
 								+ '<br />';
 					} else {
-						order_panel += '<em><a href="/animals/view?id=' + test.animal_id + '">' + test.PetName + '</a></em> - ' + test.test_name + '<br />';
+						order_panel += '<em><a href="'+DennisAjax.site_url+'/animals/view?id=' + test.animal_id + '">' + test.PetName + '</a></em> - ' + test.test_name + '<br />';
 					}
 					}
 			}
 
 			client_panel = createClientPanel(ClientDetails);
-			div.append('<h2><a href="/orders/view?id=' + OrderDetails.ID + '">Order #' + OrderDetails.ID + '</a></h2>');
+			div.append('<h2><a href="'+DennisAjax.site_url+'/orders/view?id=' + OrderDetails.ID + '">Order #' + OrderDetails.ID + '</a></h2>');
 			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Order Details</h3></div><div class="panel-body">'
 					+ order_panel + '</div></div>');
 			div.append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Client Details</h3></div><div class="panel-body">'
@@ -356,7 +356,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			ClientDetails = details.client;
 
 			/* CLIENT DETAILS */
-			client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/clients/view?id=' + ClientDetails.id
+			client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="'+DennisAjax.site_url+'/clients/view?id=' + ClientDetails.id
 					+ '"><strong>' + ClientDetails.FullName + '</strong></a></div></div>';
 			client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8">' + ClientDetails.Email + '</div></div>';
 			client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">' + ClientDetails.Tel + '</div></div>';
@@ -373,7 +373,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			$('#order_id').attr('value', orderId);
 
 			/* ANIMAL DETAILS */
-			animal_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/animals/view?id=' + TestDetails.animal_id
+			animal_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="'+DennisAjax.site_url+'/animals/view?id=' + TestDetails.animal_id
 					+ '"><strong>' + TestDetails.RegisteredName + '</strong></a></div></div>';
 			animal_panel += '<div class="row"><div class="col-sm-4">Pet Name</div><div class="col-sm-8">' + TestDetails.PetName + '</div></div>';
 			animal_panel += '<div class="row"><div class="col-sm-4">Reg No.</div><div class="col-sm-8">' + TestDetails.RegistrationNo + '</div></div>';
@@ -390,7 +390,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			//console.log(TestDetails);
 			var extraction = '&nbsp;';
 			if (TestDetails.extraction_plate != ''){
-				extraction = '<a href="/plate/' + TestDetails.extraction_plate + '">' + TestDetails.extraction_plate + '</a>';
+				extraction = '<a href="'+DennisAjax.site_url+'/plate/' + TestDetails.extraction_plate + '">' + TestDetails.extraction_plate + '</a>';
 				if (TestDetails.extraction_well != ''){ extraction += '&nbsp;(' +TestDetails.extraction_well+ ')'; }
 			}
 			order_panel = '';
@@ -472,7 +472,7 @@ function populateAnimalModal(AnimalDetails){
 function createClientPanel(ClientDetails) {
 	client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8">';
 	if (ClientDetails.client_id > 0){
-		client_panel += '<a href="/clients/view?id=' + ClientDetails.client_id+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a>';
+		client_panel += '<a href="'+DennisAjax.site_url+'/clients/view?id=' + ClientDetails.client_id+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a>';
 	}
 	client_panel += '</div></div>';
 	email = '&nbsp;';

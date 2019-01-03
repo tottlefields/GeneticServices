@@ -12,7 +12,7 @@
 		
 		<!-- start: JavaScript-->
 		<script>
-		var DennisAjax = {"ajax_url":"<?php echo admin_url( 'admin-ajax.php' ); ?>"};
+		var DennisAjax = {"ajax_url":"<?php echo admin_url( 'admin-ajax.php' ); ?>", "site_url":"<?php echo get_site_url(); ?>"};
 		</script>
 		<?php wp_footer(); ?>
 		

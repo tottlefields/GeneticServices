@@ -20,8 +20,18 @@ global $wpdb;
 	}
 }
 //if(isset($wp_query->query_vars['plate_type'])) { $plate_type_q = urldecode($wp_query->query_vars['plate_type']); }
-if(isset($wp_query->query_vars['plate'])) { $plate_q = urldecode($wp_query->query_vars['plate']); }?>
-<?php get_header(); ?>
+if(isset($wp_query->query_vars['plate'])) { 
+	$plate_q = urldecode($wp_query->query_vars['plate']);
+	$plate_details = getPlateDetails($plate_q);
+	$wells = array();
+	if (count($plate_details->wells) > 0){
+		foreach ($plate_details->wells as $well){
+			$wells[$well->well] = '<a href="'.get_site_url().'/orders/view/?id='.$well->order_id.'">AHT'.$well->order_id.'/'.$well->test_id.'</a><br />'.$well->test_code;
+		}
+	}
+}
+
+get_header(); ?>
 
 	<h1 class="hidden-print">
 		<?php if(isset($plate_q)){ echo $plate_q; }else{ wp_title('', true,''); } ?>
@@ -80,8 +90,9 @@ foreach (array_keys($plates) as $plate_type){
 				}
 				elseif($r == 0){ echo '<th>'.$c.'</th>'; }
 				elseif($c == 0){ echo '<th>'.$letters[$r-1].'</th>'; }
-				else{
-				echo '<td id="'.$cell.'" width="8%"><small class="cell_id">'.$cell.'</small><small class="contents"></small></td>';
+				else{ 
+					if(isset($wells[$cell])){ echo '<td id="'.$cell.'" width="8%"><small class="cell_id" style="display:none">'.$cell.'</small><small class="contents">'.$wells[$cell].'</small></td>'; }
+					else { echo '<td id="'.$cell.'" width="8%"><small class="cell_id">'.$cell.'</small><small class="contents"></small></td>'; }
 				}
 			}
 			echo '</tr>';
