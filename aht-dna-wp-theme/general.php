@@ -191,8 +191,8 @@ function getTestDetails($swab_id){
 	
 	$sql = 'select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, date_format(o.OrderDate, "%d/%m/%Y") as order_date,
 		a.*, t.*, date(kit_sent) as date_sent, date(returned_date) as date_returned, date(cancelled_date) as date_cancelled,
-		test_name, no_results, no_swabs, sub_tests, sum(swab_failed), extraction_plate, extraction_well, date(extraction_date) as extraction_date, extracted_by,
-		r.test_code, test_plate, test_plate_well, test_result, result_entered_by, result_entered_date, result_authorised_by, result_authorised_date, cert_code,
+		test_name, ddt_sheet, no_results, no_swabs, sub_tests, sum(swab_failed), extraction_plate, extraction_well, date(extraction_date) as extraction_date, extracted_by,
+		t.test_code, test_plate, test_plate_well, test_result, result_entered_by, result_entered_date, result_authorised_by, result_authorised_date, cert_code,
 		date_format(a.BirthDate, "%d/%m/%Y") as DOB, case when Sex="f" then "Female" else "Male" end as sex
 		from orders o inner join order_tests t on o.id=order_id 
 		left outer join animal a on animal_id=a.id 
