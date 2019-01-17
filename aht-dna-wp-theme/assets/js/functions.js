@@ -245,20 +245,38 @@ function repeatTest(swabID){
 }
 
 function cancelTest(swabID){
-
-	var data = {
-		'action'  : 'cancel_test',
-		'swabId'  : swabID
-	};
-
-	jQuery.ajax({
-		type : "post",
-		dataType : "json",
-		url : DennisAjax.ajax_url,
-		data : data,
-		success : function(results) {
-			location.reload();
-		}
+	
+	bootbox.confirm({
+			title: "Confirmation required",
+			message: "Are you sure you wish to cancel this part of the order?",
+			buttons: {
+				confirm: {
+					label: 'Yes',
+					className: 'btn-success'
+				},
+				cancel: {
+					label: 'No',
+					className: 'btn-danger'
+				}
+			},
+			callback: function (result) {
+				if (result){		
+					var data = {
+						'action'  : 'cancel_test',
+						'swabId'  : swabID
+					};
+				
+					jQuery.ajax({
+						type : "post",
+						dataType : "json",
+						url : DennisAjax.ajax_url,
+						data : data,
+						success : function(results) {
+							location.reload();
+						}
+					});
+				}
+			}
 	});
 }
 
