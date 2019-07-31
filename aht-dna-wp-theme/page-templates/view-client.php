@@ -50,6 +50,7 @@ $note_details = array();
 					?>
 				</div>
 			</div>
+			<a href="/orders/add-manual-order/?client=<?php echo $client_details->id; ?>" class="btn btn-primary btn-block">Create Manual Order</a>
 		</div>
 	
 		<div class="col-md-9">

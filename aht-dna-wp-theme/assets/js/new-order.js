@@ -4,6 +4,8 @@ jQuery(document).ready(function($) {
 		$("#owner-country").append($('<option>').text(value).attr('value', key));
 	});
 	
+	if($("#client_country").val() !== ""){ $("#owner-country").val($("#client_country").val()); }
+	
 	$("#noDogs").keyup(function() {
 		if ($("#noDogs").val() == 0)
 			$("#dogsTable").hide();

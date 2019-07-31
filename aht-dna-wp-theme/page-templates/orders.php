@@ -8,7 +8,7 @@
 	<?php
 	global $wpdb;
 
-	$sql = "select o.OrderID as webshop_id, o.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, o.ShippingCountry, count(*) as TestCount, sum(no_swabs) as SwabCount, content
+	$sql = "select o.OrderID as webshop_id, o.id as ID, o.paid, OrderDate, ReportFormat, client_id, FullName, Email, o.ShippingCountry, count(*) as TestCount, sum(no_swabs) as SwabCount, content
 	from orders o left outer join client on client.id=client_id 
 	left outer join order_tests on o.id=order_id 
 	left outer join test_codes using (test_code)
@@ -34,6 +34,7 @@
 		
 		<?php
 		foreach ( $results as $order ){
+			$row_class = ($order->paid) ? '' : 'danger';
 			$client = '';
 			if ($order->client_id > 0){
 				$client = '<a href="'.get_site_url().'/clients/view?id='.$order->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order->FullName.'</a>';
@@ -43,7 +44,7 @@
 			}
 			$order_date = new DateTime($order->OrderDate);
 			echo '
-			<tr>
+			<tr class="'.$row_class.'">
 				<td class="text-center">'.$order->ID.'</td>
 				<td class="text-center"><input type="checkbox" class="checkboxRow" name="orderList[]" value="'.$order->ID.'" /></td>
 				<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$order->ID.'">AHT'.$order->ID.'</a></td>

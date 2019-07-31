@@ -332,6 +332,9 @@ function getOrders(orderId, div) {
 			OrderDetails = details[0].order;
 			ClientDetails = details[0].client;
 			order_panel = '';
+			if (OrderDetails.paid == 0){
+				order_panel += '<div class="alert alert-danger" role="alert">Payment is still outstanding for this order.</div>';
+			}
 			for (i in OrderDetails.test_details) {
 				test = OrderDetails.test_details[i];
 				if (test.date_cancelled === ""){

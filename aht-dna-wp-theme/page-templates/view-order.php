@@ -104,6 +104,18 @@ if (in_array('', $finished_date)){ $this_order_status[5] = ''; } else { $this_or
 
 	<h1><?php wp_title('', true,''); ?> #<?php echo $order_id; ?><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
 	
+<?php
+if ($order_details->paid == 0){
+	echo '
+	<section class="row">
+		<div class="col-sm-12"><div class="alert alert-danger">
+		Payment is still outstanding for this order. 
+		<span class="pull-right"><a class="btn btn-sm btn-default" style="margin-top:-5px;" href="" disabled="disabled">Mark as Paid</a></span>
+		</div></div>
+	</section>';	
+}
+?>
+	
 	<section class="row">
 		<div class="col-sm-12">
 		<div class="sw-theme-arrows">
