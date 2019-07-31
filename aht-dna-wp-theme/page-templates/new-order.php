@@ -5,24 +5,29 @@ if (isset($_POST['new-order-submitted'])) {
 	//debug_array($_REQUEST);
 	//exit;
 	
-	$clients = clientSearch(array(
-		'Postcode'		=> $_REQUEST['owner-postcode'],
-		'ShippingPostcode'	=> $_REQUEST['owner-postcode'],
-		'FullName'		=> $_REQUEST['owner-name'],
-		'Email'			=> $_REQUEST['owner-email']
-	));
-	if (count($clients) == 0){ $client_id = addNewClient(array(
-		'FullName'	=> $_REQUEST['owner-name'],
-		'Email'		=> $_REQUEST['owner-email'],
-		'Tel'		=> $_REQUEST['owner-phone'],
-		'Address'	=> $_REQUEST['owner-address'],
-		'Town'		=> $_REQUEST['owner-town'],
-		'County'	=> $_REQUEST['owner-county'],
-		'Country'	=> $_REQUEST['owner-country'],
-		'Postcode'	=> $_REQUEST['owner-postcode'],
-	) ); }
-	elseif (count($clients) == 1) { $client_id = $clients[0]->id; }
-	else { echo "ERROR - multiple clients match"; exit; }
+	if (isset($_REQUEST['client'])){
+		$client_id = $_REQUEST['client'];
+	}
+	else{
+		$clients = clientSearch(array(
+			'Postcode'		=> $_REQUEST['owner-postcode'],
+			'ShippingPostcode'	=> $_REQUEST['owner-postcode'],
+			'FullName'		=> $_REQUEST['owner-name'],
+			'Email'			=> $_REQUEST['owner-email']
+		));
+		if (count($clients) == 0){ $client_id = addNewClient(array(
+			'FullName'	=> $_REQUEST['owner-name'],
+			'Email'		=> $_REQUEST['owner-email'],
+			'Tel'		=> $_REQUEST['owner-phone'],
+			'Address'	=> $_REQUEST['owner-address'],
+			'Town'		=> $_REQUEST['owner-town'],
+			'County'	=> $_REQUEST['owner-county'],
+			'Country'	=> $_REQUEST['owner-country'],
+			'Postcode'	=> $_REQUEST['owner-postcode'],
+		) ); }
+		elseif (count($clients) == 1) { $client_id = $clients[0]->id; }
+		else { echo "ERROR - multiple clients match"; exit; }
+	}
 
 	$order_id = addNewOrder(array(
 			'client_id'		=> $client_id,
@@ -35,7 +40,8 @@ if (isset($_POST['new-order-submitted'])) {
 			'ShippingTown'      => $_REQUEST['owner-town'],
 			'ShippingCounty'    => $_REQUEST['owner-county'],
 			'ShippingPostcode'  => $_REQUEST['owner-postcode'],
-			'ShippingCountry'   => $_REQUEST['owner-country']
+			'ShippingCountry'   => $_REQUEST['owner-country'],
+			'Paid'				=> ($_REQUEST['payment-made'] == 'on') ? 1 : 0,
 	));
 	
 	for ($i=1; $i<=$_REQUEST['noDogs']; $i++){
@@ -73,7 +79,13 @@ if (isset($_POST['new-order-submitted'])) {
 	
 	wp_redirect(get_site_url().'/orders/');
 	exit;
-}?>
+}
+$client_id = 0;
+if(isset($_GET['client']) && $_GET['client'] > 0){
+	$client_id = $_GET['client'];
+}
+$clients = clientSearch(array('id' => $client_id));
+$client_details = $clients[0];?>
 <?php get_header(); ?>
 <?php
 	global $post;
@@ -98,12 +110,18 @@ if (isset($_POST['new-order-submitted'])) {
 										<label class="radio-inline"><input type="radio" class="radiorequired" value="Post" name="format"/> Post</label>
 										<!-- <label class="radio-inline"><input type="radio" class="radiorequired" value="Fax" name="format"/> Fax</label> -->
 									</div>
+									<label class="col-sm-2 control-label">Paid?</label>
+									<div class="col-sm-2">
+										<input type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No" data-size="small" name="payment-made" id="payment-made" />
+									</div>
+								</div>
 									
-									<label class="col-sm-2 control-label">Vertification</label>
-									<div class="col-sm-1">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Verification</label>
+									<div class="col-sm-2">
 										<input type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No" data-size="small" name="vet-verified" id="vet-verified" />
 									</div>
-								  	<div class="col-sm-3" style="display:none" id="vet-select-div">
+								  	<div class="col-sm-8" style="display:none" id="vet-select-div">
 								  		<select id="vet-select" class="form-control" name="vet-select">
 								  			<option value="0">Add another Verifier...</option> 
 								  		</select>												 
@@ -120,98 +138,43 @@ if (isset($_POST['new-order-submitted'])) {
 							</div>
 						</div>
 					</div>			
-						
-<!-- 						<div class="panel panel-primary">
-							<div class="panel-heading">
-								<h3 class="panel-title">2. Dog Details</h3>
-							</div>
-							<div class="panel-body">
-								<div class="form-group">
-								  	<label class="col-sm-3 control-label">Breed</label>
-								  	<div class="col-sm-9">
-								  		<select id="breed-select" class="form-control required" name="breed">
-								  			<option value="">Select Breed of your Dog...</option>
-								  		</select>
-								  	</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">Registered Name</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" value="" name="registered-name" id="registered-name"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">Registration No.</label>
-									<div class="col-sm-3">
-										<input type="text" class="form-control" style="text-transform:uppercase" value="" name="registration-number" id="registration-number"/>
-									</div>
-									<label class="col-sm-3 control-label">Pet Name</label>
-									<div class="col-sm-3">
-										<input type="text" class="form-control required" value="" name="pet-name" id="pet-name"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">Birth Date</label>
-									<div class="col-sm-3">
-										<input type="text" value="" name="dog-birth-date" id="dog-birth-date" class="form-control datepick required num" autocomplete="off" placeholder="dd/mm/yyyy" />
-									</div>
-									<label class="col-sm-3 control-label">Sex</label>
-									<div class="col-sm-3">
-										<div class="radioerror"></div>
-										<label class="radio-inline"><input type="radio" class="radiorequired" value="Male" name="sex" checked="checked"/> Male</label>
-										<label class="radio-inline"><input type="radio" class="radiorequired" value="Female" name="sex"/> Female</label>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">Colour</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" value="" name="colour" id="colour"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">Microchip</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" value="" name="microchip" id="microchip"/>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> -->
 			
 					<div class="col-sm-7">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title">2. Client Details</h3>
+								<input type="hidden" id="client_id" name="client_id" value="<?php echo $client_id; ?>" />
+								<input type="hidden" id="client_country" name="client_country" value="<?php echo $client_details->Country; ?>" />
 							</div>
 							<div class="panel-body">
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Name</label>
 									<div class="col-sm-3">
-										<input type="text" class="form-control required" value="" name="owner-name" id="owner-name"/>
+										<input type="text" class="form-control required<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->FullName; ?>" name="owner-name" id="owner-name"/>
 									</div>
 									<label class="col-sm-2 control-label">Address</label>
 									<div class="col-sm-5">
-									 	<input type="text" class="form-control" value="" name="owner-address" id="owner-address"/>
+									 	<input type="text" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Address; ?>" name="owner-address" id="owner-address"/>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Email</label>
 									<div class="col-sm-3">
-										<input type="email" class="form-control required" value="" name="owner-email" id="owner-email"/>
+										<input type="email" class="form-control required<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Email; ?>" name="owner-email" id="owner-email"/>
 									</div>
 									<label class="col-sm-2 control-label">Town</label>
 									<div class="col-sm-2">
-										<input type="text" class="form-control" value="" placeholder="Town" name="owner-town" id="owner-town" tabindex="2" />
+										<input type="text" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Town; ?>" placeholder="Town" name="owner-town" id="owner-town" tabindex="2" />
 									</div>
 									<label class="col-sm-1 control-label">County</label>
 									<div class="col-sm-2">
-										<input type="text" class="form-control" value="" placeholder="County" name="owner-county" id="owner-county" tabindex="2" />
+										<input type="text" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->County; ?>" placeholder="County" name="owner-county" id="owner-county" tabindex="2" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Phone</label>
 									<div class="col-sm-3">
-										<input type="tel" class="form-control" value="" name="owner-phone" id="owner-phone"/>
+										<input type="tel" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Tel; ?>" name="owner-phone" id="owner-phone"/>
 									</div>
 									<label class="col-sm-2 control-label">Country</label>
 									<div class="col-sm-2">
@@ -222,7 +185,7 @@ if (isset($_POST['new-order-submitted'])) {
 									</div>
 									<label class="col-sm-1 control-label">Postcode</label>
 									<div class="col-sm-2">
-										<input type="text" class="form-control" value="" placeholder="Postcode" name="owner-postcode" id="owner-postcode" tabindex="2" />
+										<input type="text" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Postcode; ?>" placeholder="Postcode" name="owner-postcode" id="owner-postcode" tabindex="2" />
 									</div>
 								</div>
 							</div>

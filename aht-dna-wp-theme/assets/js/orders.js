@@ -48,12 +48,20 @@ jQuery(document).ready(function($) {
 	table.on('select', function(e, dt, type, indexes) {
 		if (table.rows('.selected').data().length === 1) {
 			var rowData = table.rows(indexes).data().toArray();
+			if(table.rows(indexes).nodes().to$().hasClass('danger')){
+				table.rows(indexes).nodes().to$().removeClass('danger');
+				table.rows(indexes).nodes().to$().addClass('danger-bak');
+			}
 			getOrders(rowData[0][0], details);
 		} else {
 			details.empty();
 		}
 	}).on('deselect', function(e, dt, type, indexes) {
 		details.empty();
+		if(table.rows(indexes).nodes().to$().hasClass('danger-bak')){
+			table.rows(indexes).nodes().to$().addClass('danger');
+			table.rows(indexes).nodes().to$().removeClass('danger-bak');
+		}
 	});
 	
 	$("div.toolbar").html('<button type="button" class="btn btn-default" id="exportPDFs" disabled="disabled"><i class="fa fa-file-pdf-o link"></i>&nbsp;Export PDFs</button>');
