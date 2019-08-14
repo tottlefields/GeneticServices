@@ -42,6 +42,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 	}
 	
 	if (isset($_REQUEST['book-in-samples'])){
+		
 	
 		$samples = explode("\n", str_replace("\r", "", $_REQUEST['samples']));
 		$error = '';
@@ -51,7 +52,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 	
 		$update_args = array(
 			'received_by' => $current_user->user_login,
-			'returned_date' => date('Y-m-d'),
+			'returned_date' => date('Y-m-d H:i:s'),
 			'due_date' => $date->format('Y-m-d')
 		);
 		

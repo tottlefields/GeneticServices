@@ -52,15 +52,20 @@ if (isset($_POST['new-order-submitted'])) {
 				'TattooOrChip'		=> $_REQUEST['microchip_'.$i]
 		), $client_id);
 		if (count($animals) == 0){
+			
+			$sql = "select ID, breed from breed_list WHERE is_primary=1 and ID=".$_REQUEST['breed_'.$i];
+			$Breed = $wpdb->get_var($sql);			
+			
 			$animal_id = addNewAnimal(array(
 					'RegisteredName'=> $_REQUEST['registered-name_'.$i],
 					'RegistrationNo'=> $_REQUEST['registration-number_'.$i],
 					'Sex'		=> substr($_REQUEST['sex_'.$i],0,1),
-					'BirthDate'	=> dateToSQL($_REQUEST['dog-birth-date_'.$i]),
+					'BirthDate'	=> dateToSQL($_REQUEST['birth-date_'.$i]),
 					'TattooOrChip'	=> $_REQUEST['microchip_'.$i],
 					'PetName'	=> $_REQUEST['pet-name_'.$i],
 					'Colour'	=> $_REQUEST['colour_'.$i],
 					'breed_id'	=> $_REQUEST['breed_'.$i],
+					'Breed'		=> $Breed,
 					'client_id'	=> $client_id
 			));
 		}
