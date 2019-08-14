@@ -15,7 +15,7 @@ $results = $wpdb->get_results("select t1.id as swabId, t2.OrderId as webshopID, 
 	inner join client t4 on t2.client_id=t4.id 
 	inner join test_codes t5 on t1.test_code=t5.test_code
 	left outer join vet t6 on t1.VetID=t6.id 
-	where returned_date =date(NOW())"
+	where returned_date>DATE_SUB(NOW(), INTERVAL 1 day) and returned_date<=NOW()"
 );
 if(count($results > 0)){
 	echo "OrderID\tClientID\tAnimalID\tQuantity\tTestDescription\tTestCode\tBloodTestRequired\tSwabRequired\tSpecies\tBreed\tRegistryName\tRegisteredName\tRegistration\tSex\tBirthDate\tTattooOrChip\tClientCode\tReportByEmail\tReportByPost\tReportByFax\tTel\tFax\tEmail\tFullName\tOrganisation\tAddress1\tTown\tCounty\tPostcode\tCountry\tAgreeToResearch\tVetPracticeName\tVetSurgeonName\tVetAddressLine1\tVetAddressLine2\tVetAddressLine3\tVetTown\tVetPostcode\tVetCounty\tVetCountry\tVetEmail\tVetFaxNumber\tVetReportByEmail\tVetReportByPost\tVetReportByFax\tPetName\tColour\tOrderDate\tSwabReceived\tSwabKitNumber\tSampleType\tSampleReceivedDate\tDeliveryFullName\tDeliveryOrganisation\tDeliveryAddress1\tDeliveryTown\tDeliveryCounty\tDeliveryPostcode\tDeliveryCountry\tVerifiedByVet\n";
