@@ -53,7 +53,7 @@ if (isset($_POST['new-order-submitted'])) {
 		), $client_id);
 		if (count($animals) == 0){
 			
-			$sql = "select ID, breed from breed_list WHERE is_primary=1 and ID=".$_REQUEST['breed_'.$i];
+			$sql = "select breed from breed_list WHERE is_primary=1 and ID=".$_REQUEST['breed_'.$i];
 			$Breed = $wpdb->get_var($sql);			
 			
 			$animal_id = addNewAnimal(array(
