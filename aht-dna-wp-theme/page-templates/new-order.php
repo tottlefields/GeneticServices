@@ -28,20 +28,23 @@ if (isset($_POST['new-order-submitted'])) {
 		elseif (count($clients) == 1) { $client_id = $clients[0]->id; }
 		else { echo "ERROR - multiple clients match"; exit; }
 	}
+	
+	$clients = clientSearch(array('id' => $client_id));
+	$client = $clients[0];
 
 	$order_id = addNewOrder(array(
-			'client_id'		=> $client_id,
-			'OrderDate'		=> date('Y-m-d'),
-			'ReportFormat'		=> $_REQUEST['format'],
-			'VetReportFormat'	=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['format'] : NULL,
-			'AgreeResearch'		=> ($_REQUEST['research'] == 'on') ? 1 : 0,
-			'ShippingName'      => $_REQUEST['owner-name'],
-			'ShippingAddress'   => $_REQUEST['owner-address'],
-			'ShippingTown'      => $_REQUEST['owner-town'],
-			'ShippingCounty'    => $_REQUEST['owner-county'],
-			'ShippingPostcode'  => $_REQUEST['owner-postcode'],
-			'ShippingCountry'   => $_REQUEST['owner-country'],
-			'Paid'				=> ($_REQUEST['payment-made'] == 'on') ? 1 : 0,
+		'client_id'		=> $client_id,
+		'OrderDate'		=> date('Y-m-d'),
+		'ReportFormat'		=> $_REQUEST['format'],
+		'VetReportFormat'	=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['format'] : NULL,
+		'AgreeResearch'		=> ($_REQUEST['research'] == 'on') ? 1 : 0,
+		'ShippingName'      => $client->FullName,
+	    'ShippingAddress'   => $client->Address,
+	    'ShippingTown'      => $client->Town,
+	    'ShippingCounty'    => $client->County,
+	    'ShippingPostcode'  => $client->Postcode,
+	    'ShippingCountry'   => $client->Country,
+		'Paid'				=> ($_REQUEST['payment-made'] == 'on') ? 1 : 0,
 	));
 	
 	for ($i=1; $i<=$_REQUEST['noDogs']; $i++){
@@ -53,7 +56,7 @@ if (isset($_POST['new-order-submitted'])) {
 		), $client_id);
 		if (count($animals) == 0){
 			
-			$sql = "select ID, breed from breed_list WHERE is_primary=1 and ID=".$_REQUEST['breed_'.$i];
+			$sql = "select breed from breed_list WHERE is_primary=1 and ID=".$_REQUEST['breed_'.$i];
 			$Breed = $wpdb->get_var($sql);			
 			
 			$animal_id = addNewAnimal(array(
