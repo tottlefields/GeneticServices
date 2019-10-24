@@ -4,7 +4,7 @@ Theme URI:
 Description: A demo theme built to accompany the Treehouse blog post <a href="http://teamtreehouse.com/wordpress-bootstrap-theme-tutorial">How to Build a WordPress Theme with Bootstrap</a>.
 Author: PawPrints Design
 Author URI: https://www.pawprintsdesign.co.uk
-Version: 1.1
+Version: 1.2.2
 Tags: responsive, bootstrap
 
 License: GNU General Public License v2 or later
@@ -19,8 +19,6 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 @import url('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css');
 @import url('//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote.css');
 
-.datepicker { z-index: 1200 !important; }
-.btn-block { margin-bottom:5px; }
 
 /* Main Colors
 =================================================================== */
@@ -127,7 +125,9 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 .slider.purple .ui-slider-range, 
 .progress.purple .ui-progressbar-value,
 .sliderVertical.purple .ui-slider-range,
-.progressSlim.purple .ui-progressbar-value {
+.progressSlim.purple .ui-progressbar-value,
+.label-info,
+.badge-info {
 	background: #8674A6 !important;
 	border-color: #8674A6 !important;
 	color: #fff;
@@ -139,9 +139,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 .slider.blue .ui-slider-range, 
 .progress.blue .ui-progressbar-value,
 .sliderVertical.blue .ui-slider-range,
-.progressSlim.blue .ui-progressbar-value,
-.label-info,
-.badge-info {
+.progressSlim.blue .ui-progressbar-value {
 	background: #578EBE !important;
 	border-color: #578EBE !important;
 	color: #fff;
@@ -297,13 +295,13 @@ h6 {
 }
 
 .box-heading { border-radius: 0px; }
-.panel-primary>.panel-heading { background-color: #578EBE; }
+.panel-primary>.panel-heading { background-color: #7f5ca3; }
 
 /* Header Section
 =================================================================== */
 .navbar {
 	margin-bottom: 0px;
-	background: #ff850d;
+	background: #2c9bac;
 	color: white;
 }
 
@@ -312,7 +310,7 @@ h6 {
   	min-height: 40px;
   	padding-right: 20px;
   	padding-left: 20px;
-	background: #ff850d;
+	background: #2c9bac;
 	filter: none;
 	text-shadow: 1px 1px 1px #0a0c0e;
 	border: none;
@@ -399,7 +397,7 @@ a.brand span {
 }
 
 navbar > li > a:focus, .navbar > li > a:hover {
-	background-color: #ffce9e;
+	background-color: #00457c;
 	color: white;
 }
 .navbar > li > a { color: white; padding: 15px; }
@@ -501,21 +499,21 @@ h1{margin-bottom: 20px; padding-bottom: 9px; border-bottom: 1px solid #eee;}
 .nav-tabs.nav-stacked > li > a:hover,
 .nav-tabs.nav-stacked > li > ul > li > a:hover {
   	color: #fff;
-	background-color: #ff850d;
+	background-color: #2c9bac;
 }
 
 .nav-tabs.nav-stacked  > li.active > a,
 .nav-tabs.nav-stacked  > li > ul > li.active > a {
-  	background: #578EBE;
-	border-bottom: 1px solid #578EBE;
+  	background: #7f5ca3;
+	border-bottom: 1px solid #7f5ca3;
 }
 
 .nav-tabs.nav-stacked  > li.active > a:hover,
 .nav-tabs.nav-stacked  > li > ul > li.active > a:hover {
-  	background: #578EBE;
+  	background: #7f5ca3;
 	color: #fff;
 	border: none;
-	border-bottom: 1px solid #578EBE;
+	border-bottom: 1px solid #7f5ca3;
 }
 .header-nav .nav li:hover{
 background: #3A3A3A;
@@ -632,14 +630,14 @@ border-bottom: 1px solid transparent;
 .dropdown-submenu:hover > a {
   	color: #ffffff;
   	text-decoration: none;
-  	background: #578EBE;
+  	background: #7f5ca3;
 }
 
 .dropdown .active > a,
 .dropdown .active > a:hover {
   	color: #ffffff;
   	text-decoration: none;
-  	background: #578EBE;
+  	background: #7f5ca3;
 }
 
 .dropdown .disabled > a,
@@ -868,7 +866,7 @@ ul.messages li .message {
 }
 
 .box {
-	border: 2px solid #578EBE;
+	border: 2px solid #7f5ca3;
 	background: #fff !important;
 	margin-bottom: 28px;	
 }
@@ -878,7 +876,7 @@ ul.messages li .message {
 	font-size: 16px;
 	line-height: 16px;
   	padding: 10px;
-  	background: #578EBE;
+  	background: #7f5ca3;
 	-webkit-box-shadow: none;
      	-moz-box-shadow: none;
           box-shadow: none;
@@ -1164,16 +1162,18 @@ ul.messages li .message {
 /* Buttons
 =================================================================== */
 
-.btn-primary {
-  background-color: #578EBE;
-  border-color: #578EBE;
+.btn-primary,
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover,
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover  {
+  background-color: #7f5ca3;
+  border-color: #7f5ca3;
 }
 
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
-  background-color: #357ebd;
-  border-color: #3071a9;
+  background-color: #a652df;
+  border-color: #a652df;
 }
 
 .btn-primary.disabled:hover,
@@ -1185,8 +1185,8 @@ fieldset[disabled] .btn-primary:focus,
 .btn-primary.disabled:active,
 .btn-primary[disabled]:active,
 fieldset[disabled] .btn-primary:active {
-  background-color: #578EBE;
-  border-color: #578EBE;
+  background-color: #7f5ca3;
+  border-color: #7f5ca3;
 }
 
 .btn-warning {
@@ -1308,7 +1308,7 @@ fieldset[disabled] .btn-link {
 
 .btn-link {
   font-weight: normal;
-  color: #578EBE;
+  color: #7f5ca3;
   cursor: pointer;
   border-radius: 0;
 }
@@ -1471,13 +1471,13 @@ footer {
     /*border-color: #5bc0de !important;
     background: #5bc0de !important;*/
     color: #fff !important;
-    border-color: #578EBE !important;
-    background: #578EBE !important;
+    border-color: #7f5ca3 !important;
+    background: #7f5ca3 !important;
 }
 
 .sw-theme-arrows > ul.step-anchor > li.active > span:after {
     /*border-left: 30px solid #5bc0de !important;*/
-    border-left: 30px solid #578EBE !important;
+    border-left: 30px solid #7f5ca3 !important;
     
 }
 
@@ -1485,13 +1485,13 @@ footer {
     /*border-color: #5cb85c !important;
     background: #5cb85c !important;*/
     color: #fff !important;
-    border-color: #43B5AD !important;
-    background: #43B5AD !important;
+    border-color: #9d9d9c !important;
+    background: #9d9d9c !important;
 }
 
 .sw-theme-arrows > ul.step-anchor > li.done > span:after {
     /*border-left: 30px solid #5cb85c;*/
-    border-left: 30px solid #43B5AD;
+    border-left: 30px solid #9d9d9c;
 }
 
 .sw-theme-arrows > ul.step-anchor > li.danger > span {
@@ -1602,7 +1602,7 @@ Courtesy: http://bootsnipp.com/snippets/featured/loading-button-effect-no-js
 }
 .sub-menu>li.active>a, .sub-menu>li.active>a:focus, .sub-menu>li.active>a:hover {
 	color: #fff;
-	background-color: #337ab7;
+	background-color: #7f5ca3;
 }
 .error, .required { border-color: #a94442; }
 .valid { border-color: #3c763d; }
