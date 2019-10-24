@@ -47,12 +47,13 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 		$samples = explode("\n", str_replace("\r", "", $_REQUEST['samples']));
 		$error = '';
 		$samples_updated = 0;
-		$date = new DateTime();
+		$date = new DateTime(new DateTimeZone("Europe/London"));
+		$returned_date = $date->format('Y-m-d H:i:s');
 		$date->add(new DateInterval('P14D'));
 	
 		$update_args = array(
 			'received_by' => $current_user->user_login,
-			'returned_date' => date('Y-m-d H:i:s'),
+		    'returned_date' => $returned_date,
 			'due_date' => $date->format('Y-m-d')
 		);
 		
@@ -117,7 +118,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 					<section class="row text-center placeholders">
 						<?php $count = countOrders($order_steps[0]); ?>
 						<div class="col-md-3 col-sm-6 placeholder">
-							<div class="statbox purple">
+							<div class="statbox blue">
 								<div class="number"><i class="fa fa-shopping-basket"></i>&nbsp;<?php echo $count; ?></div>
 								<div class="title">Pending Orders</div>
 								<?php if ($count>0){ ?><div class="footer"><a href="<?php echo get_site_url(); ?>/orders/"> View list</a></div><?php } ?>
