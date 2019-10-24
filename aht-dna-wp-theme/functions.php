@@ -100,8 +100,8 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'datepicker-js' );
 	
 	// PDF Make
-	wp_register_script ( 'pdfmake-js', get_template_directory_uri () . '/assets/js/pdfmake.min.js', false, '0.1.31', true );
-	wp_register_script ( 'pdfmake-fonts-js', get_template_directory_uri () . '/assets/js/vfs_fonts.js', array ('pdfmake-js' ), '0.1.31', true );
+	wp_register_script ( 'pdfmake-js', get_template_directory_uri () . '/assets/js/pdfmake.min.js', false, '0.1.60', true );
+	wp_register_script ( 'pdfmake-fonts-js', get_template_directory_uri () . '/assets/js/vfs_fonts.js', array ('pdfmake-js' ), '0.1.60', true );
 	wp_enqueue_script ( 'pdfmake-js' );
 	wp_enqueue_script ( 'pdfmake-fonts-js' );
 	
@@ -136,7 +136,7 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'summernote-js' );
 	
 	// Main functions js file
-	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.4', true );
+	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.5', true );
 	wp_enqueue_script ( 'js-functions' );
 	// Main utils js file
 	wp_register_script ( 'js-utils', get_template_directory_uri () . '/assets/js/utils.js', array (), '0.1.2', false );

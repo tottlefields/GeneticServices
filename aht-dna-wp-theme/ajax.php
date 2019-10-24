@@ -18,6 +18,9 @@ add_action( 'wp_ajax_nopriv_send_sample', 'do_send_sample' );
 add_action( 'wp_ajax_return_sample', 'do_return_sample' );
 add_action( 'wp_ajax_nopriv_return_sample', 'do_return_sample' );
 
+add_action( 'wp_ajax_order_paid', 'do_order_paid' );
+add_action( 'wp_ajax_nopriv_order_paid', 'do_order_paid' );
+
 add_action( 'wp_ajax_breed_tests', 'get_breed_tests' );
 add_action( 'wp_ajax_nopriv_breed_tests', 'get_breed_tests' );
 
@@ -100,13 +103,14 @@ function do_return_sample(){
 	global $wpdb, $current_user; // this is how you get access to the database
 	
 	$swabId = intval( $_POST['swabId'] );
-	$date = new DateTime();
+	$date = new DateTime(new DateTimeZone("Europe/London"));
+	$returned_date = $date->format('Y-m-d H:i:s');
 	$date->add(new DateInterval('P14D'));
 	
 	$update_args = array(
-			'received_by' => $current_user->user_login,
-			'returned_date' => date('Y-m-d'),
-			'due_date' => $date->format('Y-m-d')
+	    'received_by' => $current_user->user_login,
+	    'returned_date' => $returned_date,
+		'due_date' => $date->format('Y-m-d')
 	);
 	
 	$wpdb->update('order_tests', $update_args, array('id' => $swabId));
@@ -115,6 +119,17 @@ function do_return_sample(){
 	echo json_encode(array('results' => 'Successfully logged return of sample with id of '.$swabId));
 	
 	wp_die();
+}
+
+function do_order_paid(){
+    global $wpdb, $current_user; // this is how you get access to the database
+    
+    $orderId = intval( $_POST['orderId'] );    
+    $wpdb->update('orders', array('Paid' => 1), array('id' => $orderId));
+    
+    echo json_encode(array('results' => 'Successfully marked order #'.$orderId.' as paid.'));
+    
+    wp_die();
 }
 
 function get_plate_details(){

@@ -110,7 +110,7 @@ if ($order_details->paid == 0){
 	<section class="row">
 		<div class="col-sm-12"><div class="alert alert-danger">
 		Payment is still outstanding for this order. 
-		<span class="pull-right"><a class="btn btn-sm btn-default" style="margin-top:-5px;" href="" disabled="disabled">Mark as Paid</a></span>
+		<span class="pull-right"><a class="btn btn-sm btn-default" style="margin-top:-5px;" href="javascript:markOrderPaid(\''.$order_id.'\')">Mark as Paid</a></span>
 		</div></div>
 	</section>';	
 }
