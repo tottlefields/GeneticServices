@@ -604,7 +604,8 @@ function instructionsSection() {
 					widths : [ 'auto', '*', 'auto', '*' ],
 					body : [ [ {
 						text : 'Registered Name',
-						style : 'strong'
+						style : 'strong',
+						noWrap : true
 					}, {
 						text : '',
 						style : 'pre',
