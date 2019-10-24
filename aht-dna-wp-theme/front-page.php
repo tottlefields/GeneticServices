@@ -47,13 +47,14 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 		$samples = explode("\n", str_replace("\r", "", $_REQUEST['samples']));
 		$error = '';
 		$samples_updated = 0;
-		$date = new DateTime(new DateTimeZone("Europe/London"));
+		$date = new DateTime("now", new DateTimeZone("Europe/London"));
 		$returned_date = $date->format('Y-m-d H:i:s');
 		$date->add(new DateInterval('P14D'));
 	
 		$update_args = array(
 			'received_by' => $current_user->user_login,
-		    'returned_date' => $returned_date,
+			//'returned_date' => date('Y-m-d H:i:s'),
+			'returned_date' => $returned_date,
 			'due_date' => $date->format('Y-m-d')
 		);
 		
