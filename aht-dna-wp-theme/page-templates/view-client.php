@@ -73,12 +73,36 @@ $note_details = array();
 			<?php
 			$test_count = 0;
 			foreach ( $test_details as $test){
+			    
 				$class_disabled = '';
 				
 				$test->order_status = $order_steps[0];
 				if($test->kit_sent != ''){$test->order_status = $order_steps[1];}
 				if($test->returned_date != ''){$test->order_status = $order_steps[2];}				
 				if($test->cancelled_date != ''){ $test->order_status = 'Cancelled'; }
+				
+				$extraction = -1;
+				$analysis_done = -1;
+				$results_sent = -1;
+				
+				foreach ($test->swabs as $swab){
+				    if($swab->extraction_date != ''){ $extraction = 1; }
+				    else{ $extraction = 0; break; }
+				}
+				
+				foreach ($test->analysis as $analysis){
+				    if($analysis->result_entered_date != ''){ $analysis_done = 1; }
+				    else{ $analysis_done = 0; break; }
+				}
+				
+				foreach ($test->results as $result){
+				    if($result->result_reported_date != '' && $result->cert_code != ''){ $results_sent = 1; }
+				    else{ $results_sent = 0; break; }
+				}
+				
+				if ($extraction == 1) { $test->order_status = $order_steps[3];}
+				if ($analysis_done == 1) { $test->order_status = $order_steps[4];}
+				if ($results_sent == 1) { $test->order_status = $order_steps[5];}
 				
 				$animal_name = ($test->RegisteredName && $test->RegisteredName != '') ? $test->RegisteredName : '<em>'.$test->PetName.'</em>';	
 				$animal = '<a href="'.get_site_url().'/animals/view?id='.$test->animal_id.'"><i class="fa fa-paw" aria-hidden="true"></i>'.$animal_name.'</a>';
@@ -90,15 +114,29 @@ $note_details = array();
 					$class_disabled = ' disabled'; 
 				}
 				
-				$next_action = '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fa fa-repeat link"></i>&nbsp;Request Repeat</a></li>';
+				$actions = array(				    
+				    'print_order'   => '<li><a href="javascript:generatePDFs(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>',
+				    'cancel_test'   => '<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>',
+				    'repeat'        => '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fa fa-repeat link"></i>&nbsp;Request Repeat</a></li>',
+				    'dispatch'      => '<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="fa fa-paper-plane-o link"></i>&nbsp;Dispatch Sample</a></li>',
+				    'receive'       => '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>',
+				    'view_certs'    => '<li><a href="javascript:viewCert(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Certificate(s)</a></li>'
+				);
+				$action_menu = '';
+				
 				switch ($test->order_status) {
 					case 'Order Placed':
-						$next_action = '<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="fa fa-paper-plane-o link"></i>&nbsp;Dispatch Sample</a></li>';
+					    $action_menu = implode("\n", array($actions['print_order'], $actions['cancel_test'], $actions['dispatch']));
 						break;
 					case 'Kit(s) Dispatched':
-						$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
-						break;
+					    //$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
+					    $action_menu = implode("\n", array($actions['cancel_test'], $actions['receive']));
+					    break;
+					case 'Result(s) Sent':
+					    $action_menu = implode("\n", array($actions['view_certs']));
+					    break;
 				}
+				
 				$notes = '';
 				if ($test->note_count > 0){
 					foreach ($test->notes as $note){
@@ -110,23 +148,35 @@ $note_details = array();
 					$notes = '<span class="badge notes_badge" id="notes_'.$test->id.'" style="cursor:pointer" data-toggle="modal" data-target="#notesModal">'.$test->note_count.'</span>';
 				}
 				
-				$result = '';
-				if ($test->test_result){
-					switch ($test->test_result) {
-						case 'Failed':
-							$label_class = 'default';
-							break;
-						case 'AFFECTED':
-							$label_class = 'danger';
-							break;
-						case 'CARRIER':
-							$label_class = 'warning';
-							break;
-						case 'CLEAR':
-							$label_class = 'success';
-							break;
-					}
-					$result = '<span class="label label-'.$label_class.'">'.$test->test_result.'</span>';
+				$resultHTML = '';
+				if ($test->swab_failed >= 1){
+				    $resultHTML = '<span class="label label-default">Failed</span>';
+				}
+				elseif (count($test->results)>0){
+				    foreach ($test->results as $result){
+				        if ($resultHTML != ''){ $resultHTML .= '<hr style="height: 1px; margin: 0px; width: 1px;">'; }
+				        switch ($result->test_result) {
+				            case 'AFFECTED':
+				                $label_class = 'danger';
+				                break;
+				            case 'CARRIER':
+				                $label_class = 'warning';
+				                break;
+				            case 'NORMAL':
+				                $label_class = 'success';
+				                break;
+				            case 'PROFILE':
+				                $test->test_result = 'VIEW';
+				                $label_class = 'default';
+				                break;
+				        }
+				        if (count($test->results) == 1){
+				            $resultHTML = '<button class="btn btn-xs btn-'.$label_class.'" style="border-radius:0px;" type="button">'.$result->test_result.'</button>';
+				        }
+				        else {
+				            $resultHTML .=  '<button class="btn btn-xs btn-'.$label_class.'" style="border-radius:0px;" type="button"><span class="badge">'.$result->test_code.'</span>&nbsp;'.$result->test_result.'</button>';
+				        }
+				    }
 				}
 				
 				echo '
@@ -139,15 +189,12 @@ $note_details = array();
 					<td>'.$animal.'</td>
 					<td class="text-center">'.$status_label.'</td>
 					<td class="text-center">'.$notes.'</td>
-					<td class="text-center">'.$result.'</td>
+					<td class="text-center">'.$resultHTML.'</td>
 					<td class="text-center">
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle'.$class_disabled.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a href="javascript:generatePDFs(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
-								<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
-								'.$next_action.'
-								<!--<li><a href="#">Something else here</a></li>-->
+								'.$action_menu.'
 								<li role="separator" class="divider"></li>
 								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="fa fa-file-text-o link"></i>&nbsp;Add Note</a></li>
 							</ul>
@@ -209,13 +256,16 @@ jQuery(document).ready(function($) {
 	
 	var table = $('#orderDetails').DataTable({
 		order : [ [ 0, 'desc' ] ],
-		ordering: false,
-		pageLength: 20,
+		pageLength: 15,
 		paging : true,
 		lengthChange: false,
 		columnDefs : [ {
 			targets : [ 0 ],
-			visible : false
+			visible : false,
+			orderable: true
+		},{
+			targets : [ 1,2,3,4,5,6,7,8,9 ],
+			orderable : false	
 		} ]
 	});
 })

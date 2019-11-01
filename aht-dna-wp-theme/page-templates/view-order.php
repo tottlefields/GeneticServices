@@ -66,7 +66,7 @@ foreach ($test_details as $test){
 		}
 		
 		if ($test->results[0]->result_entered_date == ''){
-			array_push($analysis_date, $test->result_entered_date);		
+		    array_push($analysis_date, $test->results[0]->result_entered_date);		
 		}
 		else {
 		    foreach ($test->results as $result){
@@ -79,7 +79,7 @@ foreach ($test_details as $test){
 
 		
 		if ($test->results[0]->result_authorised_date == ''){
-			array_push($qc_date, $test->result_authorised_date);		
+		    array_push($qc_date, $test->results[0]->result_authorised_date);		
 		}
 		else {
 		    foreach ($test->results as $result){
