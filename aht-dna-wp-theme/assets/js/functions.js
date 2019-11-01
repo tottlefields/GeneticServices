@@ -616,7 +616,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			var results_by = '&nbsp;';
 			
 			if (TestDetails.results.length > 0 && TestDetails.results[0].cert_code != ''){
-				console.log(TestDetails.results[0]);
+				//console.log(TestDetails.results[0]);
 				results = '';
 				results_date = '';
 				results_by = '';
