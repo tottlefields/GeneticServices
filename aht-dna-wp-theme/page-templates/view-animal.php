@@ -11,7 +11,7 @@ $animals = animalSearch(array('id' => $animal_id));
 $animal_details = $animals[0];
 $name = $animal_details->PetName;
 if (isset($animal_details->RegisteredName)){
-    $name = $animal_details->RegisteredName;
+    $name = stripslashes($animal_details->RegisteredName);
     if (isset($animal_details->PetName) && $animal_details->PetName != '') { $name .= ' <em>('.$animal_details->PetName.')</em>'; }
 }
 $animal_details->animal_id = $animal_details->id;
@@ -41,7 +41,7 @@ $test_details = getTestsByAnimal($animal_id);
 					<?php
 					echo '
 					<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/animals/view?id='.$animal_details->id.'">
-						<strong>'.$animal_details->RegisteredName.'</strong></a>
+						<strong>'.stripslashes($animal_details->RegisteredName).'</strong></a>
 					</div></div>
 					<div class="row"><div class="col-sm-4">Pet Name</div><div class="col-sm-8">'.$animal_details->PetName.'</div></div>
 					<div class="row"><div class="col-sm-4">Reg No.</div><div class="col-sm-8">'.$animal_details->RegistrationNo.'</div></div>

@@ -104,7 +104,7 @@ $note_details = array();
 				if ($analysis_done == 1) { $test->order_status = $order_steps[4];}
 				if ($results_sent == 1) { $test->order_status = $order_steps[5];}
 				
-				$animal_name = ($test->RegisteredName && $test->RegisteredName != '') ? $test->RegisteredName : '<em>'.$test->PetName.'</em>';	
+				$animal_name = ($test->RegisteredName && $test->RegisteredName != '') ? stripslashes($test->RegisteredName) : '<em>'.$test->PetName.'</em>';	
 				$animal = '<a href="'.get_site_url().'/animals/view?id='.$test->animal_id.'"><i class="fa fa-paw" aria-hidden="true"></i>'.$animal_name.'</a>';
 								
 				$status_label = '<span class="label label-info">'.str_replace('(s)', '', $test->order_status).'</span>';

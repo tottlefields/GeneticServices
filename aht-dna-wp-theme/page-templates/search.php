@@ -239,7 +239,7 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 								echo '
 								<tr>
 									<td>'.$row->ID.'</td>
-									<td>'.$row->RegisteredName.'</td>
+									<td>'.stripslashes($row->RegisteredName).'</td>
 									<td>'.$row->PetName.'</td>
 									<td>'.$row->RegistrationNo.'</td>
 									<td>'.$row->Breed.'</td>

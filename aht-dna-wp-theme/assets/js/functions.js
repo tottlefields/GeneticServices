@@ -127,7 +127,7 @@ function generateParentagePDF(order_ids, swabID, pending) {
 
 					var rowData = [];
 					rowData.push({text: "AHT" + test.order_id + '/' + test.id, margin: [0,2,0,0], alignment: 'center' });
-					rowData.push({text: test.RegisteredName.toUpperCase(), margin: [0,2,0,0], noWrap : true });
+					rowData.push({text: test.RegisteredName.replace(/\\/g, "").toUpperCase(), margin: [0,2,0,0], noWrap : true });
 					rowData.push({text: test.RegistrationNo, margin: [0,2,0,0], alignment: 'center' });
 					rowData.push({text: test.TattooOrChip, margin: [0,2,0,0], alignment: 'center' });
 					rowData.push({
@@ -285,7 +285,7 @@ function viewCert(orderId, swabID) {
 							stack: [ { 
 								text: [
 									{ text: 'Registered Name: ' },
-									{ text: TestDetails.RegisteredName, style: 'h1', margin: [ 0, 0, 0, 0 ] }
+									{ text: TestDetails.RegisteredName.replace(/\\/g, ""), style: 'h1', margin: [ 0, 0, 0, 0 ] }
 								],
 								margin: [ 0,0,0,20]
 							}, { 
@@ -495,7 +495,7 @@ function getOrders(orderId, div) {
 				test = OrderDetails.test_details[i];
 				if (test.date_cancelled === ""){
 					if (test.RegisteredName !== "") {
-						order_panel += '<strong><a href="'+DennisAjax.site_url+'/animals/view?id=' + test.animal_id + '">' + test.RegisteredName + '</a></strong> - ' + test.test_name
+						order_panel += '<strong><a href="'+DennisAjax.site_url+'/animals/view?id=' + test.animal_id + '">' + test.RegisteredName.replace(/\\/g, "") + '</a></strong> - ' + test.test_name
 								+ '<br />';
 					} else {
 						order_panel += '<em><a href="'+DennisAjax.site_url+'/animals/view?id=' + test.animal_id + '">' + test.PetName + '</a></em> - ' + test.test_name + '<br />';
@@ -551,7 +551,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 
 			/* ANIMAL DETAILS */
 			animal_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="'+DennisAjax.site_url+'/animals/view?id=' + TestDetails.animal_id
-					+ '"><strong>' + TestDetails.RegisteredName + '</strong></a></div></div>';
+					+ '"><strong>' + TestDetails.RegisteredName.replace(/\\/g, "") + '</strong></a></div></div>';
 			animal_panel += '<div class="row"><div class="col-sm-4">Pet Name</div><div class="col-sm-8">' + TestDetails.PetName + '</div></div>';
 			animal_panel += '<div class="row"><div class="col-sm-4">Reg No.</div><div class="col-sm-8">' + TestDetails.RegistrationNo + '</div></div>';
 			animal_panel += '<div class="row"><div class="col-sm-4">Breed</div><div class="col-sm-8">' + TestDetails.breed + '</div></div>';
@@ -703,7 +703,7 @@ function populateClientModal(ClientDetails){
 
 function populateAnimalModal(AnimalDetails){
 	$('#animal_id').attr('value', AnimalDetails.animal_id);
-	$('#animal_RegisteredName').attr('value', AnimalDetails.RegisteredName);
+	$('#animal_RegisteredName').attr('value', AnimalDetails.RegisteredName.replace(/\\/g, ""));
 	$('#animal_RegistrationNo').attr('value', AnimalDetails.RegistrationNo);
 	$('#animal_PetName').attr('value', AnimalDetails.PetName);
 	$('#animal_TattooOrChip').attr('value', AnimalDetails.TattooOrChip);
@@ -787,7 +787,7 @@ function instructionsSection() {
 			{
 				text : 'Important:',
 				style : 'strong',
-				margin : [ 0, 20, 0, 5 ]
+				margin : [ 0, 10, 0, 5 ]
 			},
 			{
 				ul : [ 'To avoid sample rejection, please take the swabs as detailed on the enclosed instruction sheet.',
@@ -844,7 +844,7 @@ function instructionsSection() {
 				margin : [ 0, 5, 0, 5 ]
 			}, {
 				text : 'The AHT does not require Vet Verification to undertake DNA tests. However, verification may be needed by your breed club, please ensure you check with them directly. If Vet Verification is required, please see overleaf.',
-				margin : [ 0, 20, 0, 5 ]
+				margin : [ 0, 10, 0, 5 ]
 			} ];
 }
 
@@ -1080,7 +1080,7 @@ function testDetails(test, swab_no) {
 				style : 'strong',
 				noWrap : true
 			}, {
-				text : test.RegisteredName.toUpperCase() + ' (' + test.PetName + ')',
+				text : test.RegisteredName.replace(/\\/g, "").toUpperCase() + ' (' + test.PetName + ')',
 				style : 'pre',
 				colSpan : 3
 			}, '', '' ], [ {
@@ -1129,7 +1129,7 @@ function generateBarcode(value) {
 }
 
 function labelsSection(client, test) {
-	dogName = test.RegisteredName.toUpperCase();
+	dogName = test.RegisteredName.replace(/\\/g, "").toUpperCase();
 	if (dogName === '') {
 		dogName = test.PetName;
 	} else {

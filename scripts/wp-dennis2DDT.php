@@ -57,7 +57,7 @@ if(count($results > 0)){
 		array_push($ddt_row, 'Canine');
 		array_push($ddt_row, $row->Breed);
 		array_push($ddt_row, '');
-		array_push($ddt_row, $row->RegisteredName);
+		array_push($ddt_row, stripslashes($row->RegisteredName));
 		array_push($ddt_row, $row->RegistrationNo);
 		array_push($ddt_row, $sex_lookup[strtolower($row->Sex)]);
 		array_push($ddt_row, $row->BirthDate);
@@ -101,7 +101,7 @@ if(count($results > 0)){
 		array_push($ddt_row, ($row->ShippingCounty == "") ? $row->clientCounty : $row->ShippingCounty);
 		array_push($ddt_row, ($row->ShippingPostcode == "") ? $row->clientPostcode : $row->ShippingPostcode);
 		array_push($ddt_row, ($row->ShippingCountry == "") ? $row->clientCountry : $row->ShippingCountry);
-		array_push($ddt_row, ($row->VetID =="") ? "" : "TRUE");
+		array_push($ddt_row, ($row->VetID >0) ? "TRUE" : "");
 		
 		echo implode("\t", $ddt_row)."\n";
 	}
