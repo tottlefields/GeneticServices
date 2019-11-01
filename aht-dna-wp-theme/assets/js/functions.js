@@ -54,6 +54,141 @@ function showVetModal() {
 	});
 }
 
+function generatePickingList(swab_ids) {
+	
+	console.log(swab_ids);
+
+	var data = {
+		'action'  : 'pick_swabs',
+		'swabIds'  : swab_ids.join(),
+	};
+
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(results) {
+			console.log(results);
+			ddLandscape.content = [];
+			ddLandscape.content.push(
+					{text : swab_ids.join() }
+			);
+			
+			
+			
+			//pdfMake.createPdf(ddLandscape).open();
+		}
+	});
+	
+}
+
+function generateParentagePDF(order_ids, swabID, pending) {
+
+	var data = {
+		'action'  : 'order_details',
+		'orderId' : order_ids,
+		'swabId'  : swabID,
+		'pending' : pending
+	};
+
+	jQuery.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(results) {
+
+			var tblHeader = [
+				{ text: 'Ref No.', style: 'tableHeader', alignment: 'center', margin: [0,5,0,0]},
+				{ text: 'Registered Name/Identification', style: 'tableHeader', noWrap: true, margin: [0,5,0,0]},
+				{ text: 'KC Number', style: 'tableHeader', alignment: 'center', margin: [0,5,0,0]},
+				{ text: 'Microchip', style: 'tableHeader', alignment: 'center', margin: [0,5,0,0]},
+				{ text: [ { text: 'Relationship', style: 'tableHeader' }, { text: '\n(please circle)', style: ['tableHeader', 'small'] } ], alignment: 'center' },
+//				{ text: [ { text: 'Profile', style: 'tableHeader' }, { text: '\n(please attach)', style: ['tableHeader', 'small'] } ], alignment: 'center' },
+			];
+			
+			ddLetter.pageOrientation = 'Landscape';
+			ddLetter.content = [];
+
+			for (var x=0; x<results.length; x++){
+				details = results[x];
+				OrderDetails = details.order;
+				ClientDetails = details.client;
+			
+				ddLetter.content.push(letterHeader('ANIMAL HEALTH TRUST GENETIC SERVICES - Parentage Testing Form', 'Registered Charity No. 209642'));
+				
+				var rows = [
+					tblHeader,
+				]
+				
+				for (i = 0; i < OrderDetails.test_details.length; i++) {
+					var test = OrderDetails.test_details[i];
+
+					var rowData = [];
+					rowData.push({text: "AHT" + test.order_id + '/' + test.id, margin: [0,2,0,0], alignment: 'center' });
+					rowData.push({text: test.RegisteredName.toUpperCase(), margin: [0,2,0,0], noWrap : true });
+					rowData.push({text: test.RegistrationNo, margin: [0,2,0,0], alignment: 'center' });
+					rowData.push({text: test.TattooOrChip, margin: [0,2,0,0], alignment: 'center' });
+					rowData.push({
+						table: {
+							widths : [ '*', '*', '*' ],
+							body: [
+								['Sire', 'Dam', 'Puppy'],
+							],
+						},
+						alignment: 'center',
+						layout: 'noBorders'
+					});
+					//rowData.push("");
+										
+					rows.push(rowData);
+				}
+				
+				for (i = rows.length; i <= 16; i++){
+					var rowData = [];
+					rowData.push("");
+					rowData.push("");
+					rowData.push("");
+					rowData.push("");
+					rowData.push({
+						table: {
+							widths : [ '*', '*', '*' ],
+							body: [
+								['Sire', 'Dam', 'Puppy'],
+							],
+						},
+						alignment: 'center',
+						layout: 'noBorders'
+					});
+					//rowData.push("");				
+					rows.push(rowData);
+				}
+			
+				ddLetter.content.push({
+					table: {
+						headerRows: 1,
+						//heights: 20,
+						//widths: [ 'auto', '*', 100, 120, 'auto', 80 ],
+						widths: [ 'auto', '*', 120, 150, 'auto' ],
+						body: rows
+					},
+					margin: [ 0,20,0,0 ],
+					style: 'pre',
+					fontSize: 10,
+				});
+
+			}
+			
+			ddLetter.content.push({text : '', style : 'small', pageBreak : 'after', pageOrientation: 'portrait' });
+			ddLetter.content.push(parentageInstructions());
+			
+			pdfMake.createPdf(ddLetter).open();
+		}
+	});
+	
+}
+
 function generatePDFs(order_ids, swabID, pending) {
 
 	var data = {
@@ -431,20 +566,86 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			/* TEST/ORDER DETAILS */
 			//console.log(TestDetails);
 			var extraction = '&nbsp;';
-			if (TestDetails.extraction_plate != ''){
-				extraction = '<a href="'+DennisAjax.site_url+'/plate/' + TestDetails.extraction_plate + '">' + TestDetails.extraction_plate + '</a>';
-				if (TestDetails.extraction_well != ''){ extraction += '&nbsp;(' +TestDetails.extraction_well+ ')'; }
+			var extraction_date = '&nbsp;';
+			var extracted_by = '&nbsp;';
+			
+			if (TestDetails.swabs.length > 0 && TestDetails.swabs[0].extraction_plate != ''){
+				//console.log(TestDetails.swabs[0]);
+				extraction = '';
+				extraction_date = '';
+				extracted_by = '';
+				
+				for (var i = 0; i < TestDetails.swabs.length; ++i) {
+					if (TestDetails.swabs[i].extraction_plate != ''){
+						if (i > 0){ extraction += '<br />'; extraction_date += '<br />'; extracted_by += '<br />';}
+						
+						extraction_date += TestDetails.swabs[i].extraction_date;
+						extracted_by += TestDetails.swabs[i].extracted_by;
+						
+						extraction += '<a href="'+DennisAjax.site_url+'/plate/' + TestDetails.swabs[i].extraction_plate + '">' + TestDetails.swabs[i].extraction_plate + '</a>';
+						if (TestDetails.swabs[i].extraction_well != ''){ extraction += '&nbsp;(' +TestDetails.swabs[i].extraction_well+ ')'; }
+					}
+				}
 			}
+			
+			var analysis = '&nbsp;';
+			var analysed_date = '&nbsp;';
+			var analysed_by = '&nbsp;';
+			
+			if (TestDetails.analysis.length > 0 && TestDetails.analysis[0].test_plate != ''){
+				//console.log(TestDetails.analysis[0]);
+				analysis = '';
+				analysed_date = '';
+				analysed_by = '';
+				
+				for (var i = 0; i < TestDetails.analysis.length; ++i) {
+					if (TestDetails.analysis[i].test_plate != ''){
+						if (i > 0){ analysis += '<br />'; analysed_date += '<br />'; analysed_by += '<br />';}
+						
+						analysed_date += TestDetails.analysis[i].result_entered_date;
+						analysed_by += TestDetails.analysis[i].result_entered_by;
+						
+						analysis += '<a href="'+DennisAjax.site_url+'/plate/' + TestDetails.analysis[i].test_plate + '">' + TestDetails.analysis[i].test_plate + '</a>';
+						if (TestDetails.results[i].test_plate_well != ''){ analysis += '&nbsp;(' +TestDetails.analysis[i].test_plate_well+ ')'; }
+					}
+				}
+			}
+			
+			var results = '&nbsp;';
+			var results_date = '&nbsp;';
+			var results_by = '&nbsp;';
+			
+			if (TestDetails.results.length > 0 && TestDetails.results[0].cert_code != ''){
+				console.log(TestDetails.results[0]);
+				results = '';
+				results_date = '';
+				results_by = '';
+				
+				for (var i = 0; i < TestDetails.results.length; ++i) {
+					if (TestDetails.results[i].cert_code != ''){
+						if (i > 0){ results += '<br />'; results_date += '<br />'; results_by += '<br />';}
+						
+						results_date += TestDetails.results[i].result_reported_date;
+						results_by += TestDetails.results[i].result_authorised_by;
+						
+						//results += '<a href="'+DennisAjax.site_url+'/plate/' + TestDetails.analysis[i].test_plate + '">' + TestDetails.analysis[i].test_plate + '</a>';
+						//if (TestDetails.results[i].test_plate_well != ''){ results += '&nbsp;(' +TestDetails.analysis[i].test_plate_well+ ')'; }
+						results += TestDetails.results[i].cert_code;
+						if (TestDetails.results.length > 1){ results += '&nbsp;('+TestDetails.results[i].test_code+')'; }
+					}
+				}
+			}
+			
 			order_panel = '';
 			order_panel += '<div class="row"><div class="col-sm-12 small">';
 			// order_panel += '<h3>Progress</h3>';
-			order_panel += '<table class="table table-striped table-condensed"><tbody>';
-			order_panel += '<tr><th style="width:30%">Ordered</th><td style="width:25%">' + OrderDetails.OrderDate + '</td><td style="width:20%"><span style="color:#BBBBBB">N/A</span></td><td style="width:25%"></td></tr>';
+			order_panel += '<table class="table table-striped table-condensed" style="margin-bottom:0px;"><tbody>';
+			order_panel += '<tr><th style="width:25%">Ordered</th><td style="width:25%">' + OrderDetails.OrderDate + '</td><td style="width:20%"><span style="color:#BBBBBB">N/A</span></td><td style="width:30%"></td></tr>';
 			order_panel += '<tr><th>Dispatched</th><td>' + TestDetails.date_sent + '</td><td>' + TestDetails.sent_by + '</td><td></td></tr>';
 			order_panel += '<tr><th>Returned</th><td>' + TestDetails.date_returned + '</td><td>' + TestDetails.received_by + '</td><td></td></tr>';
-			order_panel += '<tr><th>Processed</th><td>' + TestDetails.extraction_date + '</td><td>' + TestDetails.extracted_by + '</td><td>' + extraction + '</td></tr>';
-			order_panel += '<tr><th>Analysed</th><td></td><td></td><td></td></tr>';
-			order_panel += '<tr><th>Resulted</th><td></td><td></td><td></td></tr>';
+			order_panel += '<tr><th>Processed</th><td>' + extraction_date + '</td><td>' + extracted_by + '</td><td>' + extraction + '</td></tr>';
+			order_panel += '<tr><th>Analysis</th><td>' + analysed_date + '</td><td>' + analysed_by + '</td><td>' + analysis + '</td></tr>';
+			order_panel += '<tr><th>Results</th><td>' + results_date + '</td><td>' + results_by + '</td><td>' + results + '</td></tr>';
 			order_panel += '</tbody></table/></div></div>';
 			orderDiv.html(order_panel);
 
@@ -1011,6 +1212,45 @@ function labelsSection(client, test) {
 	} ];
 }
 
+function parentageInstructions(){
+	return [
+		{
+			text : 'Notes for Sample Submission for Parentage Testing',
+			style : 'h1',
+			margin: [0,20,0,10]
+		},
+		{
+			ol : [ 
+				{text: 'To confirm the parentage of any given dog, we will need a sample from the offspring (puppy), and either a sample, or a previous DNA profile from the dam (mother) and every possible sire (father). A parentage test is not possible without all of these items.', margin: [0,0,0,10] },
+				{text: 'If a litter of puppies are being tested, a sample is needed from every single puppy (it is possible for puppies in one litter to have different sires).', margin: [0,0,0,10] },
+				{text: 'The results issued only apply to the animals tested. Parentage for dogs we have not tested (whether they are littermates of the puppy tested, or another possible sire to the puppy), cannot be inferred based on our results.', margin: [0,0,0,10] },
+				{text: 'The samples submitted for each animal must be mouth swabs supplied by the Animal Health Trust. Swabs from any other source, will not be accepted.', margin: [0,0,0,10] },
+				{text: 'Mouth swabs can be taken by anybody, following the instructions supplied with the kits, and Vet Vertification is not required.', margin: [0,0,0,10] },
+				{text: 'Before taking the swabs, puppies need to be weaned. Puppies can only be sampled once they are a minimum 4 weeks old.', margin: [0,0,0,10] },
+				{text: 'Each animal to be swabbed needs to be separated from both food and other animals for 2 hours prior to taking the samples (however, each animal may have its own fresh water supply during this time). This is to help prevent cross contamination between the samples.', margin: [0,0,0,10] },
+				{text: "When taking the swab samples, first rinse the animal's mouth out with water.", margin: [0,0,0,10] },
+				{text: 'All swabs need to be used - we provide 3 swabs for each animal.', margin: [0,0,0,10] },
+				{text: 'Check the order form for each sample and if any details have changed, please edit/correct details. Please check and complete the Parentage testing form (overleaf).' , margin: [0,0,0,10] },
+				{text: 'If you are providing previous DNA profiles for the possible parents, please write their Registered Name along with either KC Number and/or Microchip number in one of the blank rows on the Parentage testing form.', margin: [0,0,0,10] },
+				{text: 'Please make sure you follow the enclosed swabbing instructions correctly, making sure that the swabs are returned in the paper envelopes and NOT in the plastic bags.', margin: [0,0,0,10] },
+				{text: 'Make sure that the correct stickers are applied to the correct envelopes so that all details match up', margin: [0,0,0,10] },
+				],
+		} ];
+	
+}
+
+var ddLandscape = {
+	pageSize : 'A4',
+	pageOrientation : 'landscape',
+	pageMargins : [ 30, 30, 30, 40 ],
+	content : [],
+	defaultStyle : {
+		font : 'Tahoma',
+		fontSize : 12,
+		margin : [ 0, 5, 0, 5 ]
+	},
+};
+
 var ddLetter = {
 	pageSize : 'A4',
 	pageOrientation : 'portrait',
@@ -1030,6 +1270,12 @@ var ddLetter = {
 		h2 : {
 			margin : [ 0, 5, 0, 0 ],
 			fontSize : 10
+		},
+		tableHeader: {
+			bold: true,
+			fontSize: 13,
+			color: 'black',
+			font : 'Tahoma',
 		},
 		strong : {
 			margin : [ 0, 5, 0, 5 ],

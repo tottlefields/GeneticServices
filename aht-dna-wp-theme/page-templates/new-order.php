@@ -185,12 +185,18 @@ $client_details = $clients[0];?>
 										<input type="tel" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Tel; ?>" name="owner-phone" id="owner-phone"/>
 									</div>
 									<label class="col-sm-2 control-label">Country</label>
+									<?php if (isset($client_details->Country) && $client_details->Country != '') {?>
+									<div class="col-sm-2">
+										<input type="text" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Country; ?>" name="owner-country" id="owner-country"/>
+									</div>
+									<?php } else { ?>
 									<div class="col-sm-2">
 										<select id="owner-country" class="form-control required" name="owner-country" tabindex="2">
 											<option value="">Select Country...</option>
 											<option value="GB">United Kingdom</option>
 										</select>
 									</div>
+									<?php } ?>
 									<label class="col-sm-1 control-label">Postcode</label>
 									<div class="col-sm-2">
 										<input type="text" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Postcode; ?>" placeholder="Postcode" name="owner-postcode" id="owner-postcode" tabindex="2" />
@@ -263,7 +269,7 @@ $client_details = $clients[0];?>
 						<div class="form-group">
 							<label class="col-sm-3 control-label">Email</label>
 							<div class="col-sm-9">
-								<input type="email" class="form-control required" value="" name="vet-email" id="vet-email"/>
+								<input type="email" class="form-control" value="" name="vet-email" id="vet-email"/>
 							</div>
 						</div>
 						<div class="form-group">

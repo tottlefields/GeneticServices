@@ -24,6 +24,10 @@ add_action( 'wp_ajax_nopriv_order_paid', 'do_order_paid' );
 add_action( 'wp_ajax_breed_tests', 'get_breed_tests' );
 add_action( 'wp_ajax_nopriv_breed_tests', 'get_breed_tests' );
 
+add_action( 'wp_ajax_pick_swabs', 'pick_swabs' );
+add_action( 'wp_ajax_nopriv_pick_swabs', 'pick_swabs' );
+
+
 
 function do_cancel_test(){
 	global $wpdb, $current_user; // this is how you get access to the database
@@ -105,7 +109,7 @@ function do_return_sample(){
 	$swabId = intval( $_POST['swabId'] );
 	$date = new DateTime(new DateTimeZone("Europe/London"));
 	$returned_date = $date->format('Y-m-d H:i:s');
-	$date->add(new DateInterval('P14D'));
+	$date->add(new DateInterval('P21D'));
 	
 	$update_args = array(
 	    'received_by' => $current_user->user_login,
@@ -153,6 +157,31 @@ function get_plate_details(){
 	echo json_encode($return);
 	
 	wp_die();	
+}
+
+function pick_swabs() {
+    global $wpdb; // this is how you get access to the database
+    
+    $return = array();    
+    $swab_ids = $_POST['swabIds'];
+
+    $sql = 'select test_code, concat("AHT",order_id,"/",t.id) as barcode, due_date, datediff(due_date, date(NOW())) as days, test_type
+    from order_tests t inner join test_swabs s on t.id=s.test_id
+    left outer join test_codes using (test_code)
+    inner join animal a on a.id=animal_id
+    inner join breed_list b on b.id=breed_id
+    where t.id in ('.$swab_ids.')
+    order by test_code, due_date, t.ID';
+    $results = $wpdb->get_results($sql, ARRAY_A);
+    
+    foreach ($results as $row){
+        if(!isset($return[$row['test_code']])){ $return[$row['test_code']] = array(); }
+        array_push($return[$row['test_code']], $row);
+    }
+    
+    echo json_encode($return);
+    
+    wp_die();
 }
 
 function get_order_details() {
