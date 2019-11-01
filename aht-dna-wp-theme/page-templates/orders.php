@@ -28,7 +28,7 @@
 				<th>Client</th>
 				<th class="text-center">#Swabs</th>
 				<th class="text-center">Tests</th>
-				<th class="text-center">PDF</th>
+				<th class="text-center">PDF(s)</th>
 			</thead>
 			<tbody>
 		
@@ -53,7 +53,13 @@
 				<td>'.$client.'</td>
 				<td class="text-center">'.$order->SwabCount.'</td>
 				<td class="text-center">'.$order->content.'</td>
-				<td class="text-center"><a href="javascript:generatePDFs(\''.$order->ID.'\', null, 1)"><i class="fa fa-file-pdf-o link" id="pdf_'.$order->ID.'"></i></a></td>
+				<td class="text-center">
+                    <a href="javascript:generatePDFs(\''.$order->ID.'\', null, 1)"><i class="fa fa-file-pdf-o link" id="pdf_'.$order->ID.'"></i></a>';
+			if (strstr($order->content, ':CPA')){ 
+			    echo '&nbsp;<a href="javascript:generateParentagePDF(\''.$order->ID.'\', null, 1)"><i class="fa fa-users link" id="par_'.$order->ID.'"></i></a>'; 
+			}
+			echo '                
+			    </td>
 			</tr>';
 		}
 		?>
