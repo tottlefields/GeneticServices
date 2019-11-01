@@ -191,34 +191,59 @@ function getTestDetails($swab_id){
 	
 	$sql = 'select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, date_format(o.OrderDate, "%d/%m/%Y") as order_date,
 		a.*, t.*, date(kit_sent) as date_sent, date(returned_date) as date_returned, date(cancelled_date) as date_cancelled,
-		test_name, ddt_sheet, no_results, no_swabs, sub_tests, sum(swab_failed), extraction_plate, extraction_well, date(extraction_date) as extraction_date, extracted_by,
-		t.test_code, test_plate, test_plate_well, test_result, result_entered_by, result_entered_date, result_authorised_by, result_authorised_date, cert_code,
-		date_format(a.BirthDate, "%d/%m/%Y") as DOB, case when Sex="f" then "Female" else "Male" end as sex
+		test_name, ddt_sheet, no_results, no_swabs, sub_tests, date_format(a.BirthDate, "%d/%m/%Y") as DOB, case when Sex="f" then "Female" else "Male" end as sex
 		from orders o inner join order_tests t on o.id=order_id 
 		left outer join animal a on animal_id=a.id 
 		left outer join breed_list b on a.breed_id=b.id 
 		left outer join test_codes using(test_code) 
-		left outer join test_swabs s on t.id=test_id
-		left outer join test_swab_results r on t.id=r.test_id
 		where (a.breed_id is NULL or b.is_primary=1) and t.id='.$swab_id;
 	$test_details = $wpdb->get_results($sql, OBJECT );
 #	echo $wpdb->last_query."\n";
 #	echo $wpdb->last_result."\n";
 #	echo $wpdb->last_error."\n";
 	$notes = getTestNotes($swab_id);
-	//$results = getTestResults($swab_id);
+	$swabs = getSwabDetails($swab_id);
+	$analysis = getSwabAnalysis($swab_id);
+	$results = getTestResults($swab_id);
+	
 	$test_details[0]->notes = $notes;
 	$test_details[0]->note_count = count($notes);
-	//$test_details[0]->results = $results;
+	$test_details[0]->swabs = $swabs;
+	$test_details[0]->analysis = $analysis;
+	$test_details[0]->results = $results;
+	
 	return $test_details[0];	
+}
+
+function getSwabDetails($swab_id){
+    global $wpdb;
+    $results = array();
+    
+    $sql = 'select swab, extraction_plate, extraction_well, date_format(date(extraction_date), "%d/%m/%Y") as extraction_date, extracted_by, swab_failed
+    from test_swabs s where s.test_id='.$swab_id;
+    $results = $wpdb->get_results($sql, OBJECT );
+    
+    return $results;
+}
+
+function getSwabAnalysis($swab_id){
+    global $wpdb;
+    $results = array();
+    
+    $sql = 'select distinct test_plate, test_plate_well, result_entered_by, date_format(date(result_entered_date), "%d/%m/%Y") as result_entered_date
+	from test_swab_results WHERE test_id='.$swab_id;
+    $results = $wpdb->get_results($sql, OBJECT );
+    
+    return $results;
 }
 
 function getTestResults($swab_id){
 	global $wpdb;	
 	$results = array();
 	
-	$sql = "select test_code, test_plate, test_plate_well, test_result, result_entered_by, result_entered_date, result_authorised_by, result_authorised_date, cert_code
-	from test_swab_results WHERE test_id=".$swab_id;
+	$sql = 'select test_code, test_plate, test_plate_well, test_result, result_entered_by, date_format(date(result_entered_date), "%d/%m/%Y") as result_entered_date, 
+    result_authorised_by, date(result_authorised_date) as result_authorised_date, date_format(date(result_reported_date), "%d/%m/%Y") as result_reported_date, cert_code
+	from test_swab_results WHERE test_id='.$swab_id;
 	$results = $wpdb->get_results($sql, OBJECT );
 	
 	return $results;
