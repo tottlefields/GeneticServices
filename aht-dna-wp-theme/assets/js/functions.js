@@ -205,6 +205,7 @@ function generatePDFs(order_ids, swabID, pending) {
 		data : data,
 		success : function(results) {
 			ddLetter.content = [];
+			ddLetter.pageOrientation = 'portrait';
 			for (var x=0; x<results.length; x++){
 				details = results[x];
 				OrderDetails = details.order;
@@ -569,14 +570,14 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			var extraction_date = '&nbsp;';
 			var extracted_by = '&nbsp;';
 			
-			if (TestDetails.swabs.length > 0 && TestDetails.swabs[0].extraction_plate != ''){
+			if (TestDetails.swabs.length > 0 && TestDetails.swabs[0].extraction_plate !== null){
 				//console.log(TestDetails.swabs[0]);
 				extraction = '';
 				extraction_date = '';
 				extracted_by = '';
 				
 				for (var i = 0; i < TestDetails.swabs.length; ++i) {
-					if (TestDetails.swabs[i].extraction_plate != ''){
+					if (TestDetails.swabs[i].extraction_plate !== null){
 						if (i > 0){ extraction += '<br />'; extraction_date += '<br />'; extracted_by += '<br />';}
 						
 						extraction_date += TestDetails.swabs[i].extraction_date;
