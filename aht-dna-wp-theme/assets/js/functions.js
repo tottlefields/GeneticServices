@@ -1161,14 +1161,14 @@ function labelsSection(client, test) {
 							fit : [ 50, 50 ],
 							absolutePosition : {
 								x : 320,
-								y : 660
+								y : 650
 							}
 						}, {
 							image : barcodeImg,
 							width : 150,
 							absolutePosition : {
 								x : 400,
-								y : 675
+								y : 665
 							}
 						}, {
 							table : {
@@ -1205,7 +1205,7 @@ function labelsSection(client, test) {
 							layout : 'noBorders',
 							absolutePosition : {
 								x : 320,
-								y : 720
+								y : 710
 							}
 						} ]
 					} ] ]
@@ -1255,7 +1255,7 @@ var ddLandscape = {
 var ddLetter = {
 	pageSize : 'A4',
 	pageOrientation : 'portrait',
-	pageMargins : [ 30, 30, 30, 40 ],
+	pageMargins : [ 30, 30, 30, 30 ],
 	content : [],
 	defaultStyle : {
 		font : 'Tahoma',
