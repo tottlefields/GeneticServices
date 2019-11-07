@@ -107,7 +107,7 @@ function do_return_sample(){
 	global $wpdb, $current_user; // this is how you get access to the database
 	
 	$swabId = intval( $_POST['swabId'] );
-	$date = new DateTime(new DateTimeZone("Europe/London"));
+	$date = new DateTime('now', new DateTimeZone("Europe/London"));
 	$returned_date = $date->format('Y-m-d H:i:s');
 	$date->add(new DateInterval('P21D'));
 	
