@@ -185,6 +185,15 @@ function getTestsByClient($client_id){
 	return $tests;	
 }
 
+function getBasicTestDetails($swab_id){
+    global $wpdb;
+    
+    $sql = "select * from order_tests where id=".$swab_id;
+    $test_details = $wpdb->get_results($sql, OBJECT );
+    
+    return $test_details[0];
+}
+
 function getTestDetails($swab_id){
 	global $wpdb;	
 	$test_details = array();
@@ -219,8 +228,8 @@ function getSwabDetails($swab_id){
     global $wpdb;
     $results = array();
     
-    $sql = 'select swab, extraction_plate, extraction_well, date_format(date(extraction_date), "%d/%m/%Y") as extraction_date, extracted_by, swab_failed
-    from test_swabs s where s.test_id='.$swab_id;
+    $sql = 'select id, swab, extraction_plate, extraction_well, date_format(date(extraction_date), "%d/%m/%Y") as extraction_date, extracted_by, swab_failed
+    from test_swabs where test_id='.$swab_id." order by swab";
     $results = $wpdb->get_results($sql, OBJECT );
     
     return $results;
@@ -373,7 +382,38 @@ function createSwabs($test_id){
 	$wpdb->insert( 'test_swabs', array('test_id' => $test_id, 'swab' => 'A'));	
 }
 
-
+function getWellOrder($start='H1', $order='up-across'){
+    $wells = array();    
+    
+    $letters = range('A', 'H');
+    if (substr($start, 0, 1) == "H"){ $letters = range('H', 'A'); }
+    elseif (substr($start, 0, 1) == "H"){ $letters = range('A', 'H'); }
+    //debug_array($letters);
+    
+    if ($order == 'up-across' || $order == 'down-across'){
+        for ($c=1; $c<=12; $c++){
+            for ($r=0; $r<8; $r++){
+                array_push($wells, $letters[$r].($c));
+            }
+        }        
+    }
+    else{    
+        for ($r=0; $r<8; $r++){
+            for ($c=1; $c<=12; $c++){
+                $cell = $letters[$r].($c);
+                array_push($wells, $cell);
+            }
+        }
+    }
+    
+    for ($i=0; $i<count($wells); $i++){
+        $this_well = $wells[$i];
+        $next_well = (count($wells) != $i+1) ? $wells[$i+1] : null;
+        $wellOrder[$this_well] = $next_well;
+    }
+    
+    return $wellOrder;
+}
 
 
 
