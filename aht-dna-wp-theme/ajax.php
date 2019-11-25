@@ -27,6 +27,9 @@ add_action( 'wp_ajax_nopriv_breed_tests', 'get_breed_tests' );
 add_action( 'wp_ajax_pick_swabs', 'pick_swabs' );
 add_action( 'wp_ajax_nopriv_pick_swabs', 'pick_swabs' );
 
+add_action( 'wp_ajax_extract_swabs', 'extract_swabs' );
+add_action( 'wp_ajax_nopriv_extract_swabs', 'extract_swabs' );
+
 
 
 function do_cancel_test(){
@@ -157,6 +160,44 @@ function get_plate_details(){
 	echo json_encode($return);
 	
 	wp_die();	
+}
+
+function extract_swabs() {
+    global $wpdb, $current_user;
+    
+    $return = array();
+    $plate = $_POST['plate'];
+    $barcode = $_POST['barcode'];
+    $well = $_POST['well'];
+    
+    $sample_details = explode('/', $barcode);
+    $swabs = getSwabDetails($sample_details[1]);
+    $test_details = getBasicTestDetails($sample_details[1]);
+    
+    if (count($swabs) == 2 && $swabs[1]->extraction_plate != null){
+        $return = array('status' => 'Error', 'msg' => 'Both swabs have already been recorded as extracted for this sample.');
+    }
+    else {
+        $query_args = array(
+            'extraction_plate' => $plate,
+            'extraction_well' => $well,
+            'extracted_by' => $current_user->user_login,
+            'extraction_date' => date('Y-m-d')
+        );
+        if ($swabs[0]->extraction_plate != null){ 
+            $query_args['test_id'] = $sample_details[1];
+            $query_args['swab'] = 'B';
+            //$wpdb->insert('test_swabs', $query_args);
+        }
+        else { /*$wpdb->update('test_swabs', $query_args, array('id' => $swabs[0]->id));*/ }
+        $return = array('status' => 'Success', 'data' => array('barcode' => 'AHT'.$barcode, 'order_id' => $sample_details[0], 'test_code' => $test_details->test_code));
+    }
+    
+    echo json_encode($return);
+    
+    wp_die();
+    
+    
 }
 
 function pick_swabs() {

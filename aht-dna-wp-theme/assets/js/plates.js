@@ -35,6 +35,67 @@ jQuery(document).ready(function($) {
 				});
 		});
 		
+		
+		$('#first_well').on('change', function() {
+			var well = $(this).val();
+			$("input[name=gridfill]").prop('disabled', false);
+			if (well === "H1"){
+				$("input[name=gridfill][value=up-across]").prop('checked', true);
+				$("input[name=gridfill][value=down-across]").prop('disabled', true);
+				$("input[name=gridfill][value=across-down]").prop('disabled', true);
+			}
+			if (well === "A1"){
+				$("input[name=gridfill][value=down-across]").prop('checked', true);
+				$("input[name=gridfill][value=up-across]").prop('disabled', true);
+				$("input[name=gridfill][value=across-up]").prop('disabled', true);
+			}
+		});
+		
+		$('.well_enter').keypress(function(event){
+			
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keycode == '13'){
+				var barcode = $(this).val();
+				var well = $(this).closest('td').data('well');
+				var plate = $(this).closest('td').data('plate');
+
+				var data = {
+					'action' : 'extract_swabs',
+					'barcode' : barcode,
+					'well' : well,
+					'plate' : plate
+				};
+				$("body").css("cursor", "progress");
+				
+				$.ajax({
+						type : "post",
+						dataType : "json",
+						url : DennisAjax.ajax_url,
+						data : data,
+						success : function(results) {
+							//console.log(wellOrder);
+							if (results.status == "Success"){
+								$("#"+well+" > small.cell_id").hide();
+								$("#"+well+" > small.contents").html('<a href="'+DennisAjax.site_url+'/orders/view/?id='+results.data.order_id+'">'+results.data.barcode+'</a><br />'+results.data.test_code);
+								
+								var newWell = wellOrder[well];
+								$("#"+newWell+" > small.contents >input").show();
+								$("#"+newWell+" > small.contents >input").focus();
+							}
+							if (results.status == "Error"){								
+								bootbox.alert(results.msg, function(){ 
+								    $("#"+well+" > small.contents > input").val("");
+									$("#"+well+" > small.contents > input").focus();
+								});
+							
+							}
+							$("body").css("cursor", "default");
+						}
+				});
+			}
+
+		});
+		
 		$('#plate_type').change(function(e){
 				var plateType = $(this).val();
 				console.log(plateJSON);

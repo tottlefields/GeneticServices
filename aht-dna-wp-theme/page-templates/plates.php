@@ -2,6 +2,8 @@
 global $wpdb;
 ?>
 <?php if (isset($_REQUEST['add-plate'])){
+//    debug_array($_REQUEST);
+//    exit;
 	$result = $wpdb->insert( "plates", array(
 		'plate_type' => $_REQUEST['plate_type'],
 		'test_plate' => $_REQUEST['new_plate'],
@@ -15,10 +17,11 @@ global $wpdb;
 	}
 	else{
 		//echo "redirect to /plates/add-plate/".$_REQUEST['plate_type']."-".$_REQUEST['new_plate'];
-		wp_redirect(get_site_url().'/plate/'.$_REQUEST['new_plate']);
+		wp_redirect(get_site_url().'/plate/'.$_REQUEST['new_plate'].'/?well='.$_REQUEST['first_well'].'&fill_order='.$_REQUEST['gridfill']);
 		exit;
 	}
 }
+$editing = 0;
 //if(isset($wp_query->query_vars['plate_type'])) { $plate_type_q = urldecode($wp_query->query_vars['plate_type']); }
 if(isset($wp_query->query_vars['plate'])) { 
 	$plate_q = urldecode($wp_query->query_vars['plate']);
@@ -28,6 +31,11 @@ if(isset($wp_query->query_vars['plate'])) {
 		foreach ($plate_details->wells as $well){
 			$wells[$well->well] = '<a href="'.get_site_url().'/orders/view/?id='.$well->order_id.'">AHT'.$well->order_id.'/'.$well->test_id.'</a><br />'.$well->test_code;
 		}
+	}
+	if(isset($_REQUEST['well']) && isset($_REQUEST['fill_order'])){
+	    $editing = 1;
+	    $first_well = $_REQUEST['well'];
+	    $fill_order = $_REQUEST['fill_order'];
 	}
 }
 
@@ -77,22 +85,34 @@ foreach (array_keys($plates) as $plate_type){
 		<div class="<?php if(isset($plate_q) && $plate_q!=null){ echo 'col-md-12'; }else{ echo 'col-md-9'; } ?>">
 			<table width="100%" class="plate_table">
 		<?php
+		
 		$letters = range('A', 'H');
 		for ($r=0; $r<9; $r++){
 			echo '<tr style="height:50px;">';
 			for ($c=0; $c<13; $c++){
 				$cell = $letters[$r-1].($c);
+				
 				if ($r == 0 & $c == 0){ 
 					if (isset($wp_query->query_vars['plate'])){ 
-						echo '<td style="border:0px"><button type="button" class="btn btn-default btn-xs hidden-print"><i class="fa fa-pencil-square-o"></i>Edit</button></td>';
+					    if ($editing){ echo '<td style="border:0px"><button type="button" class="btn btn-success btn-xs hidden-print"><i class="fa fa-check-square-o"></i>Done</button></td>';  }
+					    else { echo '<td style="border:0px"><button type="button" class="btn btn-default btn-xs hidden-print"><i class="fa fa-pencil-square-o"></i>Edit</button></td>'; }
 					}
 					else { echo '<td style="border:0px">&nbsp;</td>'; }
 				}
 				elseif($r == 0){ echo '<th>'.$c.'</th>'; }
 				elseif($c == 0){ echo '<th>'.$letters[$r-1].'</th>'; }
 				else{ 
-					if(isset($wells[$cell])){ echo '<td id="'.$cell.'" width="8%"><small class="cell_id" style="display:none">'.$cell.'</small><small class="contents">'.$wells[$cell].'</small></td>'; }
-					else { echo '<td id="'.$cell.'" width="8%"><small class="cell_id">'.$cell.'</small><small class="contents"></small></td>'; }
+				    if(isset($wells[$cell])){ echo '<td id="'.$cell.'" width="8%"><small class="cell_id" style="display:none">'.$cell.'</small><small class="contents well_contents">'.$wells[$cell].'</small></td>'; }
+				    elseif ($editing){
+				        echo '<td id="'.$cell.'" width="8%" data-well="'.$cell.'" data-plate="'.$plate_q.'"><small class="cell_id">'.$cell.'</small>
+                        <small class="contents well_contents">';
+				        if ($first_well == $cell){
+				            echo '<input type="text" class="well_enter form-control input-sm" autofocus>';
+				        }
+				        else{ echo '<input type="text" class="well_enter form-control input-sm" style="display:none">'; }
+				        echo '</small></td>'; 
+				    }
+					else { echo '<td id="'.$cell.'" width="8%"><small class="cell_id">'.$cell.'</small><br /><small class="contents well_contents"></small></td>'; }
 				}
 			}
 			echo '</tr>';
@@ -115,8 +135,8 @@ foreach (array_keys($plates) as $plate_type){
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="form-group">
-									<label for="plate_type" class="control-label col-sm-3">Plate Type</label>
-									<div class="col-sm-5">
+									<!-- <label for="plate_type" class="control-label col-sm-3">Plate Type</label> -->
+									<div class="col-sm-6">
 										<select class="form-control" id="plate_type" name="plate_type">
 											<option value="0">Select Plate Type...</option>
 											<option value="extraction">Extraction</option>
@@ -125,6 +145,35 @@ foreach (array_keys($plates) as $plate_type){
 										</select>
 									</div>
 									<div class="col-sm-4"><input type="text" class="form-control" id="new_plate" name="new_plate" value="" placeholder="Plate ID"></div>
+									<div class="col-sm-2">
+										<select class="form-control" id="first_well" name="first_well">
+											<option value="A1">A1</option>
+											<option value="H1">H1</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="plate_type" class="control-label col-sm-4">Scanning Direction</label>
+									<div class="col-sm-8">
+										<div class="cc-selector">
+											<input checked="checked" id="down-across" type="radio" name="gridfill" value="down-across" />
+											<label class="drinkcard-cc down-across"for="down-across"></label>
+											<input id="across-down" type="radio" name="gridfill" value="across-down" />
+											<label class="drinkcard-cc across-down" for="across-down"></label>
+											
+											<input id="up-across" type="radio" name="gridfill" value="up-across" disabled />
+											<label class="drinkcard-cc up-across"for="up-across"></label>
+											<input id="across-up" type="radio" name="gridfill" value="across-up" disabled />
+											<label class="drinkcard-cc across-up" for="across-up"></label>
+										</div>
+										
+									
+									</div>
 								</div>
 							</div>
 						</div>
@@ -141,6 +190,7 @@ foreach (array_keys($plates) as $plate_type){
 	
 	<script type="text/javascript">
 	var plateJSON = <?php echo json_encode($plates); ?>;
+	<?php if ($editing){ ?>var wellOrder = <?php echo json_encode(getWellOrder($first_well, $fill_order)); ?>;<?php } ?>
 	</script>
 
 <?php 
@@ -149,7 +199,7 @@ function footer_js(){
 <script>
 	jQuery(document).ready(function($) {
 	<?php if (isset($plate_q)){ ?>
-				//onsole.log("Selecting the <?php echo $plate_type_q; ?> tab");
+				//console.log("Selecting the <?php echo $plate_type_q; ?> tab");
 	<?php } ?>
 });
 </script>

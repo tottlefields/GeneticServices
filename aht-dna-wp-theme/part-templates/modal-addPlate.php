@@ -16,6 +16,18 @@
 									<div class="col-sm-10"><input type="text" class="form-control" id="plate_type" name="plate_type" value=""></div>
 								</div>
 							</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="plate_type" class="control-label col-sm-2">First Well</label>
+									<div class="col-sm-2"></div>
+								</div>
+								<div class="form-group">
+									<label for="plate_type" class="control-label col-sm-2">Direction</label>
+									<div class="col-sm-6 well-sm"></div>
+								</div>
+							</div>
+						</div>
 						</div>
 					</div>
 					<div class="modal-footer">

@@ -9,7 +9,7 @@
 
 tr.selected ul.dropdown-menu a { color: #646464 !important; }
 
-table.plate_table td, table.plate_table th { border:1px solid #e3e3e3; text-align:center }
+table.plate_table td, table.plate_table th, table.plate_table input { border:1px solid #e3e3e3; text-align:center }
 table.plate_table small { font-size:70%; color:#999999 }
 table.plate_table small.contents { color:#000000 }
 
@@ -18,6 +18,62 @@ table.plate_table small.contents { color:#000000 }
 
 table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.dataTable tbody td.selected a { color: #F1F1F1; }
 table.dataTable tbody>tr.selected, table.dataTable tbody>tr>.selected { background-color: #7f5ca3; }
+/*table tbody th, table tbody td { vertical-align: middle !important; }*/
+
+
+.cc-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+.cc-selector-2 input{
+    position:absolute;
+    z-index:999;
+}
+
+.visa{background-image:url(http://i.imgur.com/lXzJ1eB.png);}
+.mastercard{background-image:url(http://i.imgur.com/SJbRQF7.png);}
+
+.down-across{background-image:url(../img/gridfill-down-across.png);background-position: center;}
+.across-down{background-image:url(../img/gridfill-across-down.png);background-position: center;}
+.across-up{background-image:url(../img/gridfill-across-up.png);background-position: center;}
+.up-across{background-image:url(../img/gridfill-up-across.png);background-position: center;}
+
+.cc-selector-2 input:active +.drinkcard-cc, .cc-selector input:active +.drinkcard-cc{opacity: .9;}
+.cc-selector-2 input:checked +.drinkcard-cc, .cc-selector input:checked +.drinkcard-cc{
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.drinkcard-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:80px;height:70px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+       -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+            filter: brightness(1.8) grayscale(1) opacity(.7);
+}
+.drinkcard-cc:hover{
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+            filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+
+/* Extras */
+/*a:visited{color:#888}
+a{color:#444;text-decoration:none;}
+p{margin-bottom:.3em;}
+* { font-family:monospace; }
+.cc-selector-2 input{ margin: 5px 0 0 12px; }
+.cc-selector-2 label{ margin-left: 7px; }
+span.cc{ color:#6d84b4 } */
 
 
 /* Font Awesome
