@@ -187,9 +187,9 @@ function extract_swabs() {
         if ($swabs[0]->extraction_plate != null){ 
             $query_args['test_id'] = $sample_details[1];
             $query_args['swab'] = 'B';
-            //$wpdb->insert('test_swabs', $query_args);
+            $wpdb->insert('test_swabs', $query_args);
         }
-        else { /*$wpdb->update('test_swabs', $query_args, array('id' => $swabs[0]->id));*/ }
+        else { $wpdb->update('test_swabs', $query_args, array('id' => $swabs[0]->id)); }
         $return = array('status' => 'Success', 'data' => array('barcode' => 'AHT'.$barcode, 'order_id' => $sample_details[0], 'test_code' => $test_details->test_code));
     }
     
