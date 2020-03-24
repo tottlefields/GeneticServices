@@ -15,9 +15,8 @@ if ($mysqli->connect_error) { die("Connection failed: " . $mysqli->connect_error
 $sql = "select OrderID,AnimalID,TestCode,Quantity,SampleType,VetID,test_code,no_swabs,sub_tests
 	from es_webshop_data.order_tests inner join test_code_webshop_lookup using (TestCode)
 	inner join test_codes using (test_code)
-	where concat(OrderID,':',AnimalID,':',TestCode) NOT IN (select concat(OrderID,':',AnimalID,':',TestCode) from order_tests where OrderID>0) and OrderID >57000";
-
-//	where OrderID NOT IN (select OrderID from order_tests where OrderID>0)";
+	where OrderID NOT IN (select OrderID from order_tests where OrderID>0)";
+	//where concat(OrderID,':',AnimalID,':',TestCode) NOT IN (select concat(OrderID,':',AnimalID,':',TestCode) from order_tests where OrderID>0) and OrderID >57000";
 
 //$sql = "select t1.OrderID,t1.AnimalID,t1.TestCode,t1.Quantity,t1.SampleType,t1.VetID,t3.test_code,t3.no_swabs,t3.sub_tests  from es_webshop_data.order_tests t1  inner join test_code_webshop_lookup t2 using (TestCode)  inner join test_codes t3 using (test_code)  left outer join order_tests t4 on t1.OrderID=t4.OrderID and t1.TestCode=t4.TestCode where t4.OrderID is null and t1.OrderID=55382";
 

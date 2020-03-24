@@ -3,7 +3,8 @@ global $wpdb;
 
 $sex_lookup = array('m' => 'Male', 'f' => 'Female');
 
-$results = $wpdb->get_results("select t1.id as swabId, t2.OrderId as webshopID, t2.id as orderId, t4.id as clientID, t3.id as animalID, Quantity, test_name, t1.test_code, Breed, RegisteredName, RegistrationNo,
+$results = $wpdb->get_results("select t1.id as swabId, t2.OrderId as webshopID, t2.id as orderId, t4.id as clientID, t3.id as animalID, Quantity, test_name, Breed, RegisteredName, RegistrationNo,
+	case when ddt_code is not null then ddt_code else t1.test_code end as test_code,
 	Sex, DATE_FORMAT(BirthDate, '%d/%m/%Y') as BirthDate, TattooOrChip, t4.Tel as clientTel, t4.Fax as clientFax, t4.Email as clientEmail, t4.FullName as clientName,
 	t4.Address as clientAddress, t4.Town as clientTown, t4.county as clientCounty, t4.Postcode as clientPostcode, t4.Country as clientCountry,
 	t2.ReportFormat, t2.VetReportFormat, AgreeResearch, PetName, Colour, DATE_FORMAT(OrderDate, '%d/%m/%Y') as OrderDate, PortalID, DATE_FORMAT(returned_date, '%d/%m/%Y') as returned_date, 

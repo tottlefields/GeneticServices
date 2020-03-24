@@ -112,7 +112,7 @@ foreach (array_keys($plates) as $plate_type){
 				        else{ echo '<input type="text" class="well_enter form-control input-sm" style="display:none">'; }
 				        echo '</small></td>'; 
 				    }
-					else { echo '<td id="'.$cell.'" width="8%"><small class="cell_id">'.$cell.'</small><br /><small class="contents well_contents"></small></td>'; }
+					else { echo '<td id="'.$cell.'" width="8%"><small class="cell_id">'.$cell.'</small><small class="contents well_contents"></small></td>'; }
 				}
 			}
 			echo '</tr>';
