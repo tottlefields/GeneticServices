@@ -1226,7 +1226,7 @@ function parentageInstructions(){
 				{text: 'If a litter of puppies are being tested, a sample is needed from every single puppy (it is possible for puppies in one litter to have different sires).', margin: [0,0,0,10] },
 				{text: 'The results issued only apply to the animals tested. Parentage for dogs we have not tested (whether they are littermates of the puppy tested, or another possible sire to the puppy), cannot be inferred based on our results.', margin: [0,0,0,10] },
 				{text: 'The samples submitted for each animal must be mouth swabs supplied by the Animal Health Trust. Swabs from any other source, will not be accepted.', margin: [0,0,0,10] },
-				{text: 'Mouth swabs can be taken by anybody, following the instructions supplied with the kits, and Vet Vertification is not required.', margin: [0,0,0,10] },
+				{text: 'Mouth swabs can be taken by anybody, following the instructions supplied with the kits, and Vet Verification  is not required.', margin: [0,0,0,10] },
 				{text: 'Before taking the swabs, puppies need to be weaned. Puppies can only be sampled once they are a minimum 4 weeks old.', margin: [0,0,0,10] },
 				{text: 'Each animal to be swabbed needs to be separated from both food and other animals for 2 hours prior to taking the samples (however, each animal may have its own fresh water supply during this time). This is to help prevent cross contamination between the samples.', margin: [0,0,0,10] },
 				{text: "When taking the swab samples, first rinse the animal's mouth out with water.", margin: [0,0,0,10] },
