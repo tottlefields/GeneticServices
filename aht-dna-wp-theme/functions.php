@@ -79,6 +79,18 @@ add_filter('rewrite_rules_array', 'add_rewrite_rules');
 
 
 
+// add filter
+add_filter('pre_get_document_title', 'change_my_title');
+// Our function
+function change_my_title($title) {
+    if ( is_page( 'plates' ) && get_query_var( 'plate' ) ) {
+        $plate_id = get_query_var( 'plate' );
+        $title = $plate_id.' - Plates - Dennis';
+    }
+    
+    return $title;
+}
+
 
 
 

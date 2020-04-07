@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+	var duplicates = new Array();
 	var details = $('#order_details');
 	var table = $('#samples').DataTable({
 		dom: '<"toolbar">frtip',
@@ -8,6 +9,7 @@ jQuery(document).ready(function($) {
 		order: [[ 4, "asc" ], [7, "asc"]],
 		select: { 
 			style: 'multi',
+			selector: ':not(input.noRowSelect)'
 //			//selector: 'td:first-child'
 		},
 		columnDefs: [ {
@@ -17,6 +19,9 @@ jQuery(document).ready(function($) {
          }, {
 			targets: [ 0, 2, 3 ],
 			orderable: false
+		}, {
+			targets: [ 2, 3, 6 ],
+			visible: false
 		}, {
 			type: 'date-uk',
 			targets: 4
@@ -32,6 +37,16 @@ jQuery(document).ready(function($) {
             //var rowData = table.rows( indexes ).data().toArray();
             countSamples();
         } );
+	
+	$('.duplicateSwab').change(function() {
+		var swabID = $(this).closest('tr').attr('id').replace("row","");
+		if($(this).prop('checked')){
+			duplicates.push(swabID);
+		}else{
+			duplicates.splice( $.inArray(swabID, duplicates), 1 );
+		}
+		countSamples();
+	});
 	
 	$(".selectSample").on("click", function() {
 			
@@ -60,13 +75,12 @@ jQuery(document).ready(function($) {
 			}
 	});
 	
-	$("div.toolbar").html('<button type="button" class="btn btn-default" id="exportSampleList" disabled="disabled"><i class="fa fa-flask link"></i>&nbsp;Export Sample List</button>');
+	$("div.toolbar").html('<button type="button" class="btn btn-default" id="exportSampleList" disabled="disabled"><i class="fa fa-th link"></i>&nbsp;Generate Q Plate</button>');
 	
 	$("#exportSampleList").on('click', function(e){
 		var orderIds = [];
-		var rows_selected = table.column(0).checkboxes.selected();
-		alert(rows_selected.join());
-		//generatePDFs(orderIds, null, 1);
+		var rows_selected = table.column(0).checkboxes.selected();		
+		window.location.href = "http://dennis.local/plates/?add-plate&plate_type=extraction&samples="+rows_selected.join()+"&duplicates="+duplicates.join();
 	});
 	
 
@@ -77,6 +91,7 @@ function countSamples(){
 	var sampleCount = table.rows('.selected').count();
 	if (sampleCount == 0 ){ $("#exportSampleList").prop("disabled", true); }
 	else{ $("#exportSampleList").prop("disabled", false); }
+	if ($('.duplicateSwab:checked').length > 0){ sampleCount += ' ('+$('.duplicateSwab:checked').length+')'}
 	$('#sample_count').text(sampleCount);
 }
 
@@ -84,6 +99,7 @@ function resetSamples(){
 	var table = $('#samples').DataTable();
 	table.rows().deselect();
 	$(".selectSample").removeClass('active');
+	$('.duplicateSwab').bootstrapToggle('off');
 	countSamples();
 	//location.reload();
 }

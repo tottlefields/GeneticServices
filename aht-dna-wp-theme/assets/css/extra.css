@@ -2,6 +2,7 @@
 	.no-print, .no-print * { display: none !important; }
 	a[href]:after { content: none }
 	main { width:100% !important; margin-left: 0px !important; }
+	.pagebreak { break-before: page; }
 }
 
 .top-logo { padding:0px; }

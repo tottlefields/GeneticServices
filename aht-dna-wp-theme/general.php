@@ -272,13 +272,13 @@ function getPlateDetails($plate_id){
 	global $wpdb;
 	$test_details = array();
 	
-	$sql = "select * FROM plates WHERE UPPER(test_plate)='$plate_id'";
+	$sql = "select *, DATE_FORMAT(created_date, '%D %M %Y') as readable_date FROM plates WHERE UPPER(test_plate)='$plate_id'";
 	$plate_details = $wpdb->get_results($sql, OBJECT );
 	
 	if ($plate_details[0]->plate_type == 'extraction'){
-		$sql = "select distinct t.order_id, s.test_id as test_id, t.test_code, s.extraction_well as well 
+		$sql = "select distinct s.id as swab_id, t.order_id, s.test_id as test_id, t.test_code, s.extraction_well as well 
 		from test_swabs s inner join order_tests t on s.test_id=t.id where s.extraction_plate='".$plate_id."'
-		order by 4";		
+		order by 5, 4";		
 	}
 	else {
 		$sql = "select distinct t.order_id, r.test_id, t.test_code, r.test_plate_well as well 
@@ -289,6 +289,22 @@ function getPlateDetails($plate_id){
 	$plate_details[0]->wells = $wells;
 	
 	return $plate_details[0];	
+}
+
+function getTestAnalysisDetails($test_code=null){
+    global $wpdb;
+    $testAnalysis_details = array();
+    
+    $sql = "select * from test_codes left outer join analysis_conditions using (test_type,type_group)";
+    if (isset($test_code)){ $sql .= " WHERE test_code='".$test_code."'"; }
+    $sql .= " ORDER BY no_swabs desc, no_results desc";
+    $results = $wpdb->get_results($sql, OBJECT);
+    
+    foreach ($results as $r){
+        $testAnalysis_details[$r->test_code] = $r;
+    }
+    
+    return $testAnalysis_details;
 }
 
 function addNewClient($client){

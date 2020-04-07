@@ -8,14 +8,15 @@ jQuery(document).ready(function($) {
 		
 		
 		$('.plate_select').on('change', function() {
-				
-				$("#plate_id").html($(this).val());
-				clearPlate();
-				
-				var data = {
+			
+			var plate = $(this).val();
+			$("#plate_id").html(plate+'<span id="plate_details" class="pull-right"></span>');
+			clearPlate();
+			
+			var data = {
 					'action' : 'plate_details',
 					'ptype' : ($(this).attr('id')).replace('_plate', ''),
-					'pid' : $(this).val()
+					'pid' : plate
 				};
 				
 				$.ajax({
@@ -24,13 +25,17 @@ jQuery(document).ready(function($) {
 						url : DennisAjax.ajax_url,
 						data : data,
 						success : function(results) {
-								$("small.contents").html("");
-								$("small.cell_id").show();
-								for (var x=0; x<results.length; x++){
-									var well = results[x].well;
-									$("#"+well+" > small.cell_id").hide();
-									$("#"+well+" > small.contents").html('<a href="'+DennisAjax.site_url+'/orders/view/?id='+results[x].order_id+'">AHT'+results[x].order_id+"/"+results[x].test_id+'</a><br />'+results[x].test_code);
-								}
+							//console.log(results);
+							$("#plate_details").html('<small>'+results.created_by+" ("+results.readable_date+")</small>");
+							$("#details_plate").html('<div class="row"><div class="col-sm-5">Plate</div><div class="col-sm-7">'+plate+'</div></div><div class="row"><div class="col-sm-5">Processed By</div><div class="col-sm-7"><strong>'+results.created_by+'</strong></div></div><div class="row"><div class="col-sm-5">Date</div><div class="col-sm-7">'+results.readable_date+'</div></div>');
+							$("small.contents").html("");
+							$("small.cell_id").show();
+							var wells = results.wells;
+							for (var x=0; x<wells.length; x++){
+								var well = wells[x].well;
+								$("#"+well+" > small.cell_id").hide();
+								$("#"+well+" > small.contents").html('<a href="'+DennisAjax.site_url+'/orders/view/?id='+wells[x].order_id+'"><span class="hidden-print">AHT</span>'+wells[x].order_id+"/"+wells[x].test_id+'</a><br />'+wells[x].test_code);
+							}
 						}
 				});
 		});
@@ -98,11 +103,13 @@ jQuery(document).ready(function($) {
 		
 		$('#plate_type').change(function(e){
 				var plateType = $(this).val();
-				console.log(plateJSON);
+				//console.log(plateJSON);
 				var plateIDs = plateJSON[plateType];
-				console.log(plateIDs);
+				//console.log(plateIDs);
 				if (plateIDs.length > 0){
-					var last = plateIDs.pop();
+					//var last = plateIDs.pop();
+					var last = plateIDs[0];
+					console.log(last);
 					var plateID = "";
 					if (plateType == 'extraction'){	
 						var id = parseInt(last.replace("Q", ""));
@@ -124,6 +131,7 @@ jQuery(document).ready(function($) {
 function clearPlate(){
 	$("small.contents").html("");
 	$("small.cell_id").show();
+	$("#details_plate").html("");
 }
 	
 
