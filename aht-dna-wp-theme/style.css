@@ -1446,6 +1446,7 @@ footer {
 .sw-theme-arrows > ul.step-anchor > li:first-child > span {
     padding-left: 15px;
 }
+.sw-theme-arrows > ul.step-anchor > li:last-child > span { padding-right: 15px; }
 
 /*.sw-theme-arrows > ul.step-anchor > li > a:hover {
     color: #bbb;

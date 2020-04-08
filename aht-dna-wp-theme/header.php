@@ -8,10 +8,21 @@ if(!is_user_logged_in()) {
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
 		<meta name="description" content="">
 		<meta name="author" content="Ellen Schofield">
-				
+
+		<link rel="manifest" href="<?php echo get_template_directory_uri(); ?>/assets/ico/manifest.json">
+
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="application-name" content="dennis">
+		<meta name="apple-mobile-web-app-title" content="dennis">
+		<meta name="theme-color" content="#2c9bac">
+		<meta name="msapplication-navbutton-color" content="#2c9bac">
+		<meta name="apple-mobile-web-app-status-bar-style" content="default">
+		<meta name="msapplication-starturl" content="<?php echo site_url('/'); ?>">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 		<!-- start: Favicon -->
 		<link rel="shortcut icon" href="<?php echo get_template_directory_uri() . '/assets/ico/favicon.ico'; ?>">
 		<link rel="apple-touch-icon" sizes="57x57" href="<?php echo get_template_directory_uri() . '/assets/ico/apple-icon-57x57.png'; ?>">
@@ -101,14 +112,16 @@ if(!is_user_logged_in()) {
 			
 				<nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar hidden-print">
 				<?php
-					wp_nav_menu(
+					$menu = wp_nav_menu(
 						array(
+							'echo' => false,
 							'container' => 'ul',
 							'theme_location' => 'main-menu',
 							'menu_class' => 'nav nav-pills nav-stacked',
 							'link_before' => '<i class="fa"></i>&nbsp;'
 							)
 						);
+					echo str_replace(get_site_url(), '', $menu);
 					?>
 				</nav>
 				

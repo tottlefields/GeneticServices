@@ -293,7 +293,7 @@ if ($order_details->paid == 0){
 		</div>
 	</section>
 	<section class="row well" style="margin-top:15px;">
-		<div class="col-md-4">
+		<div class="col-md-12 col-lg-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title"><i class="fa fa-flask"></i>&nbsp;Test Details</h3>
@@ -302,7 +302,7 @@ if ($order_details->paid == 0){
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-6 col-lg-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
@@ -316,7 +316,7 @@ if ($order_details->paid == 0){
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-6 col-lg-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>

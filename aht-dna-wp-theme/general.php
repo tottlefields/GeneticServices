@@ -2,11 +2,11 @@
 
 $order_steps = array(
 		'Order Placed',
-		'Kit(s) Dispatched',
-		'Sample(s) Received',
-		'Sample(s) Processed',
-		'Data Analysis & QC',
-		'Result(s) Sent'
+		'Dispatched',
+		'Received',
+		'Processed',
+		'Data Analysis',
+		'Results'
 );
 
 $sexes = array('m' => 'Male', 'f', 'Female');
@@ -33,8 +33,8 @@ function countOrders($status){
 	$sql = "SELECT count(distinct orders.id) from orders inner join order_tests on orders.id=order_id where cancelled_date is null";
 	switch($status){
 		case 'Order Placed' : $sql .= ' AND kit_sent IS NULL'; break;
-		case 'Sample(s) Received' : $sql .= ' AND returned_date IS NOT NULL'; break;
-		case 'Sample(s) Processed' : $sql .= ''; break;
+		case 'Received' : $sql .= ' AND returned_date IS NOT NULL'; break;
+		case 'Processed' : $sql .= ''; break;
 	}
 	$count = $wpdb->get_var($sql);
 	return $count;	
