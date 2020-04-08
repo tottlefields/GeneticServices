@@ -27,7 +27,7 @@ jQuery(document).ready(function($) {
 						success : function(results) {
 							//console.log(results);
 							$("#plate_details").html('<small>'+results.created_by+" ("+results.readable_date+")</small>");
-							$("#details_plate").html('<div class="row"><div class="col-sm-5">Plate</div><div class="col-sm-7">'+plate+'</div></div><div class="row"><div class="col-sm-5">Processed By</div><div class="col-sm-7"><strong>'+results.created_by+'</strong></div></div><div class="row"><div class="col-sm-5">Date</div><div class="col-sm-7">'+results.readable_date+'</div></div>');
+							$("#details_plate").html('<div class="row"><div class="col-xs-5">Plate</div><div class="col-xs-7">'+plate+'</div></div><div class="row"><div class="col-xs-5">Owner</div><div class="col-xs-7"><strong>'+results.created_by+'</strong></div></div><div class="row"><div class="col-xs-5">Generated</div><div class="col-xs-7">'+results.readable_date+'</div></div>');
 							$("small.contents").html("");
 							$("small.cell_id").show();
 							var wells = results.wells;

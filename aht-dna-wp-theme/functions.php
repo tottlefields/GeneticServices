@@ -118,7 +118,7 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'pdfmake-fonts-js' );
 	
 	// DataTables
-	wp_register_script ( 'datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.min.js', array ('jquery','bootstrap-js','pdfmake-js'), '1.10.15', true );
+	wp_register_script ( 'datatables-js', 'https://cdn.datatables.net/v/bs/dt-1.10.20/b-1.6.1/b-html5-1.6.1/b-print-1.6.1/r-2.2.3/sl-1.3.1/datatables.min.js', array ('jquery','bootstrap-js','pdfmake-js'), '1.10.20', true );
 	wp_enqueue_script ( 'datatables-js' );
 	
 	wp_register_script ( 'dt-ukdatesort-js', '//cdn.datatables.net/plug-ins/1.10.16/sorting/date-uk.js', array ('bootstrap-js'), '1.10.16', true);
@@ -148,7 +148,7 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'summernote-js' );
 	
 	// Main functions js file
-	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.5', true );
+	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.6', true );
 	wp_enqueue_script ( 'js-functions' );
 	// Main utils js file
 	wp_register_script ( 'js-utils', get_template_directory_uri () . '/assets/js/utils.js', array (), '0.1.2', false );

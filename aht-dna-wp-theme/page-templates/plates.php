@@ -208,7 +208,7 @@ if(isset($wp_query->query_vars['plate'])) {
 	$wells = array();
 	if (count($plate_details->wells) > 0){
 		foreach ($plate_details->wells as $well){
-			$wells[$well->well] = '<a href="'.get_site_url().'/orders/view/?id='.$well->order_id.'"><span class="hidden-print">AHT</span>'.$well->order_id.'/'.$well->test_id.'</a><br />'.$well->test_code;
+			$wells[$well->well] = '<a href="'.get_site_url().'/orders/view/?id='.$well->order_id.'"><span class="hide-small"><span class="hidden-print">AHT</span>'.$well->order_id.'/</span>'.$well->test_id.'</a><br />'.$well->test_code;
 		}
 	}
 	if(isset($_REQUEST['well']) && isset($_REQUEST['fill_order'])){
@@ -274,8 +274,8 @@ foreach (array_keys($plates) as $plate_type){
 				
 				if ($r == 0 & $c == 0){ 
 					if (isset($wp_query->query_vars['plate'])){ 
-					    if ($editing){ echo '<td style="border:0px"><button type="button" class="btn btn-success btn-xs hidden-print"><i class="fa fa-check-square-o"></i>Done</button></td>';  }
-					    else { echo '<td style="border:0px"><button type="button" class="btn btn-default btn-xs hidden-print"><i class="fa fa-pencil-square-o"></i>Edit</button></td>'; }
+					    if ($editing){ echo '<td style="border:0px"><button type="button" class="btn btn-success btn-xs hidden-print hide-small"><i class="fa fa-check-square-o"></i>Done</button></td>';  }
+					    else { echo '<td style="border:0px"><button type="button" class="btn btn-default btn-xs hidden-print hide-small"><i class="fa fa-pencil-square-o"></i>Edit</button></td>'; }
 					}
 					else { echo '<td style="border:0px">&nbsp;</td>'; }
 				}
@@ -314,9 +314,9 @@ foreach (array_keys($plates) as $plate_type){
 				</div>
 				<div class="panel-body" id="details_plate">
 				<?php if(isset($plate_q) && $plate_q!=null) {?>
-					<div class="row"><div class="col-sm-5">Plate</div><div class="col-sm-7"><?php echo $plate_q; ?></div></div>
-					<div class="row"><div class="col-sm-5">Processed By</div><div class="col-sm-7"><strong><?php echo $plate_details->created_by; ?></strong></div></div>
-					<div class="row"><div class="col-sm-5">Date</div><div class="col-sm-7"><?php echo $created_date; ?></div></div>
+					<div class="row"><div class="col-xs-5">Plate</div><div class="col-xs-7"><?php echo $plate_q; ?></div></div>
+					<div class="row"><div class="col-xs-5">Owner</div><div class="col-xs-7"><strong><?php echo $plate_details->created_by; ?></strong></div></div>
+					<div class="row"><div class="col-xs-5">Generated</div><div class="col-xs-7"><?php echo $created_date; ?></div></div>
 				<?php } ?>
 				</div>
 			</div>

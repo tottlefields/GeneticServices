@@ -27,11 +27,11 @@ $test_details = getTestsByAnimal($animal_id);
 	<h1><i class="fa fa-paw"></i>&nbsp;<?php echo $name; ?><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
 			
 	<section class="row">
-		<div class="col-md-3">
+		<div class="col-md-5 col-lg-3">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
-					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="animal" data-toggle="modal" data-target="#animalModal">
+					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit hide-small" id="animal" data-toggle="modal" data-target="#animalModal">
 						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
 					</button>
 				<?php } ?>
@@ -40,34 +40,34 @@ $test_details = getTestsByAnimal($animal_id);
 				<div class="panel-body" id="details_animal">
 					<?php
 					echo '
-					<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="/animals/view?id='.$animal_details->id.'">
+					<div class="row"><div class="col-xs-4">Name</div><div class="col-xs-8"><a href="/animals/view?id='.$animal_details->id.'">
 						<strong>'.stripslashes($animal_details->RegisteredName).'</strong></a>
 					</div></div>
-					<div class="row"><div class="col-sm-4">Pet Name</div><div class="col-sm-8">'.$animal_details->PetName.'</div></div>
-					<div class="row"><div class="col-sm-4">Reg No.</div><div class="col-sm-8">'.$animal_details->RegistrationNo.'</div></div>
-					<div class="row"><div class="col-sm-4">Breed</div><div class="col-sm-8">'.$animal_details->Breed.'</div></div>
-					<div class="row"><div class="col-sm-4">DOB</div><div class="col-sm-8">'.$animal_details->DOB.'</div></div>
-					<div class="row"><div class="col-sm-4">Sex</div><div class="col-sm-8">'.$animal_details->sex.'</div></div>
-					<div class="row"><div class="col-sm-4">Microchip</div><div class="col-sm-8">'.$animal_details->TattooOrChip.'</div></div>
-					<div class="row"><div class="col-sm-4">Colour</div><div class="col-sm-8">'.$animal_details->Colour.'</div></div>';
+					<div class="row"><div class="col-xs-4">Pet Name</div><div class="col-xs-8">'.$animal_details->PetName.'</div></div>
+					<div class="row"><div class="col-xs-4">Reg No.</div><div class="col-xs-8">'.$animal_details->RegistrationNo.'</div></div>
+					<div class="row"><div class="col-xs-4">Breed</div><div class="col-xs-8">'.$animal_details->Breed.'</div></div>
+					<div class="row"><div class="col-xs-4">DOB</div><div class="col-xs-8">'.$animal_details->DOB.'</div></div>
+					<div class="row"><div class="col-xs-4">Sex</div><div class="col-xs-8">'.$animal_details->sex.'</div></div>
+					<div class="row"><div class="col-xs-4">Microchip</div><div class="col-xs-8">'.$animal_details->TattooOrChip.'</div></div>
+					<div class="row"><div class="col-xs-4">Colour</div><div class="col-xs-8">'.$animal_details->Colour.'</div></div>';
 					?>
 				</div>
 			</div>
 		</div>
 	
-		<div class="col-md-9">
+		<div class="col-md-7 col-lg-9">
 		<?php if ( $test_details ){ ?>
-			<table id="orderDetails" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
+			<table id="orderDetails" class="table table-striped table-bordered table-responsive nowrap" cellspacing="0" width="100%">
 				<thead>
 					<th></th>
-					<th class="text-center">OrderID</th>
-					<th class="text-center">Order Date</th>
+					<th class="text-center" data-priority="1">OrderID</th>
+					<th class="text-center"data-priority="2">Order Date</th>
 					<th class="text-center">TestID</th>
-					<th>Test</th>
+					<th data-priority="4">Test</th>
 					<th>Client</th>
-					<th class="text-center">Status</th>
+					<th class="text-center" data-priority="3">Status</th>
 					<th class="text-center">Notes</th>
-					<th class="text-center">Result</th>
+					<th class="text-center"data-priority="4">Result</th>
 					<th class="text-center">Actions</th>
 				</thead>
 				<tbody>
@@ -276,6 +276,9 @@ jQuery(document).ready(function($) {
 		order : [ [ 0, 'desc' ] ],
 		"ordering": false,
 		"paging": false,
+		responsive: {
+            details: false
+        },
 		columnDefs : [ {
 			targets : [ 0 ],
 			visible : false

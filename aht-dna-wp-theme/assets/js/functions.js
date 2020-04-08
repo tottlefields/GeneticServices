@@ -534,16 +534,16 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			ClientDetails = details.client;
 
 			/* CLIENT DETAILS */
-			client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="'+DennisAjax.site_url+'/clients/view?id=' + ClientDetails.id
+			client_panel = '<div class="row"><div class="col-xs-4">Name</div><div class="col-xs-8"><a href="'+DennisAjax.site_url+'/clients/view?id=' + ClientDetails.id
 					+ '"><strong>' + ClientDetails.FullName + '</strong></a></div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8">' + ClientDetails.Email + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">' + ClientDetails.Tel + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">' + ClientDetails.Address + '<br />'
+			client_panel += '<div class="row"><div class="col-xs-4">Email</div><div class="col-xs-8">' + ClientDetails.Email + '</div></div>';
+			client_panel += '<div class="row"><div class="col-xs-4">Phone</div><div class="col-xs-8">' + ClientDetails.Tel + '</div></div>';
+			client_panel += '<div class="row"><div class="col-xs-4">Address</div><div class="col-xs-8">' + ClientDetails.Address + '<br />'
 					+ ClientDetails.Address2 + '<br />' + ClientDetails.Address3 + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Town</div><div class="col-sm-8">' + ClientDetails.Town + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">' + ClientDetails.County + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
-			client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
+			client_panel += '<div class="row"><div class="col-xs-4">Town</div><div class="col-xs-8">' + ClientDetails.Town + '</div></div>';
+			client_panel += '<div class="row"><div class="col-xs-4">County</div><div class="col-xs-8">' + ClientDetails.County + '</div></div>';
+			client_panel += '<div class="row"><div class="col-xs-4">Postcode</div><div class="col-xs-8">' + ClientDetails.Postcode + '</div></div>';
+			client_panel += '<div class="row"><div class="col-xs-4">Country</div><div class="col-xs-8">' + ClientDetails.Country + '</div></div>';
 
 			clientDiv.html(client_panel);
 			//console.log(ClientDetails);
@@ -551,15 +551,15 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			$('#order_id').attr('value', orderId);
 
 			/* ANIMAL DETAILS */
-			animal_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8"><a href="'+DennisAjax.site_url+'/animals/view?id=' + TestDetails.animal_id
+			animal_panel = '<div class="row"><div class="col-xs-4">Name</div><div class="col-xs-8"><a href="'+DennisAjax.site_url+'/animals/view?id=' + TestDetails.animal_id
 					+ '"><strong>' + TestDetails.RegisteredName.replace(/\\/g, "") + '</strong></a></div></div>';
-			animal_panel += '<div class="row"><div class="col-sm-4">Pet Name</div><div class="col-sm-8">' + TestDetails.PetName + '</div></div>';
-			animal_panel += '<div class="row"><div class="col-sm-4">Reg No.</div><div class="col-sm-8">' + TestDetails.RegistrationNo + '</div></div>';
-			animal_panel += '<div class="row"><div class="col-sm-4">Breed</div><div class="col-sm-8">' + TestDetails.breed + '</div></div>';
-			animal_panel += '<div class="row"><div class="col-sm-4">DOB</div><div class="col-sm-8">' + TestDetails.DOB + '</div></div>';
-			animal_panel += '<div class="row"><div class="col-sm-4">Sex</div><div class="col-sm-8">' + TestDetails.sex + '</div></div>';
-			animal_panel += '<div class="row"><div class="col-sm-4">Microchip</div><div class="col-sm-8">' + TestDetails.TattooOrChip + '</div></div>';
-			animal_panel += '<div class="row"><div class="col-sm-4">Colour</div><div class="col-sm-8">' + TestDetails.Colour + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-xs-4">Pet Name</div><div class="col-xs-8">' + TestDetails.PetName + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-xs-4">Reg No.</div><div class="col-xs-8">' + TestDetails.RegistrationNo + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-xs-4">Breed</div><div class="col-xs-8">' + TestDetails.breed + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-xs-4">DOB</div><div class="col-xs-8">' + TestDetails.DOB + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-xs-4">Sex</div><div class="col-xs-8">' + TestDetails.sex + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-xs-4">Microchip</div><div class="col-xs-8">' + TestDetails.TattooOrChip + '</div></div>';
+			animal_panel += '<div class="row"><div class="col-xs-4">Colour</div><div class="col-xs-8">' + TestDetails.Colour + '</div></div>';
 
 			animalDiv.html(animal_panel);	
 			populateAnimalModal(TestDetails);
@@ -615,6 +615,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			var results = '&nbsp;';
 			var results_date = '&nbsp;';
 			var results_by = '&nbsp;';
+			var testResults = '';
 			
 			if (TestDetails.results.length > 0 && TestDetails.results[0].cert_code != ''){
 				//console.log(TestDetails.results[0]);
@@ -631,15 +632,41 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 						
 						//results += '<a href="'+DennisAjax.site_url+'/plate/' + TestDetails.analysis[i].test_plate + '">' + TestDetails.analysis[i].test_plate + '</a>';
 						//if (TestDetails.results[i].test_plate_well != ''){ results += '&nbsp;(' +TestDetails.analysis[i].test_plate_well+ ')'; }
+						
+						var labelClass = "default";
+						switch (TestDetails.results[i].test_result) {
+				            case 'AFFECTED':
+				            	labelClass = 'danger';
+				                break;
+				            case 'CARRIER':
+				            	labelClass = 'warning';
+				                break;
+				            case 'NORMAL':
+				            	labelClass = 'success';
+				                break;
+				            case 'PROFILE':
+				            	TestDetails.results[i].test_result = 'VIEW';
+				                labelClass = 'default';
+				                break;
+				        }
+											
+						
 						results += TestDetails.results[i].cert_code;
-						if (TestDetails.results.length > 1){ results += '&nbsp;('+TestDetails.results[i].test_code+')'; }
+						if (TestDetails.results.length > 1){ 
+							results += '&nbsp;('+TestDetails.results[i].test_code+')'; 
+							testResults += '<button class="btn btn-block btn-'+labelClass+'" type="button"><span class="badge">'+TestDetails.results[i].test_code+'</span>&nbsp;'+TestDetails.results[i].test_result+'</button>';
+						}
+						else{
+							testResults += '<button class="btn btn-block btn-'+labelClass+'" type="button">'+TestDetails.results[i].test_result+'</button>';
+						}
+						
 					}
 				}
 			}
 			
 			order_panel = '';
 			order_panel += '<div class="row"><div class="col-sm-12 small">';
-			// order_panel += '<h3>Progress</h3>';
+			order_panel += '<h3 style="margin-top:0px; text-align:center"><small>'+TestDetails.test_name+' ~ '+TestDetails.Breed+'</small></h3>';
 			order_panel += '<table class="table table-striped table-condensed" style="margin-bottom:0px;"><tbody>';
 			order_panel += '<tr><th style="width:25%">Ordered</th><td style="width:25%">' + OrderDetails.OrderDate + '</td><td style="width:20%"><span style="color:#BBBBBB">N/A</span></td><td style="width:30%"></td></tr>';
 			order_panel += '<tr><th>Dispatched</th><td>' + TestDetails.date_sent + '</td><td>' + TestDetails.sent_by + '</td><td></td></tr>';
@@ -647,7 +674,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			order_panel += '<tr><th>Processed</th><td>' + extraction_date + '</td><td>' + extracted_by + '</td><td>' + extraction + '</td></tr>';
 			order_panel += '<tr><th>Analysis</th><td>' + analysed_date + '</td><td>' + analysed_by + '</td><td>' + analysis + '</td></tr>';
 			order_panel += '<tr><th>Results</th><td>' + results_date + '</td><td>' + results_by + '</td><td>' + results + '</td></tr>';
-			order_panel += '</tbody></table/></div></div>';
+			order_panel += '</tbody></table/>'+testResults+'</div></div>';
 			orderDiv.html(order_panel);
 
 			$('#swab_id').text('#' + TestDetails.id);
@@ -714,7 +741,7 @@ function populateAnimalModal(AnimalDetails){
 }
 
 function createClientPanel(ClientDetails) {
-	client_panel = '<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8">';
+	client_panel = '<div class="row"><div class="col-xs-4">Name</div><div class="col-xs-8">';
 	if (ClientDetails.client_id > 0){
 		client_panel += '<a href="'+DennisAjax.site_url+'/clients/view?id=' + ClientDetails.client_id+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a>';
 	}
@@ -723,14 +750,14 @@ function createClientPanel(ClientDetails) {
 	if (ClientDetails.Email !== '') {
 		email = '<a href="mailto:' + ClientDetails.Email + '"><i class="fa fa-envelope-o" aria-hidden="true"></i>' + ClientDetails.Email + '</a>';
 	}
-	client_panel += '<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8">' + email + '</div></div>';
-	client_panel += '<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">' + ClientDetails.Tel + '</div></div>';
-	client_panel += '<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">' + ClientDetails.Address + '<br />' + ClientDetails.Address2
+	client_panel += '<div class="row"><div class="col-xs-4">Email</div><div class="col-xs-8">' + email + '</div></div>';
+	client_panel += '<div class="row"><div class="col-xs-4">Phone</div><div class="col-xs-8">' + ClientDetails.Tel + '</div></div>';
+	client_panel += '<div class="row"><div class="col-xs-4">Address</div><div class="col-xs-8">' + ClientDetails.Address + '<br />' + ClientDetails.Address2
 			+ '<br />' + ClientDetails.Address3 + '</div></div>';
-	client_panel += '<div class="row"><div class="col-sm-4">Town</div><div class="col-sm-8">' + ClientDetails.Town + '</div></div>';
-	client_panel += '<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">' + ClientDetails.County + '</div></div>';
-	client_panel += '<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">' + ClientDetails.Postcode + '</div></div>';
-	client_panel += '<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">' + ClientDetails.Country + '</div></div>';
+	client_panel += '<div class="row"><div class="col-xs-4">Town</div><div class="col-xs-8">' + ClientDetails.Town + '</div></div>';
+	client_panel += '<div class="row"><div class="col-xs-4">County</div><div class="col-xs-8">' + ClientDetails.County + '</div></div>';
+	client_panel += '<div class="row"><div class="col-xs-4">Postcode</div><div class="col-xs-8">' + ClientDetails.Postcode + '</div></div>';
+	client_panel += '<div class="row"><div class="col-xs-4">Country</div><div class="col-xs-8">' + ClientDetails.Country + '</div></div>';
 
 	return client_panel;
 }

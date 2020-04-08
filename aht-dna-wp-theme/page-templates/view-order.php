@@ -128,7 +128,7 @@ if ($order_details->paid == 0){
 }
 ?>
 	
-	<section class="row">
+	<section class="row hidden-xs hidden-sm">
 		<div class="col-sm-12">
 		<div class="sw-theme-arrows">
 			<ul class="nav nav-tabs nav-justified step-anchor">
@@ -155,17 +155,17 @@ if ($order_details->paid == 0){
 	<section class="row">
 		<div class="col-md-12" style="margin-top:15px;">
 		<?php if ( $test_details ){ ?>
-			<table id="orderDetails" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
+			<table id="orderDetails" class="table table-striped table-bordered table-responsive nowrap" cellspacing="0" width="100%">
 				<thead>
 					<th></th>
 					<th></th>
-					<th class="text-center">TestID</th>
-					<th>Test</th>
+					<th class="text-center" data-priority="1">TestID</th>
+					<th data-priority="2">Test</th>
 					<th>Breed</th>
-					<th>Animal</th>
+					<th data-priority="2">Animal</th>
 					<th>Client</th>
-					<th class="text-center">Status</th>
-					<th class="text-center">Notes</th>
+					<th class="text-center" data-priority="3">Status</th>
+					<th class="text-center" data-priority="3">Notes</th>
 					<th class="text-center">Result</th>
 					<th class="text-center">Actions</th>
 				</thead>
@@ -372,6 +372,9 @@ jQuery(document).ready(function($) {
 			
 	var table = $('#orderDetails').DataTable({
 		select : true,
+		responsive: {
+            details: false
+        },
 		order : [ [ 1, 'desc' ] ],
 		"ordering": false,
 		"paging": false,
