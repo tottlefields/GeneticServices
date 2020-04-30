@@ -338,7 +338,7 @@ function add_plate() {
 	$count = 0;
 	foreach ($_POST['plate_data']['cols'] as $col){
 		$count++;
-		if (preg_match ( '/^\Q\d+/', $col )) { $update_args['col'.$count] = $col; }
+		if (preg_match ( '/^Q\d+/', $col )) { $update_args['col'.$count] = $col; }
 	}
 	$result = $wpdb->update('plates', $update_args, array('test_plate' => $new_plate));
 	
