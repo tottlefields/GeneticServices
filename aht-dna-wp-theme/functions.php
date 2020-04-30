@@ -112,7 +112,7 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'bootstrap-js' );
 	
 	// BS DatePicker
-	wp_register_script ( 'datepicker-js', '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', array ('jquery', 'bootstrap-js' ), '1.6.4', true );
+	wp_register_script ( 'datepicker-js', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js', array ('jquery', 'bootstrap-js' ), '1.9.0', true );
 	wp_enqueue_script ( 'datepicker-js' );
 	
 	// PDF Make
