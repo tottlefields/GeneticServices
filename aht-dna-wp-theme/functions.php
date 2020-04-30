@@ -59,6 +59,7 @@ function add_query_vars($aVars) {
 	//$aVars[] = "plate_type"; // represents the name of the plate type as shown in the URL
 	//$aVars[] = "plate_id"; // represents the name of the plate id as shown in the URL
 	$aVars[] = "plate"; // represents the name of the plate id as shown in the URL
+	$aVars[] = "hilight"; // represents the name of the plate id as shown in the URL
 	return $aVars;
 }
 // hook add_query_vars function into query_vars
@@ -67,6 +68,7 @@ add_filter('query_vars', 'add_query_vars');
 function add_rewrite_rules($aRules) {
 	$aNewRules = array(
 //		'plates/add-plate/([^/]+)/([^/]+)/?$' => 'index.php?pagename=add-plate&plate_type=$matches[1]&plate_id=$matches[2]',
+		'plate/([^/]+)/well/([^/]+)/?$' => 'index.php?pagename=plates&plate=$matches[1]&hilight=$matches[2]',
 		'plate/([^/]+)/?$' => 'index.php?pagename=plates&plate=$matches[1]',
 //		'plate/([^/]+)/?$' => 'index.php?pagename=plates&plate_type=$matches[1]',
 //		'plate/([^/]+)/([^/]+)/?$' => 'index.php?pagename=plates&plate_type=$matches[1]&plate_id=$matches[2]'
@@ -99,6 +101,8 @@ function change_my_title($title) {
 
 // Hooking up our functions to WordPress filters
 function mytheme_enqueue_scripts() {
+	global $wp;
+	
 	wp_deregister_script ( 'jquery' );
 	wp_register_script ( 'jquery', ("//code.jquery.com/jquery-2.2.4.min.js"), false, '2.2.4', true );
 	wp_enqueue_script ( 'jquery' );
@@ -146,10 +150,15 @@ function mytheme_enqueue_scripts() {
 	// Summernote JS
 	wp_register_script ( 'summernote-js', '//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote.min.js', array ('jquery','bootstrap-js'), '0.8.10', true);
 	wp_enqueue_script ( 'summernote-js' );
+
+	// FontAwesome
+	wp_register_script( 'fontawesome-js', 'https://kit.fontawesome.com/8cef4f0a86.js', array(), '5.13.0', true );
+	wp_enqueue_script( 'fontawesome-js');
 	
 	// Main functions js file
 	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.6', true );
 	wp_enqueue_script ( 'js-functions' );
+
 	// Main utils js file
 	wp_register_script ( 'js-utils', get_template_directory_uri () . '/assets/js/utils.js', array (), '0.1.2', false );
 	wp_enqueue_script ( 'js-utils' );
@@ -164,11 +173,11 @@ function mytheme_enqueue_scripts() {
 	
 	// conditional load
 	if (is_page ( array ('orders') )) { wp_enqueue_script ( 'js-orders' ); }
-	if (is_page ( array ('samples') )) { wp_enqueue_script ( 'js-samples' ); }
+	if (is_page ( array ('samples') ) || preg_match( '#^samples(/.+)?$#', $wp->request ) ) { wp_enqueue_script ( 'js-samples' ); }
 	if (is_page ( array ('add-manual-order') )) { wp_enqueue_script ( 'js-new-order' ); }
 	if (is_page ( array ('portal') )) { wp_enqueue_script ( 'js-portal' ); }
 	if (is_page ( array ('statistics') )) { wp_enqueue_script ( 'chart-js' ); }
-	if (is_page ( array ('plates') )) { wp_enqueue_script ( 'js-plates' ); }
+	if (is_page ( array ('plates') ) || preg_match( '#^plates(/.+)?$#', $wp->request ) ) { wp_enqueue_script ( 'js-plates' ); }
 }
 add_action ( 'wp_enqueue_scripts', 'mytheme_enqueue_scripts' );
 
@@ -181,9 +190,9 @@ function filter_wp_nav_menu_items($items, $args) {
 	$items_array = explode ( "\n", $items );
 	$new_items = array ();
 	foreach ( $items_array as $item ) {
-		if (preg_match ( "/fa-\S+/i", $item, $matches )) {
+		if (preg_match ( "/fa\S+ fa-\S+/i", $item, $matches )) {
 			$item = preg_replace ( '/' . $matches [0] . ' /', '', $item );
-			$item = preg_replace ( '/<i class="fa">/', '<i class="fa fa-fw ' . $matches [0] . '">', $item );
+			$item = preg_replace ( '/<i class="fa">/', '<i class="' . $matches [0] . ' fa-fw">', $item );
 		}
 		array_push ( $new_items, $item );
 	}
@@ -223,7 +232,7 @@ function custom_breadcrumbs($sub_page = null) {
 	if (! is_front_page ()) {
 		echo '
 							<li>
-								<i class="fa fa-home"></i>
+								<i class="fas fa-home"></i>
 								<a href="/">' . $home_title . '</a> 
 							</li>';
 		if (is_page ()) {

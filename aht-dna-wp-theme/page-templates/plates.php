@@ -6,23 +6,9 @@ global $wpdb;
     $username = (isset($_REQUEST['username'])) ? $_REQUEST['username'] : $current_user->user_login;
     $new_plate = $_REQUEST['new_plate'];    
     if(!isset($_REQUEST['new_plate'])){
-        $last_plate = $wpdb->get_var("select distinct test_plate as plate from plates where test_plate is not null and plate_type='".$_REQUEST['plate_type']."' order by 1 desc limit 1");
-       
-        switch($_REQUEST['plate_type']){
-            case 'extraction': 
-                $last_plate = str_replace('Q', '', $last_plate);
-                $new_plate = "Q".($last_plate+1);
-                break;
-            case 'taqman':
-                $last_plate = str_replace('TaqMan', '', $last_plate);
-                $new_plate = "TaqMan".($last_plate+1);
-                break;
-            case 'genotype':
-                $last_plate = str_replace('G', '', $last_plate);
-                $new_plate = "G".($last_plate+1);
-                break;
-        }        
-    }
+    	$new_plate = getNextPlate($_REQUEST['plate_type']);    
+	}
+	
     //$new_plate = 'Q2014';
     //$result = 1;
     //echo $new_plate." ";
@@ -54,7 +40,8 @@ global $wpdb;
                 )
 	         */
 	        
-	        $wpdb->query("UPDATE test_swabs SET extraction_plate='".$new_plate."', extraction_date='".$now_date."', extracted_by='".$username."' WHERE extraction_plate IS NULL AND test_id IN (".$_REQUEST['samples'].")");
+	        $wpdb->query("UPDATE test_swabs SET extraction_plate='".$new_plate."', extraction_date='".$now_date."', extracted_by='".$username."' 
+			WHERE extraction_plate IS NULL AND test_id IN (".$_REQUEST['samples'].")");
 	        
 	        
 	        $samples = explode(',', $_REQUEST['samples']);
@@ -176,7 +163,7 @@ global $wpdb;
 	        }
 	        
 	        if (count($wells_allocated) > count($well_order)){
-	            $error = "ERROR: More wells have been allocated thean are available in a single plate (".$new_plate.")."; 
+	            $error = "ERROR: More wells have been allocated than are available in a single plate (".$new_plate.")."; 
 	        }
 	        else{
     	        $index = 0;
@@ -211,6 +198,13 @@ if(isset($wp_query->query_vars['plate'])) {
 			$wells[$well->well] = '<a href="'.get_site_url().'/orders/view/?id='.$well->order_id.'"><span class="hide-small"><span class="hidden-print">AHT</span>'.$well->order_id.'/</span>'.$well->test_id.'</a><br />'.$well->test_code;
 		}
 	}
+	if (count($plate_details->other_wells) > 0){
+		foreach ($plate_details->other_wells as $well){
+			//$wells[$well->well] = '<small class="text-muted">'.$well->well_contents.'</small>';
+			$wells[$well->well] = $well->well_contents;
+		}
+	}
+	
 	if(isset($_REQUEST['well']) && isset($_REQUEST['fill_order'])){
 	    $editing = 1;
 	    $first_well = $_REQUEST['well'];
@@ -265,6 +259,7 @@ foreach (array_keys($plates) as $plate_type){
 		<!-- <div class="<?php if(isset($plate_q) && $plate_q!=null){ echo 'col-md-12'; }else{ echo 'col-md-9'; } ?>"> -->
 			<table width="100%" class="plate_table">
 		<?php
+		$wellRequest = (isset($wp_query->query_vars['hilight'])) ? urldecode($wp_query->query_vars['hilight']) : '';
 		
 		$letters = range('A', 'H');
 		for ($r=0; $r<9; $r++){
@@ -273,16 +268,24 @@ foreach (array_keys($plates) as $plate_type){
 				$cell = $letters[$r-1].($c);
 				
 				if ($r == 0 & $c == 0){ 
-					if (isset($wp_query->query_vars['plate'])){ 
-					    if ($editing){ echo '<td style="border:0px"><button type="button" class="btn btn-success btn-xs hidden-print hide-small"><i class="fa fa-check-square-o"></i>Done</button></td>';  }
-					    else { echo '<td style="border:0px"><button type="button" class="btn btn-default btn-xs hidden-print hide-small"><i class="fa fa-pencil-square-o"></i>Edit</button></td>'; }
+					/*if (isset($wp_query->query_vars['plate'])){ 
+					    if ($editing){ echo '<td style="border:0px"><button type="button" class="btn btn-success btn-xs hidden-print hide-small"><i class="far fa-check-square"></i>Done</button></td>';  }
+					    else { echo '<td style="border:0px"><button type="button" class="btn btn-default btn-xs hidden-print hide-small"><i class="far fa-edit-square-o"></i>Edit</button></td>'; }
 					}
-					else { echo '<td style="border:0px">&nbsp;</td>'; }
+					else { echo '<td style="border:0px">&nbsp;</td>'; } */
+					echo '<td style="border:0px">&nbsp;</td>';
 				}
-				elseif($r == 0){ echo '<th>'.$c.'</th>'; }
+				elseif($r == 0){ 
+					if (isset($plate_details->{'col'.$c})) { echo '<th>'.str_replace(':', '/', $plate_details->{'col'.$c}).'</th>'; } 
+					else { echo '<th>'.$c.'</th>'; }
+				}
 				elseif($c == 0){ echo '<th>'.$letters[$r-1].'</th>'; }
 				else{ 
-				    if(isset($wells[$cell])){ echo '<td id="'.$cell.'" width="8%"><small class="cell_id" style="display:none">'.$cell.'</small><small class="contents well_contents">'.$wells[$cell].'</small></td>'; }
+				    if(isset($wells[$cell])){ 
+						echo '<td id="'.$cell.'" width="8%"';
+						if ($cell == $wellRequest){ echo ' class="hilight-well"'; }
+						echo '><small class="cell_id" style="display:none">'.$cell.'</small><small class="contents well_contents">'.$wells[$cell].'</small></td>'; 
+					}
 				    elseif ($editing){
 				        echo '<td id="'.$cell.'" width="8%" data-well="'.$cell.'" data-plate="'.$plate_q.'"><small class="cell_id">'.$cell.'</small>
                         <small class="contents well_contents">';
@@ -310,7 +313,7 @@ foreach (array_keys($plates) as $plate_type){
 		<div class="col-sm-4 col-md-3 hidden-print">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title"><i class="fa fa-th"></i>&nbsp;Plate Details</h3>
+					<h3 class="panel-title"><i class="fas fa-th"></i>&nbsp;Plate Details</h3>
 				</div>
 				<div class="panel-body" id="details_plate">
 				<?php if(isset($plate_q) && $plate_q!=null) {?>
@@ -325,9 +328,9 @@ foreach (array_keys($plates) as $plate_type){
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit hidden-print" id="experiment" disabled="disabled" data-toggle="modal" data-target="#experimentModal">
-						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
+						<i class="far fa-edit" aria-hidden="true"></i>Edit
 					</button>
-					<h3 class="panel-title"><i class="fa fa-flask"></i>&nbsp;Experiment Details</h3>
+					<h3 class="panel-title"><i class="fas fa-flask"></i>&nbsp;Experiment Details</h3>
 				</div>
 				<div class="panel-body" id="details_client">
 				</div>
@@ -342,7 +345,7 @@ foreach (array_keys($plates) as $plate_type){
 				<form class="form form-horizontal" role="form" method="post">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h2 class="modal-title" id="platesModalLabel"><i class="fa fa-file-text-o"></i>&nbsp;Add a Plate</h2>
+						<h2 class="modal-title" id="platesModalLabel"><i class="far fa-file-alt"></i>&nbsp;Add a Plate</h2>
 					</div>
 					<div class="modal-body">
 						<div class="row">

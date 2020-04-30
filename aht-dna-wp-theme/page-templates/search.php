@@ -8,7 +8,7 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 	$allResults = array();
 	
 	
-	if (preg_match('/^Q\d{1,6}$/', strtoupper($query)) || preg_match('/^\d{1,6}G$/', strtoupper($query)) || preg_match('/^TaqMan\d{1,6}$/', strtoupper($query))){
+	if (preg_match('/^Q\d{1,6}$/', strtoupper($query)) || preg_match('/^\d{1,6}G$/', strtoupper($query)) || preg_match('/^TM\d{1,6}$/', strtoupper($query))){
 		//Plate Record ID - Etraction plate (Q plus 1-6 digits) OR Genotyping plate (1 to 6 digits appended by a G) OR TaqMan plate
 		$sql = "select * FROM plates
 				WHERE UPPER(test_plate)='".strtoupper($query)."'";
@@ -186,7 +186,7 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 							<div class="input-group input-group-lg">
 								<input type="text" class="form-control search-form" placeholder="Search" name="q">
 								<span class="input-group-btn">
-									<button type="submit" class="btn btn-primary search-btn" data-target="#search-form"><i class="fa fa-search"></i></button>
+									<button type="submit" class="btn btn-primary search-btn" data-target="#search-form"><i class="fas fa-search"></i></button>
 								</span>
 							</div>
 						</div>
@@ -207,15 +207,15 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 				<div class="alert alert-success">Your search for <strong><?php echo strtoupper($query); ?></strong> found <strong><?php echo $total_results; ?></strong> results.</div>
 				<ul class="nav nav-tabs nav-justified" id="resultsTabs" role="tablist">
 					<li<?php if(count($allResults['animals']) == 0){ echo ' class="disabled"'; }?>>
-						<a href="#tab-animals" role="tab" data-toggle="tab" aria-controls="tab-animals"><i class="fa fa-paw fa-lg"></i>&nbsp;Animals&nbsp;
+						<a href="#tab-animals" role="tab" data-toggle="tab" aria-controls="tab-animals"><i class="fas fa-dog fa-lg"></i>&nbsp;Animals&nbsp;
 						<span class="badge"><?php echo count($allResults['animals']); ?></span></a>
 					</li>
 					<li<?php if(count($allResults['clients']) == 0){ echo ' class="disabled"'; }?>>
-						<a href="#tab-clients" role="tab" data-toggle="tab" aria-controls="tab-clients"><i class="fa fa-user fa-lg"></i>&nbsp;Clients&nbsp;
+						<a href="#tab-clients" role="tab" data-toggle="tab" aria-controls="tab-clients"><i class="fas fa-user fa-lg"></i>&nbsp;Clients&nbsp;
 						<span class="badge"><?php echo count($allResults['clients']); ?></span></a>
 					</li>
 					<li<?php if(count($allResults['orders']) == 0){ echo ' class="disabled"'; }?>>
-						<a href="#tab-orders" role="tab" data-toggle="tab" aria-controls="tab-orders"><i class="fa fa-shopping-basket fa-lg"></i>&nbsp;Orders&nbsp;
+						<a href="#tab-orders" role="tab" data-toggle="tab" aria-controls="tab-orders"><i class="fas fa-shopping-basket fa-lg"></i>&nbsp;Orders&nbsp;
 						<span class="badge"><?php echo count($allResults['orders']); ?></span></a>
 					</li>
 				</ul>

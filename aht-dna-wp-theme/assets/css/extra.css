@@ -13,6 +13,7 @@ tr.selected ul.dropdown-menu a { color: #646464 !important; }
 table.plate_table td, table.plate_table th, table.plate_table input { border:1px solid #e3e3e3; text-align:center }
 table.plate_table small { font-size:70%; color:#999999 }
 table.plate_table small.contents { color:#000000 }
+table.plate_table td.hilight-well{ border: 2px solid #7f5ca3; }
 
 .datepicker { z-index: 1200 !important; }
 .btn-block { margin-bottom:5px; }
@@ -79,7 +80,7 @@ span.cc{ color:#6d84b4 } */
 
 /* Font Awesome
 =================================================================== */
-.fa { padding: 0px 5px 0px 0px; }
-.fa-file-pdf-o { color:darkred; }
-table.dataTable tbody>tr.selected td>a>i.fa-file-pdf-o { color:white; }
+.fas, .fab, .far { padding: 0px 5px 0px 0px; }
+.fa-file-pdf{ color:darkred; }
+table.dataTable tbody>tr.selected td>a>i.fa-file-pdf { color:white; }
 .link { cursor: pointer; }

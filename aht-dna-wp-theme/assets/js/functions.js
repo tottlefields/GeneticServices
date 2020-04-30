@@ -582,8 +582,10 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 						
 						extraction_date += TestDetails.swabs[i].extraction_date;
 						extracted_by += TestDetails.swabs[i].extracted_by;
-						
-						extraction += '<a href="'+DennisAjax.site_url+'/plate/' + TestDetails.swabs[i].extraction_plate + '">' + TestDetails.swabs[i].extraction_plate + '</a>';
+
+						plateLink = DennisAjax.site_url+'/plate/' + TestDetails.swabs[i].extraction_plate;
+						if (TestDetails.swabs[i].extraction_well != '') { plateLink += '/well/'+TestDetails.swabs[i].extraction_well; }
+						extraction += '<a href="'+ plateLink + '">' + TestDetails.swabs[i].extraction_plate + '</a>';
 						if (TestDetails.swabs[i].extraction_well != ''){ extraction += '&nbsp;(' +TestDetails.swabs[i].extraction_well+ ')'; }
 					}
 				}
@@ -743,12 +745,12 @@ function populateAnimalModal(AnimalDetails){
 function createClientPanel(ClientDetails) {
 	client_panel = '<div class="row"><div class="col-xs-4">Name</div><div class="col-xs-8">';
 	if (ClientDetails.client_id > 0){
-		client_panel += '<a href="'+DennisAjax.site_url+'/clients/view?id=' + ClientDetails.client_id+ '"><i class="fa fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a>';
+		client_panel += '<a href="'+DennisAjax.site_url+'/clients/view?id=' + ClientDetails.client_id+ '"><i class="fas fa-user" aria-hidden="true"></i>' + ClientDetails.FullName + '</a>';
 	}
 	client_panel += '</div></div>';
 	email = '&nbsp;';
 	if (ClientDetails.Email !== '') {
-		email = '<a href="mailto:' + ClientDetails.Email + '"><i class="fa fa-envelope-o" aria-hidden="true"></i>' + ClientDetails.Email + '</a>';
+		email = '<a href="mailto:' + ClientDetails.Email + '"><i class="far fa-envelope" aria-hidden="true"></i>' + ClientDetails.Email + '</a>';
 	}
 	client_panel += '<div class="row"><div class="col-xs-4">Email</div><div class="col-xs-8">' + email + '</div></div>';
 	client_panel += '<div class="row"><div class="col-xs-4">Phone</div><div class="col-xs-8">' + ClientDetails.Tel + '</div></div>';

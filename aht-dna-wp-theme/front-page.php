@@ -106,7 +106,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 											<div class="input-group input-group-lg">
 												<input type="text" class="form-control search-form" placeholder="Search" name="q">
 												<span class="input-group-btn">
-													<button type="submit" class="btn btn-primary search-btn" data-target="#search-form"><i class="fa fa-search"></i></button>
+													<button type="submit" class="btn btn-primary search-btn" data-target="#search-form"><i class="fas fa-search"></i></button>
 												</span>
 											</div>
 										</div>
@@ -120,7 +120,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 						<?php $count = countOrders($order_steps[0]); ?>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="statbox blue">
-								<div class="number"><i class="fa fa-shopping-basket"></i>&nbsp;<?php echo $count; ?></div>
+								<div class="number"><i class="fas fa-shopping-basket"></i>&nbsp;<?php echo $count; ?></div>
 								<div class="title">Pending Orders</div>
 								<?php if ($count>0){ ?><div class="footer"><a href="<?php echo get_site_url(); ?>/orders/"> View list</a></div><?php } ?>
 							</div>
@@ -128,7 +128,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 						<?php $count = countUnextracted(); ?>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="statbox yellow">
-								<div class="number"><i class="fa fa-flask"></i>&nbsp;<?php echo $count; ?></div>
+								<div class="number"><i class="fas fa-flask"></i>&nbsp;<?php echo $count; ?></div>
 								<div class="title">Untested Samples</div>
 								<?php if ($count>0){ ?><div class="footer"><a href="<?php echo get_site_url(); ?>/samples/"> View list</a></div><?php } ?>
 							</div>
@@ -136,7 +136,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 						<?php $count = countRepeats(); ?>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<div class="statbox red">
-								<div class="number"><i class="fa fa-repeat"></i>&nbsp;<?php echo $count; ?></div>
+								<div class="number"><i class="fas fa-redo"></i>&nbsp;<?php echo $count; ?></div>
 								<div class="title">Pending Repeats</div>
 								<?php if ($count>0){ ?><div class="footer"><a href="#"> View list</a></div><?php } ?>
 							</div>

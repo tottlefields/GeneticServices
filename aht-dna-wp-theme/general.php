@@ -46,12 +46,27 @@ function countUnextracted(){
 	where returned_date is not null and cancelled_date is null and extraction_plate is null and test_code<>'WP'";
 	$count = $wpdb->get_var($sql);
 	return $count;	
-}	
+}
 
 function countUntested(){
 	global $wpdb;
+	$sql = "SELECT count(DISTINCT test_id) FROM test_swabs t1 LEFT OUTER JOIN (
+			SELECT id, test_id, swab_failed, plate_allocated FROM test_swabs WHERE plate_allocated=1
+		) t2 USING (test_id) 
+		WHERE t1.plate_allocated=0 AND extraction_plate IS NOT NULL AND  
+		((t2.plate_allocated IS NULL AND t2.swab_failed IS NOT NULL) OR t2.plate_allocated IS NULL) ";
+	$count = $wpdb->get_var($sql);
+	return $count;
+}
+
+function countUnanalysed(){
+	return '10';
+}
+
+function countUnreported(){
+	global $wpdb;
 	$sql = "SELECT count(distinct order_tests.id) from order_tests left outer join test_swab_results on order_tests.id=test_id 
-	where returned_date is not null and cancelled_date is null and cert_code is null and test_code<>'WP'";
+	where returned_date is not null and cancelled_date is null and cert_code is null and order_tests.test_code<>'WP'";
 	$count = $wpdb->get_var($sql);
 	return $count;	
 }	
@@ -276,19 +291,48 @@ function getPlateDetails($plate_id){
 	$plate_details = $wpdb->get_results($sql, OBJECT );
 	
 	if ($plate_details[0]->plate_type == 'extraction'){
-		$sql = "select distinct s.id as swab_id, t.order_id, s.test_id as test_id, t.test_code, s.extraction_well as well 
+		$sql = "select distinct s.id as swab_id, t.order_id, s.test_id as test_id, t.test_code, s.swab, s.extraction_well as well 
 		from test_swabs s inner join order_tests t on s.test_id=t.id where s.extraction_plate='".$plate_id."'
-		order by 5, 4";		
+		order by 4,5";		
 	}
 	else {
+		$sql = "select well_id as well, well_contents from plate_wells where test_plate='".$plate_id."'";
+		$plate_details[0]->other_wells = $wpdb->get_results($sql, OBJECT);
+		
 		$sql = "select distinct t.order_id, r.test_id, t.test_code, r.test_plate_well as well 
 		from test_swab_results r inner join order_tests t on t.id=test_id where test_plate='".$plate_id."'
-		order by 4";		
+		order by 4";
+		
 	}
 	$wells = $wpdb->get_results($sql, OBJECT);	
 	$plate_details[0]->wells = $wells;
 	
 	return $plate_details[0];	
+}
+
+function getNextPlate($plate_type){
+	global $wpdb;	
+	$new_plate = '';
+	
+	$last_plate = $wpdb->get_var("select distinct test_plate as plate 
+	from plates where test_plate is not null and plate_type='".$plate_type."' 
+	order by 1 desc limit 1");
+	
+	switch($plate_type){
+		case 'extraction':
+			$last_plate = str_replace('Q', '', $last_plate);
+			$new_plate = "Q".($last_plate+1);
+			break;
+		case 'taqman':
+			$last_plate = str_replace('TM', '', $last_plate);
+			$new_plate = "TM".($last_plate+1);
+			break;
+		case 'genotype':
+			$last_plate = str_replace('G', '', $last_plate);
+			$new_plate = ($last_plate+1)."G";
+			break;
+	}  
+	return $new_plate;
 }
 
 function getTestAnalysisDetails($test_code=null){
@@ -396,6 +440,27 @@ function orderStats($year=null, $month=0){
 function createSwabs($test_id){
 	global $wpdb;
 	$wpdb->insert( 'test_swabs', array('test_id' => $test_id, 'swab' => 'A'));	
+}
+
+function drawPlate($id = "plate_table", $row_height = "50px"){
+
+	$plate_html = '<table width="100%" class="plate_table" id="'.$id.'">';
+
+	$letters = range('A', 'H');
+	for ($r=0; $r<9; $r++){
+		$plate_html .= '<tr style="height:'.$row_height.'">';
+		for ($c=0; $c<13; $c++){
+			$cell = $letters[$r-1].($c);
+			if ($r == 0 & $c == 0){ $plate_html .= '<td style="border:0px">&nbsp;</td>'; }
+			elseif($r == 0){ $plate_html .= '<th id="col'.$c.'" class="cell col">'.$c.'</th>'; }
+			elseif($c == 0){ $plate_html .= '<th id="row'.$letters[$r-1].'" class="cell row">'.$letters[$r-1].'</th>'; }
+			else{ $plate_html .= '<td id="'.$cell.'" width="8%" class="cell"></td>'; }
+		}
+		$plate_html .= '</tr>';
+	}
+	$plate_html .= '</table>';
+
+	return $plate_html;
 }
 
 function getWellOrder($start='H1', $order='up-across'){

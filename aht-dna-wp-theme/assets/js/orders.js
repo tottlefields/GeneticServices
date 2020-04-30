@@ -64,7 +64,7 @@ jQuery(document).ready(function($) {
 		}
 	});
 	
-	$("div.toolbar").html('<button type="button" class="btn btn-default" id="exportPDFs" disabled="disabled"><i class="fa fa-file-pdf-o link"></i>&nbsp;Export PDFs</button>');
+	$("div.toolbar").html('<button type="button" class="btn btn-default" id="exportPDFs" disabled="disabled"><i class="far fa-file-pdf link"></i>&nbsp;Export PDFs</button>');
 	
 	$("#exportPDFs").on('click', function(e){
 		var orderIds = [];

@@ -6,7 +6,7 @@
 				<form class="form form-horizontal" role="form" method="post">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h2 class="modal-title" id="clientModalLabel"><i class="fa fa-user"></i>&nbsp;Client Details</h2>
+						<h2 class="modal-title" id="clientModalLabel"><i class="fas fa-user"></i>&nbsp;Client Details</h2>
 					</div>
 					<div class="modal-body">
 						<div class="row">

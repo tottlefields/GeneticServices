@@ -286,8 +286,8 @@ function getGPlate($cell){
 
 function getTPlate($cell){
 	$plate = '';
-	if (preg_match('/TaqMan\d+/', $cell)){
-		preg_match_all('/TaqMan\d+/', $cell, $plates);
+	if (preg_match('/TM\d+/', $cell)){
+		preg_match_all('/TM\d+/', $cell, $plates);
 		if (count($plates[0]) > 1 ){ return implode(':', $plates[0]); }
 		$plate = $plates[0][0];
 			//$wpdb->query( "UPDATE IGNORE test_swabs SET extraction_plate='".$matches[0][0]."' WHERE test_id=$swab_id AND swab='A'");

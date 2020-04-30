@@ -84,7 +84,7 @@ if(!is_user_logged_in()) {
     				<a href="<?php echo site_url('/'); ?>"><img src="<?php echo get_template_directory_uri() . '/assets/img/logo.png'; ?>" alt="" class="navbar-brand top-logo" /></a>
     			</div>
     			
-    			<div class="collapse navbar-collapse visivle-xs" id="bs-example-navbar-collapse-6">
+    			<div class="collapse navbar-collapse visible-xs" id="bs-example-navbar-collapse-6">
     				<?php
     				    wp_nav_menu(
     						array(
@@ -103,9 +103,9 @@ if(!is_user_logged_in()) {
         				<p class="navbar-text">Hi, <?php echo $current_user->user_firstname; ?></p>
 						<!-- <li class="topbar-user"><span style="padding:15px;">Hi, <?php echo $current_user->user_firstname; ?></span></li>  -->
 					<?php if(current_user_can('administrator')) { ?>
-						<li><a href="<?php echo admin_url(); ?>"><i class="fa fa-lock"></i>Admin</a></li>
+						<li><a href="<?php echo admin_url(); ?>"><i class="fas fa-lock"></i>Admin</a></li>
 					<?php } ?>
-						<li><a href="<?php echo wp_logout_url(); ?>"><i class="fa fa-sign-out"></i>Log Out</a></li>
+						<li><a href="<?php echo wp_logout_url(); ?>"><i class="fas fa-sign-out-alt"></i>Log Out</a></li>
 					<?php } else { ?>
 						<li><a href="<?php echo wp_login_url(); ?>">Log In</a></li>
 					<?php } ?>
@@ -123,7 +123,7 @@ if(!is_user_logged_in()) {
 		<div class="container-fluid">
 			<div class="row">
 			
-    			<nav class="hidden-xs col-sm-3 col-md-2 sidebar hidden-print bg-faded">
+    			<nav class="hidden-xs col-sm-2 sidebar hidden-print bg-faded">
     				<?php
     				    wp_nav_menu(
     						array(
@@ -144,4 +144,4 @@ if(!is_user_logged_in()) {
 				</noscript>
 				
 				<!-- start: Content -->
-				<main class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 pt-3">
+				<main class="col-sm-10 col-sm-offset-2 pt-3">

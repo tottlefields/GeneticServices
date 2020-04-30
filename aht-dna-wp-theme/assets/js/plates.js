@@ -1,4 +1,8 @@
 jQuery(document).ready(function($) {
+		$(document).on({ //no need to be inside document ready handler!
+			ajaxStart: function () { $('body').addClass("loading"); },
+			ajaxStop: function () { $('body').removeClass("loading"); }
+		});
 		
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				clearPlate();
@@ -116,8 +120,8 @@ jQuery(document).ready(function($) {
 						plateID = "Q"+(id+1);
 					}
 					else if (plateType == 'taqman'){	
-						var id = parseInt(last.replace("TaqMan", ""));
-						plateID = "TaqMan"+(id+1);
+						var id = parseInt(last.replace("TM", ""));
+						plateID = "TM"+(id+1);
 					}
 					else if (plateType == 'genotype'){	
 						var id = parseInt(last.replace("G", ""));

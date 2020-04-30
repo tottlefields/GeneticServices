@@ -1,105 +1,133 @@
 jQuery(document).ready(function($) {
-	var duplicates = new Array();
-	var details = $('#order_details');
-	var table = $('#samples').DataTable({
-		dom: '<"toolbar">frtip',
-		paging: false,
-//		ordering: false,
-		lengthChange: false,
-		order: [[ 4, "asc" ], [7, "asc"]],
-		select: { 
-			style: 'multi',
-			selector: ':not(input.noRowSelect)'
-//			//selector: 'td:first-child'
-		},
-		columnDefs: [ {
-            targets: 0,
-			orderable: false,
-            checkboxes: { selectRow: true }
-         }, {
-			targets: [ 0, 2, 3 ],
-			orderable: false
-		}, {
-			targets: [ 2, 3, 6 ],
-			visible: false
-		}, {
-			type: 'date-uk',
-			targets: 4
-		} ]
-	});
-	
-	table
-        .on( 'select', function ( e, dt, type, indexes ) {
-            //var rowData = table.rows( indexes ).data().toArray();
-            countSamples();
-        } )
-        .on( 'deselect', function ( e, dt, type, indexes ) {
-            //var rowData = table.rows( indexes ).data().toArray();
-            countSamples();
-        } );
-	
-	$('.duplicateSwab').change(function() {
-		var swabID = $(this).closest('tr').attr('id').replace("row","");
-		if($(this).prop('checked')){
-			duplicates.push(swabID);
-		}else{
-			duplicates.splice( $.inArray(swabID, duplicates), 1 );
-		}
-		countSamples();
-	});
-	
-	$(".selectSample").on("click", function() {
-			
-			var button = $(this).attr('id');
-			var selector;
-			
-			if (button.match(/selectTest/)){
-				test = button.replace("selectTest", "");
-				selector = "test-"+test;
-			}
-			if (button.match(/selectType/)){
-				type = button.replace("selectType", "");
-				selector = "type-"+type;
-				for (var test in types2test[type]) {
-					if($(this).hasClass('active')){ $("#selectTest"+test).removeClass("active"); }
-					else { $("#selectTest"+test).addClass("active"); }
-				}
-			}			
-			
-			if($(this).hasClass('active')){
-				$(this).removeClass('active');
-				table.rows('.'+selector).deselect();
-			} else { 
-				$(this).addClass('active'); 
-				table.rows('.'+selector).select();
-			}
-	});
-	
-	$("div.toolbar").html('<button type="button" class="btn btn-default" id="exportSampleList" disabled="disabled"><i class="fa fa-th link"></i>&nbsp;Generate Q Plate</button>');
-	
-	$("#exportSampleList").on('click', function(e){
-		var orderIds = [];
-		var rows_selected = table.column(0).checkboxes.selected();		
-		window.location.href = "http://dennis.local/plates/?add-plate&plate_type=extraction&samples="+rows_selected.join()+"&duplicates="+duplicates.join();
-	});
-	
+		$(document).on({ //no need to be inside document ready handler!
+			ajaxStart: function () { $('body').addClass("loading"); },
+			ajaxStop: function () { $('body').removeClass("loading"); }
+		});
+}); 
 
-});
-
-function countSamples(){
-	var table = $('#samples').DataTable();
+function countSamples(table){
 	var sampleCount = table.rows('.selected').count();
-	if (sampleCount == 0 ){ $("#exportSampleList").prop("disabled", true); }
-	else{ $("#exportSampleList").prop("disabled", false); }
+	if (sampleCount == 0 ){ $("#createQPlate").prop("disabled", true); }
+	else{ $("#createQPlate").prop("disabled", false); }
 	if ($('.duplicateSwab:checked').length > 0){ sampleCount += ' ('+$('.duplicateSwab:checked').length+')'}
 	$('#sample_count').text(sampleCount);
 }
 
-function resetSamples(){
-	var table = $('#samples').DataTable();
+function resetSamples(tableSelector){
+	var table = $(tableSelector).DataTable();
 	table.rows().deselect();
+	$(".selectSample").attr('disabled', false);
 	$(".selectSample").removeClass('active');
 	$('.duplicateSwab').bootstrapToggle('off');
-	countSamples();
-	//location.reload();
+	rebuildPlate();
+	countSamples(table);
+}
+
+function rebuildPlate(){
+	$("td.cell").empty();
+	$("th.col").each(function(i){
+		col = ($(this).attr('id')).replace('col', '');
+		$("#col"+col).text(col);
+	});
+	$("th.row").each(function(i){
+		row = ($(this).attr('id')).replace('row', '');
+		$("#row"+row).text(row);
+	});
+	plateJson = {'cols': [], 'wells' : {}, 'groups' : []};
+}
+
+function updatePlate(testCode, testGroup, data){
+
+	var lastCol = 0;
+	var colCount = plateJson.cols.length;
+	var wellCount = 0;
+	var rowLetters = ['H','G','F','E','D','C','B','A'];
+	var plateType = 'taqman';
+
+	// make sure genotyping plates are in blocks of 16 for each grouping
+	if (testGroup.charAt(0) == 'G'){
+		plateType = 'genotype';
+		if(colCount%2 != 0){	// we are on an odd column... need to check previous group
+			if(testGroup != plateJson.groups[plateJson.cols.length-1]){
+				colCount++;
+				plateJson.cols.push('empty');
+				plateJson.groups.push(testGroup);
+				wellCount = 0;
+			}
+		}
+	}
+
+	for (var i=0; i<data.length; i++){
+		rowData = data[i];
+
+		plate = rowData[11];
+		well = rowData[10];
+		letter = well.substring(0,1);
+		num = well.substring(1);
+
+		if (lastCol != num){
+			colCount++;
+			colID = 'col'+colCount.toString();
+			//plateJson.cols.push({ [colID] : plate+':'+num});
+			plateJson.cols.push(plate+':'+num);
+			$("#"+colID).text(plate+'/'+num);
+			plateJson.groups.push(testGroup);
+			wellCount = 0;
+		}
+		lastCol = num;
+
+		newWell = rowLetters[wellCount]+colCount.toString();
+
+		//var well = letter+colCount.toString();
+		$("#"+newWell).text(rowData[7]);
+		plateJson.wells[newWell] = rowData[0];
+		wellCount++;
+	}
+
+	controls = testControls[testCode].split(':');
+
+	if((8-wellCount) < controls.length){
+		colCount++;
+		//plateJson.cols.push({ ['col'+colCount] : testCode+'_controls'});
+		plateJson.cols.push(testCode+'_controls');
+		plateJson.groups.push(testGroup);
+		wellCount = 0;
+	}
+
+	for (var i=0; i<controls.length; i++){
+		var well = String.fromCharCode(65 + i)+colCount.toString();
+		$("#"+well).html('<small class="text-muted">'+controls[i]+"</small>");
+		plateJson.wells[well] = controls[i];
+		wellCount++;
+	}
+
+	if ((8-wellCount) >= 1){ 
+		var well = String.fromCharCode(65 + controls.length)+colCount.toString();
+		$("#"+well).html('<small class="text-muted">'+controls[(controls.length - 1)]+"</small>");
+		plateJson.wells[well] = controls[(controls.length - 1)];
+		wellCount++;
+	}
+
+	$("#plate_type").val(plateType);
+	//$("#plateStructure").val(JSON.stringify(plateJson));
+}
+
+function createPlate(){
+	//console.log(plateJson);
+
+	var data = {
+		"action" : "add_plate",
+		"plate_type" : $("#plate_type").val(),
+		"plate_data" : plateJson
+	}
+
+	$.ajax({
+		type : "post",
+		dataType : "json",
+		url : DennisAjax.ajax_url,
+		data : data,
+		success : function(results) {
+			window.location.href = results.redirect;
+		}
+});
 }
