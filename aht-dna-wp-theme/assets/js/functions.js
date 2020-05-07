@@ -1,5 +1,12 @@
 var address = 'Genetic Services, Animal Health Trust, Lanwades Park, Kentford, Newmarket, Suffolk, CB8 7UU, UK.';
 
+jQuery(document).ready(function($) {
+	$(document).on({ //no need to be inside document ready handler!
+		ajaxStart: function () { $('body').addClass("loading"); },
+		ajaxStop: function () { $('body').removeClass("loading"); }
+	});
+});
+
 function addVetDetails() {
 	var vetDetails;
 	try {
@@ -605,8 +612,10 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 					if (TestDetails.analysis[i].test_plate != ''){
 						if (i > 0){ analysis += '<br />'; analysed_date += '<br />'; analysed_by += '<br />';}
 						
-						analysed_date += TestDetails.analysis[i].result_entered_date;
-						analysed_by += TestDetails.analysis[i].result_entered_by;
+						if (TestDetails.analysis[i].result_entered_by !== null){
+							analysed_date += TestDetails.analysis[i].result_entered_date;
+							analysed_by += TestDetails.analysis[i].result_entered_by;
+						}
 						
 						analysis += '<a href="'+DennisAjax.site_url+'/plate/' + TestDetails.analysis[i].test_plate + '">' + TestDetails.analysis[i].test_plate + '</a>';
 						if (TestDetails.results[i].test_plate_well != ''){ analysis += '&nbsp;(' +TestDetails.analysis[i].test_plate_well+ ')'; }
@@ -619,7 +628,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			var results_by = '&nbsp;';
 			var testResults = '';
 			
-			if (TestDetails.results.length > 0 && TestDetails.results[0].cert_code != ''){
+			if (TestDetails.results.length > 0 && TestDetails.results[0].cert_code !== null && TestDetails.results[0].cert_code != ''){
 				//console.log(TestDetails.results[0]);
 				results = '';
 				results_date = '';
@@ -654,7 +663,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 											
 						
 						results += TestDetails.results[i].cert_code;
-						if (TestDetails.results.length > 1){ 
+						if (TestDetails.results.length > 1 ){ 
 							results += '&nbsp;('+TestDetails.results[i].test_code+')'; 
 							testResults += '<button class="btn btn-block btn-'+labelClass+'" type="button"><span class="badge">'+TestDetails.results[i].test_code+'</span>&nbsp;'+TestDetails.results[i].test_result+'</button>';
 						}

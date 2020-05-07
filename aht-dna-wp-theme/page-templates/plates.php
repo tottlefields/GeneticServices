@@ -192,23 +192,27 @@ $editing = 0;
 if(isset($wp_query->query_vars['plate'])) { 
 	$plate_q = urldecode($wp_query->query_vars['plate']);
 	$plate_details = getPlateDetails($plate_q);
-	$wells = array();
-	if (count($plate_details->wells) > 0){
-		foreach ($plate_details->wells as $well){
-			$wells[$well->well] = '<a href="'.get_site_url().'/orders/view/?id='.$well->order_id.'"><span class="hide-small"><span class="hidden-print">AHT</span>'.$well->order_id.'/</span>'.$well->test_id.'</a><br />'.$well->test_code;
+	if ($plate_details == null){ $error .= 'Sorry, no plate with that ID ('.$plate_q.') exists on the system. Please return to the <a href="/plates/">Plates</a> page and select a different plate.'; }
+	else{
+		$wells = array();
+		if (count($plate_details->wells) > 0){
+			foreach ($plate_details->wells as $well){
+				$wells[$well->well] = '<a href="'.get_site_url().'/orders/view/?id='.$well->order_id.'">
+				<span class="hide-small"><span class="hidden-print">AHT</span>'.$well->order_id.'/</span><span class="test-id">'.$well->test_id.'</span></a><br />'.$well->test_code;
+			}
 		}
-	}
-	if (count($plate_details->other_wells) > 0){
-		foreach ($plate_details->other_wells as $well){
-			//$wells[$well->well] = '<small class="text-muted">'.$well->well_contents.'</small>';
-			$wells[$well->well] = $well->well_contents;
+		if (isset($plate_details->other_wells) && count($plate_details->other_wells) > 0){
+			foreach ($plate_details->other_wells as $well){
+				//$wells[$well->well] = '<small class="text-muted">'.$well->well_contents.'</small>';
+				$wells[$well->well] = '<span class="control">'.$well->well_contents."</span>";
+			}
 		}
-	}
-	
-	if(isset($_REQUEST['well']) && isset($_REQUEST['fill_order'])){
-	    $editing = 1;
-	    $first_well = $_REQUEST['well'];
-	    $fill_order = $_REQUEST['fill_order'];
+		
+		if(isset($_REQUEST['well']) && isset($_REQUEST['fill_order'])){
+		    $editing = 1;
+		    $first_well = $_REQUEST['well'];
+		    $fill_order = $_REQUEST['fill_order'];
+		}
 	}
 }
 
@@ -216,7 +220,7 @@ get_header(); ?>
 
 	<h1 class="hidden-print">
 		<?php if(isset($plate_q)){ echo $plate_q; }else{ wp_title('', true,''); } ?>
-		<button type="button" class="btn btn-default btn-sm" style="margin-left:10px;margin-bottom:3px;" id="animal" data-toggle="modal" data-target="#addPlateModal">Add Plate</button>
+		<!-- <button type="button" class="btn btn-default btn-sm" style="margin-left:10px;margin-bottom:3px;" id="animal" data-toggle="modal" data-target="#addPlateModal">Add Plate</button> -->
 		<ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs($plate_q); ?>
 	</h1>
 	<h1 class="visible-print-block" id="plate_id"><?php echo $plate_q; ?><span id="plate_details" class="pull-right"><small><?php echo $plate_details->created_by; ?> (<?php echo $plate_details->readable_date; ?>)</small></span></h1>

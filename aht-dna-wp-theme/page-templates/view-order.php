@@ -229,7 +229,7 @@ if ($order_details->paid == 0){
 				if ($test->swab_failed >= 1){
 				    $resultHTML = '<span class="label label-default">Failed</span>';
 				}
-				elseif (count($test->results)>0){
+				elseif (count($test->results)>0 && $test->results[0]->cert_code !== null){
 				    foreach ($test->results as $result){
 				        if ($resultHTML != ''){ $resultHTML .= '<hr style="height: 1px; margin: 0px; width: 1px;">'; }
 				        switch ($result->test_result) {

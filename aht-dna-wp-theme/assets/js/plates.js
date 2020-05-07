@@ -31,21 +31,21 @@ jQuery(document).ready(function($) {
 						success : function(results) {
 							//console.log(results);
 							$("#plate_details").html('<small>'+results.created_by+" ("+results.readable_date+")</small>");
-							$("#details_plate").html('<div class="row"><div class="col-xs-5">Plate</div><div class="col-xs-7">'+plate+'</div></div><div class="row"><div class="col-xs-5">Owner</div><div class="col-xs-7"><strong>'+results.created_by+'</strong></div></div><div class="row"><div class="col-xs-5">Generated</div><div class="col-xs-7">'+results.readable_date+'</div></div>');
+							$("#details_plate").html('<div class="row"><div class="col-xs-5">Plate</div><div class="col-xs-7"><a href="/plate/'+plate+'">'+plate+'</a></div></div><div class="row"><div class="col-xs-5">Owner</div><div class="col-xs-7"><strong>'+results.created_by+'</strong></div></div><div class="row"><div class="col-xs-5">Generated</div><div class="col-xs-7">'+results.readable_date+'</div></div>');
 							$("small.contents").html("");
 							$("small.cell_id").show();
 							var wells = results.wells;
 							for (var x=0; x<wells.length; x++){
 								var well = wells[x].well;
 								$("#"+well+" > small.cell_id").hide();
-								$("#"+well+" > small.contents").html('<a href="'+DennisAjax.site_url+'/orders/view/?id='+wells[x].order_id+'"><span class="hidden-print">AHT</span>'+wells[x].order_id+"/"+wells[x].test_id+'</a><br />'+wells[x].test_code);
+								$("#"+well+" > small.contents").html('<a href="'+DennisAjax.site_url+'/orders/view/?id='+wells[x].order_id+'"><span class="hidden-print">AHT</span>'+wells[x].order_id+"/<span class=\"test-id\">"+wells[x].test_id+'</span></a><br />'+wells[x].test_code);
 							}
 						}
 				});
 		});
 		
 		
-		$('#first_well').on('change', function() {
+		/*$('#first_well').on('change', function() {
 			var well = $(this).val();
 			$("input[name=gridfill]").prop('disabled', false);
 			if (well === "H1"){
@@ -58,7 +58,7 @@ jQuery(document).ready(function($) {
 				$("input[name=gridfill][value=up-across]").prop('disabled', true);
 				$("input[name=gridfill][value=across-up]").prop('disabled', true);
 			}
-		});
+		});*/
 		
 		$('.well_enter').keypress(function(event){
 			

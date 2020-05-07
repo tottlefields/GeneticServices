@@ -290,6 +290,10 @@ function getPlateDetails($plate_id){
 	$sql = "select *, DATE_FORMAT(created_date, '%D %M %Y') as readable_date FROM plates WHERE UPPER(test_plate)='$plate_id'";
 	$plate_details = $wpdb->get_results($sql, OBJECT );
 	
+	if (count($plate_details) == 0){
+		return null;
+	}
+	
 	if ($plate_details[0]->plate_type == 'extraction'){
 		$sql = "select distinct s.id as swab_id, t.order_id, s.test_id as test_id, t.test_code, s.swab, s.extraction_well as well 
 		from test_swabs s inner join order_tests t on s.test_id=t.id where s.extraction_plate='".$plate_id."'

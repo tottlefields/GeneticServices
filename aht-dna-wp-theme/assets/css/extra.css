@@ -5,6 +5,8 @@
 	.pagebreak { break-before: page; }
 }
 
+span.test-id { font-weight:bold; color:black; } 
+span.control{ font-size:1.3em; color: #7f5ca3; }
 .top-logo { padding:0px; }
 .toolbar { float:left; }
 
