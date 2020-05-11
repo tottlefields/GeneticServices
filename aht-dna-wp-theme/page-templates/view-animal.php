@@ -57,7 +57,7 @@ $test_details = getTestsByAnimal($animal_id);
 	
 		<div class="col-md-7 col-lg-9">
 		<?php if ( $test_details ){ ?>
-			<table id="orderDetails" class="table table-striped table-bordered table-responsive nowrap" cellspacing="0" width="100%">
+			<table id="orderDetails" class="table table-bordered table-responsive nowrap" cellspacing="0" width="100%">
 				<thead>
 					<th></th>
 					<th class="text-center" data-priority="1">OrderID</th>
@@ -74,6 +74,8 @@ $test_details = getTestsByAnimal($animal_id);
 		
 			<?php
 			$test_count = 0;
+			$previous_order = '';
+			$order_class = 'info';
 			foreach ( $test_details as $test){
 				$class_disabled = '';
 				
@@ -196,8 +198,10 @@ $test_details = getTestsByAnimal($animal_id);
 					$cert = '<li><a href="javascript:viewCert(\''.$test->order_id.'\', \''.$test->id.'\',\''.$test->cert_code.'\')"><i class="fas fa-certificate" aria-hidden="true"></i>&nbsp;View Certificate(s)</a></li>';
 				}
 				
+				if ($previous_order != $test->order_id){ $order_class = ($order_class == 'info') ? 'default' : 'info'; }
+				
 				echo '
-				<tr>
+				<tr class="'.$order_class.'">
 					<td>'.$test->id.'</td>
 					<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$test->order_id.'">AHT'.$test->order_id.'</a></td>
 					<td class="text-center">'.$test->order_date.'</td>
@@ -220,6 +224,7 @@ $test_details = getTestsByAnimal($animal_id);
 					</td>
 				</tr>';
 				$test_count++;
+				$previous_order = $test->order_id;
 			}
 			?>
 				</tbody>
