@@ -55,7 +55,7 @@ $note_details = array();
 	
 		<div class="col-md-7 col-lg-9">
 		<?php if ( $test_details ){ ?>
-			<table id="orderDetails" class="table table-striped table-bordered table-responsive nowrap" cellspacing="0" width="100%">
+			<table id="orderDetails" class="table table-bordered table-responsive nowrap" cellspacing="0" width="100%">
 				<thead>
 					<th></th>
 					<th class="text-center" data-priority="1">OrderID</th>
@@ -72,6 +72,8 @@ $note_details = array();
 		
 			<?php
 			$test_count = 0;
+			$previous_order = '';
+			$order_class = 'info';
 			foreach ( $test_details as $test){
 			    
 				$class_disabled = '';
@@ -179,8 +181,10 @@ $note_details = array();
 				    }
 				}
 				
+				if ($previous_order != $test->order_id){ $order_class = ($order_class == 'info') ? 'default' : 'info'; }
+				
 				echo '
-				<tr>
+				<tr class="'.$order_class.'">
 					<td>'.$test->id.'</td>
 					<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$test->order_id.'">AHT'.$test->order_id.'</a></td>
 					<td class="text-center">'.$test->order_date.'</td>
@@ -202,6 +206,7 @@ $note_details = array();
 					</td>
 				</tr>';
 				$test_count++;
+				$previous_order = $test->order_id;
 			}
 			?>
 				</tbody>

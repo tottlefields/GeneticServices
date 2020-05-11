@@ -60,13 +60,17 @@ function countUntested(){
 }
 
 function countUnanalysed(){
-	return '10';
+	global $wpdb;
+	$sql = "SELECT count(distinct order_tests.id) from order_tests left outer join test_swab_results on order_tests.id=test_id
+	where returned_date is not null and cancelled_date is null and result_entered_date is null and order_tests.test_code<>'WP'";
+	$count = $wpdb->get_var($sql);
+	return $count;	
 }
 
 function countUnreported(){
 	global $wpdb;
 	$sql = "SELECT count(distinct order_tests.id) from order_tests left outer join test_swab_results on order_tests.id=test_id 
-	where returned_date is not null and cancelled_date is null and cert_code is null and order_tests.test_code<>'WP'";
+	where returned_date is not null and cancelled_date is null and result_entered_date is not null and result_reported_date is NULL and cert_code is null and order_tests.test_code<>'WP'";
 	$count = $wpdb->get_var($sql);
 	return $count;	
 }	
@@ -178,7 +182,7 @@ function getTestsByAnimal($animal_id){
 	global $wpdb;	
 	$tests = array();
 	
-	$sql = "select id from order_tests where animal_id=".$animal_id;
+	$sql = "select id from order_tests where animal_id=".$animal_id." order by order_id desc";
 	$test_ids = $wpdb->get_results($sql, ARRAY_N );
 	foreach ($test_ids as $row){
 		$test_details = getTestDetails($row[0]);
@@ -191,7 +195,7 @@ function getTestsByClient($client_id){
 	global $wpdb;	
 	$tests = array();
 	
-	$sql = "select t.* from order_tests t inner join orders o on order_id=o.id  where client_id=".$client_id;
+	$sql = "select t.* from order_tests t inner join orders o on order_id=o.id  where client_id=".$client_id." order by order_id desc";
 	$test_ids = $wpdb->get_results($sql, ARRAY_N );
 	foreach ($test_ids as $row){
 		$test_details = getTestDetails($row[0]);
