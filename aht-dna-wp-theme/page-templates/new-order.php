@@ -47,6 +47,8 @@ if (isset($_POST['new-order-submitted'])) {
 		'Paid'				=> ($_REQUEST['payment-made'] == 'on') ? 1 : 0,
 	));
 	
+	$contentArray = array();
+	
 	for ($i=1; $i<=$_REQUEST['noDogs']; $i++){
 		
 		$animals = animalSearch(array(
@@ -82,8 +84,13 @@ if (isset($_POST['new-order-submitted'])) {
 					'test_code'	=> $test,
 					'VetID'		=> ($_REQUEST['vet-select'] > 0) ? $_REQUEST['vet-select'] : NULL
 			));
+			if(!isset($contentArray[$test])){ $order_content[$test] = 0; }
+			$contentArray[$test]++;
 		}
 	}
+	$order_content = '';
+	foreach ($contentArray as $test => $count){ $order_content .= $count.':'.$test; }
+	$wpdb->update('orders', array('content' => $order_content), array('id' => $order_id));
 	
 	wp_redirect(get_site_url().'/orders/');
 	exit;

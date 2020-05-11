@@ -177,14 +177,15 @@ global $wpdb;
     	            $index++;
     	        } 
     	        wp_redirect(get_site_url().'/plate/'.$new_plate);
+    	        exit;
 	        }
 	        
 	        
 	    } else {
-	        wp_redirect(get_site_url().'/plate/'.$_REQUEST['new_plate'].'/?well='.$_REQUEST['first_well'].'&fill_order='.$_REQUEST['gridfill']);
+	    	wp_redirect(get_site_url().'/plate/'.$_REQUEST['new_plate'].'/?well='.$_REQUEST['first_well'].'&fill_order='.$_REQUEST['gridfill']);
+	    	exit;
 	    }
 	    
-		exit;
 	}
 }
 $editing = 0;
