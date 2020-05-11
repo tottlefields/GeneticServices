@@ -11,28 +11,28 @@
 						<div class="col-md-3 col-sm-6 placeholder">
 							<h4>This Month</h4>
 							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-purple.png'; ?>);">
-								<div style="line-height:200px;"><i class="fa fa-flask" aria-hidden="true"></i><?php echo countTests(date('Y'), date('m')); ?></div>
+								<div style="line-height:200px;"><i class="fas fa-flask" aria-hidden="true"></i><?php echo countTests(date('Y'), date('m')); ?></div>
 							</div>
 							<div class="text-muted">Tests ordered this month.</div>
 						</div>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<h4>This Year</h4>
 							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-green.png'; ?>);">
-								<div style="line-height:200px;"><i class="fa fa-flask" aria-hidden="true"></i><?php echo countTests(date('Y')); ?></div>						
+								<div style="line-height:200px;"><i class="fas fa-flask" aria-hidden="true"></i><?php echo countTests(date('Y')); ?></div>						
 							</div>
 							<div class="text-muted">Tests ordered this year.</div>
 						</div>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<h4>This Month</h4>
 							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-purple.png'; ?>);">
-								<div style="line-height:200px;"><i class="fa fa-shopping-basket" aria-hidden="true"></i><?php echo orderStats(date('Y'), date('m')); ?></div>	
+								<div style="line-height:200px;"><i class="fas fa-shopping-basket" aria-hidden="true"></i><?php echo orderStats(date('Y'), date('m')); ?></div>	
 							</div>
 							<div class="text-muted">Total orders this month.</div>
 						</div>
 						<div class="col-md-3 col-sm-6 placeholder">
 							<h4>This Year</h4>
 							<div class="circle" style="background-image: url(<?php echo get_template_directory_uri() . '/assets/img/circle-green.png'; ?>);">
-								<div style="line-height:200px;"><i class="fa fa-shopping-basket" aria-hidden="true"></i><?php echo orderStats(date('Y')); ?></div>	
+								<div style="line-height:200px;"><i class="fas fa-shopping-basket" aria-hidden="true"></i><?php echo orderStats(date('Y')); ?></div>	
 							</div>
 							<div class="text-muted">Total orders this year.</div>
 						</div>
@@ -66,8 +66,9 @@
 							| 2018      | 04         |      448 |
 							+-----------+------------+----------+ */
 							$results = $wpdb->get_results($sql);
-							$order_counts = array('2017' => array(), '2018' => array());
+							$order_counts = array();
 							foreach ( $results as $order_date ) {
+							    if(!isset($order_counts[$order_date->OrderYear])){$order_counts[$order_date->OrderYear] = array(); }
 								array_push($order_counts[$order_date->OrderYear], $order_date->month_count);
 							}
 							?>
@@ -89,6 +90,20 @@
 											data: [<?php echo implode(',', $order_counts['2018']); ?>],
 											backgroundColor: window.chartColors.red,
 											borderColor: window.chartColors.red,
+											borderWidth: 1,
+											fill: false
+										},{
+											label: '2019',
+											data: [<?php echo implode(',', $order_counts['2019']); ?>],
+											backgroundColor: window.chartColors.blue,
+											borderColor: window.chartColors.blue,
+											borderWidth: 1,
+											fill: false
+										},{
+											label: '2020',
+											data: [<?php echo implode(',', $order_counts['2020']); ?>],
+											backgroundColor: window.chartColors.orange,
+											borderColor: window.chartColors.orange,
 											borderWidth: 1,
 											fill: false
 										}]

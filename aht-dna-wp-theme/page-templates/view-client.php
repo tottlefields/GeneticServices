@@ -16,54 +16,54 @@ $note_details = array();
 ?>
 <?php get_header(); ?>
 
-	<h1><i class="fa fa-user"></i>&nbsp;<?php echo $client_details->FullName; ?><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
+	<h1><i class="fas fa-user"></i>&nbsp;<?php echo $client_details->FullName; ?><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
 			
 	<section class="row">
-		<div class="col-md-3">
+		<div class="col-md-5 col-lg-3">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
-					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="client" data-toggle="modal" data-target="#clientModal">
-						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
+					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit hide-small" id="client" data-toggle="modal" data-target="#clientModal">
+						<i class="far fa-edit" aria-hidden="true"></i>Edit
 					</button>
 				<?php } ?>
-					<h3 class="panel-title"><i class="fa fa-user"></i>&nbsp;Client Details</h3>
+					<h3 class="panel-title"><i class="fas fa-user"></i>&nbsp;Client Details</h3>
 				</div>
 				<div class="panel-body" id="details_client">
 					<?php
 					echo '
-					<div class="row"><div class="col-sm-4">Name</div><div class="col-sm-8">
-						<a href="/clients/view?id='.$client_details->id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$client_details->FullName.'</a>
+					<div class="row"><div class="col-xs-4">Name</div><div class="col-xs-8">
+						<a href="/clients/view?id='.$client_details->id.'"><i class="fas fa-user" aria-hidden="true"></i>'.$client_details->FullName.'</a>
 					</div></div>';
 					$email = '&nbsp;';
 					if ($client_details->Email !== '') {
-						$email = '<a href="mailto:'.$client_details->Email.'"><i class="fa fa-envelope-o" aria-hidden="true"></i>'.$client_details->Email.'</a>';
+						$email = '<a href="mailto:'.$client_details->Email.'"><i class="far fa-envelope" aria-hidden="true"></i>'.$client_details->Email.'</a>';
 					}
 					echo '
-					<div class="row"><div class="col-sm-4">Email</div><div class="col-sm-8">'.$email.'</div></div>
-					<div class="row"><div class="col-sm-4">Phone</div><div class="col-sm-8">'.$client_details->Tel.'</div></div>
-					<div class="row"><div class="col-sm-4">Address</div><div class="col-sm-8">'.$client_details->Address.'<br />'.$client_details->Address2.'<br />'.$client_details->Address3.'</div></div>
-					<div class="row"><div class="col-sm-4">Town</div><div class="col-sm-8">'.$client_details->Town.'</div></div>
-					<div class="row"><div class="col-sm-4">County</div><div class="col-sm-8">'.$client_details->County.'</div></div>
-					<div class="row"><div class="col-sm-4">Postcode</div><div class="col-sm-8">'.$client_details->Postcode.'</div></div>
-					<div class="row"><div class="col-sm-4">Country</div><div class="col-sm-8">'.$client_details->Country.'</div></div>';
+					<div class="row"><div class="col-xs-4">Email</div><div class="col-xs-8">'.$email.'</div></div>
+					<div class="row"><div class="col-xs-4">Phone</div><div class="col-xs-8">'.$client_details->Tel.'</div></div>
+					<div class="row"><div class="col-xs-4">Address</div><div class="col-xs-8">'.$client_details->Address.'<br />'.$client_details->Address2.'<br />'.$client_details->Address3.'</div></div>
+					<div class="row"><div class="col-xs-4">Town</div><div class="col-xs-8">'.$client_details->Town.'</div></div>
+					<div class="row"><div class="col-xs-4">County</div><div class="col-xs-8">'.$client_details->County.'</div></div>
+					<div class="row"><div class="col-xs-4">Postcode</div><div class="col-xs-8">'.$client_details->Postcode.'</div></div>
+					<div class="row"><div class="col-xs-4">Country</div><div class="col-xs-8">'.$client_details->Country.'</div></div>';
 					?>
 				</div>
 			</div>
-			<a href="/orders/add-manual-order/?client=<?php echo $client_details->id; ?>" class="btn btn-primary btn-block">Create Manual Order</a>
+			<a href="/orders/add-manual-order/?client=<?php echo $client_details->id; ?>" class="btn btn-primary btn-block hide-small">Create Manual Order</a>
 		</div>
 	
-		<div class="col-md-9">
+		<div class="col-md-7 col-lg-9">
 		<?php if ( $test_details ){ ?>
-			<table id="orderDetails" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
+			<table id="orderDetails" class="table table-striped table-bordered table-responsive nowrap" cellspacing="0" width="100%">
 				<thead>
 					<th></th>
-					<th class="text-center">OrderID</th>
-					<th class="text-center">Order Date</th>
-					<th>Test</th>
+					<th class="text-center" data-priority="1">OrderID</th>
+					<th class="text-center" data-priority="2">Order Date</th>
+					<th data-priority="4">Test</th>
 					<th>Breed</th>
-					<th>Animal</th>
-					<th class="text-center">Status</th>
+					<th data-priority="2">Animal</th>
+					<th class="text-center" data-priority="3">Status</th>
 					<th class="text-center">Notes</th>
 					<th class="text-center">Result</th>
 					<th class="text-center">Actions</th>
@@ -105,7 +105,7 @@ $note_details = array();
 				if ($results_sent == 1) { $test->order_status = $order_steps[5];}
 				
 				$animal_name = ($test->RegisteredName && $test->RegisteredName != '') ? stripslashes($test->RegisteredName) : '<em>'.$test->PetName.'</em>';	
-				$animal = '<a href="'.get_site_url().'/animals/view?id='.$test->animal_id.'"><i class="fa fa-paw" aria-hidden="true"></i>'.$animal_name.'</a>';
+				$animal = '<a href="'.get_site_url().'/animals/view?id='.$test->animal_id.'"><i class="fas fa-dog" aria-hidden="true"></i>'.$animal_name.'</a>';
 								
 				$status_label = '<span class="label label-info">'.str_replace('(s)', '', $test->order_status).'</span>';
 				if ($test->order_status == 'Cancelled'){
@@ -115,12 +115,12 @@ $note_details = array();
 				}
 				
 				$actions = array(				    
-				    'print_order'   => '<li><a href="javascript:generatePDFs(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>',
-				    'cancel_test'   => '<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>',
-				    'repeat'        => '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fa fa-repeat link"></i>&nbsp;Request Repeat</a></li>',
-				    'dispatch'      => '<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="fa fa-paper-plane-o link"></i>&nbsp;Dispatch Sample</a></li>',
-				    'receive'       => '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>',
-				    'view_certs'    => '<li><a href="javascript:viewCert(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Certificate(s)</a></li>'
+				    'print_order'   => '<li><a href="javascript:generatePDFs(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="far fa-file-pdf link"></i>&nbsp;Print Order</a></li>',
+				    'cancel_test'   => '<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fas fa-ban link"></i>&nbsp;Cancel Test</a></li>',
+				    'repeat'        => '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fas fa-redo link"></i>&nbsp;Request Repeat</a></li>',
+				    'dispatch'      => '<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="far fa-paper-plane link"></i>&nbsp;Dispatch Sample</a></li>',
+				    'receive'       => '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="far fa-check-square link"></i>&nbsp;Receive Sample</a></li>',
+				    'view_certs'    => '<li><a href="javascript:viewCert(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="far fa-file-pdf link"></i>&nbsp;Print Certificate(s)</a></li>'
 				);
 				$action_menu = '';
 				
@@ -129,7 +129,7 @@ $note_details = array();
 					    $action_menu = implode("\n", array($actions['print_order'], $actions['cancel_test'], $actions['dispatch']));
 						break;
 					case 'Kit(s) Dispatched':
-					    //$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
+					    //$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="far fa-check-square link"></i>&nbsp;Receive Sample</a></li>';
 					    $action_menu = implode("\n", array($actions['cancel_test'], $actions['receive']));
 					    break;
 					case 'Result(s) Sent':
@@ -196,7 +196,7 @@ $note_details = array();
 							<ul class="dropdown-menu dropdown-menu-right">
 								'.$action_menu.'
 								<li role="separator" class="divider"></li>
-								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="fa fa-file-text-o link"></i>&nbsp;Add Note</a></li>
+								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="far fa-file-alt link"></i>&nbsp;Add Note</a></li>
 							</ul>
 						</div>
 					</td>
@@ -259,6 +259,9 @@ jQuery(document).ready(function($) {
 		pageLength: 15,
 		paging : true,
 		lengthChange: false,
+		responsive: {
+            details: false
+        },
 		columnDefs : [ {
 			targets : [ 0 ],
 			visible : false,

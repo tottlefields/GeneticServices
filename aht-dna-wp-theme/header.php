@@ -8,10 +8,21 @@ if(!is_user_logged_in()) {
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
 		<meta name="description" content="">
 		<meta name="author" content="Ellen Schofield">
-				
+
+		<link rel="manifest" href="<?php echo get_template_directory_uri(); ?>/assets/ico/manifest.json">
+
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="application-name" content="dennis">
+		<meta name="apple-mobile-web-app-title" content="dennis">
+		<meta name="theme-color" content="#2c9bac">
+		<meta name="msapplication-navbutton-color" content="#2c9bac">
+		<meta name="apple-mobile-web-app-status-bar-style" content="default">
+		<meta name="msapplication-starturl" content="<?php echo site_url('/'); ?>">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 		<!-- start: Favicon -->
 		<link rel="shortcut icon" href="<?php echo get_template_directory_uri() . '/assets/ico/favicon.ico'; ?>">
 		<link rel="apple-touch-icon" sizes="57x57" href="<?php echo get_template_directory_uri() . '/assets/ico/apple-icon-57x57.png'; ?>">
@@ -63,54 +74,67 @@ if(!is_user_logged_in()) {
 	</head>
 	<body>
 		<!-- start: Header -->
-		<nav class="navbar navbar-default navbar-static-top navbar-fixed-top">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a href="<?php echo site_url('/'); ?>"><img src="<?php echo get_template_directory_uri() . '/assets/img/logo.png'; ?>" alt="" class="navbar-brand top-logo" /></a>
-				</div>
-				
-				<ul class="nav navbar navbar-top-links navbar-right mbn">
-				<?php if(is_user_logged_in()) { 
-					global $current_user;
-					get_currentuserinfo();
-					?>
-                    <!-- <li class="dropdown"><a data-hover="dropdown" href="#" class="dropdown-toggle"><i class="fa fa-bell fa-fw"></i><span class="badge badge-green">3</span></a></li>
-                    <li class="dropdown"><a data-hover="dropdown" href="#" class="dropdown-toggle"><i class="fa fa-envelope fa-fw"></i><span class="badge badge-orange">7</span></a> </li>
-                    <li class="dropdown"><a data-hover="dropdown" href="#" class="dropdown-toggle"><i class="fa fa-tasks fa-fw"></i><span class="badge badge-yellow">8</span></a></li> -->
-                    <li class="topbar-user"><span style="padding:15px;">Hi, <?php echo $current_user->user_firstname; ?></span></li>
-                <?php if(current_user_can('administrator')) { ?>
-                    <li><a href="<?php echo admin_url(); ?>"><i class="fa fa-lock"></i>Admin</a></li>
-                <?php } ?>
-                    <li><a href="<?php echo wp_logout_url(); ?>"><i class="fa fa-sign-out"></i>Log Out</a></li>
-				<?php } else { ?>
-					<li><a href="<?php echo wp_login_url(); ?>">Log In</a></li>
+		
+		<nav class="navbar navbar-default navbar-fixed-top">
+    		<div class="container-fluid">
+    			<div class="navbar-header">
+    				<button type="button" class="collapsed navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
+    					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> 
+    				</button>
+    				<a href="<?php echo site_url('/'); ?>"><img src="<?php echo get_template_directory_uri() . '/assets/img/logo.png'; ?>" alt="" class="navbar-brand top-logo" /></a>
+    			</div>
+    			
+    			<div class="collapse navbar-collapse visible-xs" id="bs-example-navbar-collapse-6">
+    				<?php
+    				    wp_nav_menu(
+    						array(
+    							'container' => 'ul',
+    							'theme_location' => 'main-menu',
+    							'menu_class' => 'nav navbar-nav mobile-nav hidden-sm hidden-md hidden-lg hidden-xl',
+    							'link_before' => '<i class="fa"></i>&nbsp;'
+    							)
+    						);
+    					?>
+    				<ul class="nav navbar-nav navbar-right navbar-top-links hidden-xs">
+    				<?php if(is_user_logged_in()) { 
+        				global $current_user;
+        				get_currentuserinfo();
+        				?>
+        				<p class="navbar-text">Hi, <?php echo $current_user->user_firstname; ?></p>
+						<!-- <li class="topbar-user"><span style="padding:15px;">Hi, <?php echo $current_user->user_firstname; ?></span></li>  -->
+					<?php if(current_user_can('administrator')) { ?>
+						<li><a href="<?php echo admin_url(); ?>"><i class="fas fa-lock"></i>Admin</a></li>
 					<?php } ?>
-                </ul>					
-			</div>
-		</nav>
+						<li><a href="<?php echo wp_logout_url(); ?>"><i class="fas fa-sign-out-alt"></i>Log Out</a></li>
+					<?php } else { ?>
+						<li><a href="<?php echo wp_login_url(); ?>">Log In</a></li>
+					<?php } ?>
+					</ul>
+    			</div>
+    		</div>
+    	</nav>
+		
+		
+		
+		
+
 		<!-- end: Header -->
 		
 		<div class="container-fluid">
 			<div class="row">
 			
-				<nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar hidden-print">
-				<?php
-					wp_nav_menu(
-						array(
-							'container' => 'ul',
-							'theme_location' => 'main-menu',
-							'menu_class' => 'nav nav-pills nav-stacked',
-							'link_before' => '<i class="fa"></i>&nbsp;'
-							)
-						);
-					?>
-				</nav>
+    			<nav class="hidden-xs col-sm-2 sidebar hidden-print bg-faded">
+    				<?php
+    				    wp_nav_menu(
+    						array(
+    							'container' => 'ul',
+    							'theme_location' => 'main-menu',
+    							'menu_class' => 'nav nav-pills nav-stacked',
+    							'link_before' => '<i class="fa"></i>&nbsp;'
+    							)
+    						);
+    					?>
+    			</nav>
 				
 				<noscript>
 					<div class="alert alert-block col-sm-10">
@@ -120,4 +144,4 @@ if(!is_user_logged_in()) {
 				</noscript>
 				
 				<!-- start: Content -->
-				<main class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 pt-3">
+				<main class="col-sm-10 col-sm-offset-2 pt-3">

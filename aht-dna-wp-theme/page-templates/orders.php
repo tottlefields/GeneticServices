@@ -37,9 +37,9 @@
 			$row_class = ($order->paid) ? '' : 'danger';
 			$client = '';
 			if ($order->client_id > 0){
-				$client = '<a href="'.get_site_url().'/clients/view?id='.$order->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order->FullName.'</a>';
+				$client = '<a href="'.get_site_url().'/clients/view?id='.$order->client_id.'"><i class="fas fa-user" aria-hidden="true"></i>'.$order->FullName.'</a>';
 				if ($order->Email != ''){
-					$client .= '&nbsp;<a href="mailto:'.$order->Email.'"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>';
+					$client .= '&nbsp;<a href="mailto:'.$order->Email.'"><i class="far fa-envelope" aria-hidden="true"></i></a>';
 				}
 			}
 			$order_date = new DateTime($order->OrderDate);
@@ -54,9 +54,9 @@
 				<td class="text-center">'.$order->SwabCount.'</td>
 				<td class="text-center">'.$order->content.'</td>
 				<td class="text-center">
-                    <a href="javascript:generatePDFs(\''.$order->ID.'\', null, 1)"><i class="fa fa-file-pdf-o link" id="pdf_'.$order->ID.'"></i></a>';
+                    <a href="javascript:generatePDFs(\''.$order->ID.'\', null, 1)"><i class="far fa-file-pdf link" id="pdf_'.$order->ID.'"></i></a>';
 			if (strstr($order->content, ':CPA')){ 
-			    echo '&nbsp;<a href="javascript:generateParentagePDF(\''.$order->ID.'\', null, 1)"><i class="fa fa-users link" id="par_'.$order->ID.'"></i></a>'; 
+			    echo '&nbsp;<a href="javascript:generateParentagePDF(\''.$order->ID.'\', null, 1)"><i class="fas fa-users link" id="par_'.$order->ID.'"></i></a>'; 
 			}
 			echo '                
 			    </td>

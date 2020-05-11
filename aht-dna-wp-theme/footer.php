@@ -8,6 +8,8 @@
 
 			</div><!--/row-->
 		</div><!--/.container-fluid-->
+
+		<div class="ajax"></div>
 		
 		
 		<!-- start: JavaScript-->
@@ -17,7 +19,7 @@
 		<?php wp_footer(); ?>
 		
 		<script>
-		$(document).ready(function() {
+		$(document).ready(function() {			
 			$('.datepick').datepicker({
 				format: 'dd/mm/yyyy'
 			});

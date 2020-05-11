@@ -128,7 +128,7 @@ if ($order_details->paid == 0){
 }
 ?>
 	
-	<section class="row">
+	<section class="row hidden-xs hidden-sm">
 		<div class="col-sm-12">
 		<div class="sw-theme-arrows">
 			<ul class="nav nav-tabs nav-justified step-anchor">
@@ -155,17 +155,17 @@ if ($order_details->paid == 0){
 	<section class="row">
 		<div class="col-md-12" style="margin-top:15px;">
 		<?php if ( $test_details ){ ?>
-			<table id="orderDetails" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
+			<table id="orderDetails" class="table table-striped table-bordered table-responsive nowrap" cellspacing="0" width="100%">
 				<thead>
 					<th></th>
 					<th></th>
-					<th class="text-center">TestID</th>
-					<th>Test</th>
+					<th class="text-center" data-priority="1">TestID</th>
+					<th data-priority="2">Test</th>
 					<th>Breed</th>
-					<th>Animal</th>
+					<th data-priority="2">Animal</th>
 					<th>Client</th>
-					<th class="text-center">Status</th>
-					<th class="text-center">Notes</th>
+					<th class="text-center" data-priority="3">Status</th>
+					<th class="text-center" data-priority="3">Notes</th>
 					<th class="text-center">Result</th>
 					<th class="text-center">Actions</th>
 				</thead>
@@ -176,13 +176,13 @@ if ($order_details->paid == 0){
 			foreach ( $test_details as $test){
 				
 				$class_disabled = '';
-				$client = '<a href="'.get_site_url().'/clients/view?id='.$order_details->client_id.'"><i class="fa fa-user" aria-hidden="true"></i>'.$order_details->FullName.'</a>';
+				$client = '<a href="'.get_site_url().'/clients/view?id='.$order_details->client_id.'"><i class="fas fa-user" aria-hidden="true"></i>'.$order_details->FullName.'</a>';
 				if ($order_details->Email != ''){
-					$client .= '&nbsp;<a href="mailto:'.$order_details->Email.'"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>';
+					$client .= '&nbsp;<a href="mailto:'.$order_details->Email.'"><i class="far fa-envelope" aria-hidden="true"></i></a>';
 				}
 				
 				$animal_name = ($test->RegisteredName && $test->RegisteredName != '') ? stripslashes($test->RegisteredName) : '<em>'.$test->PetName.'</em>';	
-				$animal = '<a href="'.get_site_url().'/animals/view?id='.$test->animal_id.'"><i class="fa fa-paw" aria-hidden="true"></i>'.$animal_name.'</a>';
+				$animal = '<a href="'.get_site_url().'/animals/view?id='.$test->animal_id.'"><i class="fas fa-dog" aria-hidden="true"></i>'.$animal_name.'</a>';
 				
 				$portalID = ($test->PortalID == '') ? '<span style="color:#BBBBBB">N/A</span>' : $test->PortalID;
 				
@@ -197,22 +197,22 @@ if ($order_details->paid == 0){
 					$class_disabled = ' disabled'; 
 				}
 				
-				$actions = '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fa fa-repeat link"></i>&nbsp;Request Repeat</a></li>';
+				$actions = '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fas fa-redo link"></i>&nbsp;Request Repeat</a></li>';
 				switch ($test->order_status) {
 					case 'Order Placed':
 						$actions = '
-							<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
-							<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
-							<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="fa fa-paper-plane-o link"></i>&nbsp;Dispatch Sample</a></li>';
+							<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="far fa-file-pdf link"></i>&nbsp;Print Order</a></li>
+							<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fas fa-ban link"></i>&nbsp;Cancel Test</a></li>
+							<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="far fa-paper-plane link"></i>&nbsp;Dispatch Sample</a></li>';
 						break;
-					case 'Kit(s) Dispatched':
+					case 'Dispatched':
 						$actions = '
-							<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Order</a></li>
-							<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fa fa-ban link"></i>&nbsp;Cancel Test</a></li>
-							<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="fa fa-check-square-o link"></i>&nbsp;Receive Sample</a></li>';
+							<li><a href="javascript:generatePDFs(\''.$order_id.'\',\''.$test->id.'\')"><i class="far fa-file-pdf link"></i>&nbsp;Print Order</a></li>
+							<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fas fa-ban link"></i>&nbsp;Cancel Test</a></li>
+							<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="far fa-check-square link"></i>&nbsp;Receive Sample</a></li>';
 						break;
-					case 'Result(s) Sent':
-						$actions = '<li><a href="javascript:viewCert(\''.$order_id.'\',\''.$test->id.'\')"><i class="fa fa-file-pdf-o link"></i>&nbsp;Print Certificate(s)</a></li>';
+					case 'Results':
+						$actions = '<li><a href="javascript:viewCert(\''.$order_id.'\',\''.$test->id.'\')"><i class="far fa-file-pdf link"></i>&nbsp;Print Certificate(s)</a></li>';
 				}
 				$notes = '';
 				if ($test->note_count > 0){
@@ -229,7 +229,7 @@ if ($order_details->paid == 0){
 				if ($test->swab_failed >= 1){
 				    $resultHTML = '<span class="label label-default">Failed</span>';
 				}
-				elseif (count($test->results)>0){
+				elseif (count($test->results)>0 && $test->results[0]->cert_code !== null){
 				    foreach ($test->results as $result){
 				        if ($resultHTML != ''){ $resultHTML .= '<hr style="height: 1px; margin: 0px; width: 1px;">'; }
 				        switch ($result->test_result) {
@@ -276,7 +276,7 @@ if ($order_details->paid == 0){
 								'.$actions.'
 								<!--<li><a href="#">Something else here</a></li>-->
 								<li role="separator" class="divider"></li>
-								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="fa fa-file-text-o link"></i>&nbsp;Add Note</a></li>
+								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="far fa-file-alt link"></i>&nbsp;Add Note</a></li>
 							</ul>
 						</div>
 					</td>
@@ -293,38 +293,38 @@ if ($order_details->paid == 0){
 		</div>
 	</section>
 	<section class="row well" style="margin-top:15px;">
-		<div class="col-md-4">
+		<div class="col-md-12 col-lg-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title"><i class="fa fa-flask"></i>&nbsp;Test Details</h3>
+					<h3 class="panel-title"><i class="fas fa-dna"></i>&nbsp;Test Details</h3>
 				</div>
 				<div class="panel-body" id="details_order">
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-6 col-lg-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
 					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="client" disabled="disabled" data-toggle="modal" data-target="#clientModal">
-						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
+						<i class="far fa-edit" aria-hidden="true"></i>Edit
 					</button>
 				<?php } ?>
-					<h3 class="panel-title"><i class="fa fa-user"></i>&nbsp;Client Details</h3>
+					<h3 class="panel-title"><i class="fas fa-user"></i>&nbsp;Client Details</h3>
 				</div>
 				<div class="panel-body" id="details_client">
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-6 col-lg-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
 					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="animal" disabled="disabled" data-toggle="modal" data-target="#animalModal">
-						<i class="fa fa-pencil" aria-hidden="true"></i>Edit
+						<i class="far fa-edit" aria-hidden="true"></i>Edit
 					</button>
 				<?php } ?>
-					<h3 class="panel-title"><i class="fa fa-paw"></i>&nbsp;Animal Details</h3>
+					<h3 class="panel-title"><i class="fas fa-dog"></i>&nbsp;Animal Details</h3>
 				</div>
 				<div class="panel-body" id="details_animal">
 				</div>
@@ -372,6 +372,9 @@ jQuery(document).ready(function($) {
 			
 	var table = $('#orderDetails').DataTable({
 		select : true,
+		responsive: {
+            details: false
+        },
 		order : [ [ 1, 'desc' ] ],
 		"ordering": false,
 		"paging": false,

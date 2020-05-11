@@ -7,9 +7,9 @@ session_start ();
 register_nav_menu ( 'main-menu', 'Main Menu' );
 
 // Function to change email address
-function wpb_sender_email($original_email_address) {
-	return 'dennis@aht.org.uk';
-}
+//function wpb_sender_email($original_email_address) {
+//	return 'dennis@aht.org.uk';
+//}
 
 // Function to change sender name
 function wpb_sender_name($original_email_from) {
@@ -19,7 +19,7 @@ function wpb_sender_name($original_email_from) {
 add_theme_support('title-tag');
 
 // Editing the login page
-add_filter ( 'wp_mail_from', 'wpb_sender_email' );
+//add_filter ( 'wp_mail_from', 'wpb_sender_email' );
 add_filter ( 'wp_mail_from_name', 'wpb_sender_name' );
 function my_custom_login() {
 	echo '<link rel="stylesheet" type="text/css" href="' . get_bloginfo ( 'stylesheet_directory' ) . '/assets/css/custom-login-styles.css" />';
@@ -59,6 +59,7 @@ function add_query_vars($aVars) {
 	//$aVars[] = "plate_type"; // represents the name of the plate type as shown in the URL
 	//$aVars[] = "plate_id"; // represents the name of the plate id as shown in the URL
 	$aVars[] = "plate"; // represents the name of the plate id as shown in the URL
+	$aVars[] = "hilight"; // represents the name of the plate id as shown in the URL
 	return $aVars;
 }
 // hook add_query_vars function into query_vars
@@ -67,6 +68,7 @@ add_filter('query_vars', 'add_query_vars');
 function add_rewrite_rules($aRules) {
 	$aNewRules = array(
 //		'plates/add-plate/([^/]+)/([^/]+)/?$' => 'index.php?pagename=add-plate&plate_type=$matches[1]&plate_id=$matches[2]',
+		'plate/([^/]+)/well/([^/]+)/?$' => 'index.php?pagename=plates&plate=$matches[1]&hilight=$matches[2]',
 		'plate/([^/]+)/?$' => 'index.php?pagename=plates&plate=$matches[1]',
 //		'plate/([^/]+)/?$' => 'index.php?pagename=plates&plate_type=$matches[1]',
 //		'plate/([^/]+)/([^/]+)/?$' => 'index.php?pagename=plates&plate_type=$matches[1]&plate_id=$matches[2]'
@@ -79,6 +81,18 @@ add_filter('rewrite_rules_array', 'add_rewrite_rules');
 
 
 
+// add filter
+add_filter('pre_get_document_title', 'change_my_title');
+// Our function
+function change_my_title($title) {
+    if ( is_page( 'plates' ) && get_query_var( 'plate' ) ) {
+        $plate_id = get_query_var( 'plate' );
+        $title = $plate_id.' - Plates - Dennis';
+    }
+    
+    return $title;
+}
+
 
 
 
@@ -87,6 +101,8 @@ add_filter('rewrite_rules_array', 'add_rewrite_rules');
 
 // Hooking up our functions to WordPress filters
 function mytheme_enqueue_scripts() {
+	global $wp;
+	
 	wp_deregister_script ( 'jquery' );
 	wp_register_script ( 'jquery', ("//code.jquery.com/jquery-2.2.4.min.js"), false, '2.2.4', true );
 	wp_enqueue_script ( 'jquery' );
@@ -96,7 +112,7 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'bootstrap-js' );
 	
 	// BS DatePicker
-	wp_register_script ( 'datepicker-js', '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', array ('jquery', 'bootstrap-js' ), '1.6.4', true );
+	wp_register_script ( 'datepicker-js', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js', array ('jquery', 'bootstrap-js' ), '1.9.0', true );
 	wp_enqueue_script ( 'datepicker-js' );
 	
 	// PDF Make
@@ -106,7 +122,7 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'pdfmake-fonts-js' );
 	
 	// DataTables
-	wp_register_script ( 'datatables-js', '//cdn.datatables.net/v/bs/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/se-1.2.2/datatables.min.js', array ('jquery','bootstrap-js','pdfmake-js'), '1.10.15', true );
+	wp_register_script ( 'datatables-js', 'https://cdn.datatables.net/v/bs/dt-1.10.20/b-1.6.1/b-html5-1.6.1/b-print-1.6.1/r-2.2.3/sl-1.3.1/datatables.min.js', array ('jquery','bootstrap-js','pdfmake-js'), '1.10.20', true );
 	wp_enqueue_script ( 'datatables-js' );
 	
 	wp_register_script ( 'dt-ukdatesort-js', '//cdn.datatables.net/plug-ins/1.10.16/sorting/date-uk.js', array ('bootstrap-js'), '1.10.16', true);
@@ -134,10 +150,15 @@ function mytheme_enqueue_scripts() {
 	// Summernote JS
 	wp_register_script ( 'summernote-js', '//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote.min.js', array ('jquery','bootstrap-js'), '0.8.10', true);
 	wp_enqueue_script ( 'summernote-js' );
+
+	// FontAwesome
+	wp_register_script( 'fontawesome-js', 'https://kit.fontawesome.com/8cef4f0a86.js', array(), '5.13.0', true );
+	wp_enqueue_script( 'fontawesome-js');
 	
 	// Main functions js file
-	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.5', true );
+	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.6', true );
 	wp_enqueue_script ( 'js-functions' );
+
 	// Main utils js file
 	wp_register_script ( 'js-utils', get_template_directory_uri () . '/assets/js/utils.js', array (), '0.1.2', false );
 	wp_enqueue_script ( 'js-utils' );
@@ -152,11 +173,11 @@ function mytheme_enqueue_scripts() {
 	
 	// conditional load
 	if (is_page ( array ('orders') )) { wp_enqueue_script ( 'js-orders' ); }
-	if (is_page ( array ('samples') )) { wp_enqueue_script ( 'js-samples' ); }
+	if (is_page ( array ('samples') ) || preg_match( '#^samples(/.+)?$#', $wp->request ) ) { wp_enqueue_script ( 'js-samples' ); }
 	if (is_page ( array ('add-manual-order') )) { wp_enqueue_script ( 'js-new-order' ); }
 	if (is_page ( array ('portal') )) { wp_enqueue_script ( 'js-portal' ); }
 	if (is_page ( array ('statistics') )) { wp_enqueue_script ( 'chart-js' ); }
-	if (is_page ( array ('plates') )) { wp_enqueue_script ( 'js-plates' ); }
+	if (is_page ( array ('plates') ) || preg_match( '#^plates(/.+)?$#', $wp->request ) ) { wp_enqueue_script ( 'js-plates' ); }
 }
 add_action ( 'wp_enqueue_scripts', 'mytheme_enqueue_scripts' );
 
@@ -169,9 +190,9 @@ function filter_wp_nav_menu_items($items, $args) {
 	$items_array = explode ( "\n", $items );
 	$new_items = array ();
 	foreach ( $items_array as $item ) {
-		if (preg_match ( "/fa-\S+/i", $item, $matches )) {
+		if (preg_match ( "/fa\S+ fa-\S+/i", $item, $matches )) {
 			$item = preg_replace ( '/' . $matches [0] . ' /', '', $item );
-			$item = preg_replace ( '/<i class="fa">/', '<i class="fa fa-fw ' . $matches [0] . '">', $item );
+			$item = preg_replace ( '/<i class="fa">/', '<i class="' . $matches [0] . ' fa-fw">', $item );
 		}
 		array_push ( $new_items, $item );
 	}
@@ -211,7 +232,7 @@ function custom_breadcrumbs($sub_page = null) {
 	if (! is_front_page ()) {
 		echo '
 							<li>
-								<i class="fa fa-home"></i>
+								<i class="fas fa-home"></i>
 								<a href="/">' . $home_title . '</a> 
 							</li>';
 		if (is_page ()) {
