@@ -6,8 +6,8 @@ jQuery(document).ready(function($) {
 		
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				clearPlate();
-				console.log(e.target);				
-				console.log ( $(e.target).attr('id') );
+				// console.log(e.target);				
+				// console.log ( $(e.target).attr('id') );
 		})
 		
 		
@@ -39,6 +39,20 @@ jQuery(document).ready(function($) {
 								var well = wells[x].well;
 								$("#"+well+" > small.cell_id").hide();
 								$("#"+well+" > small.contents").html('<a href="'+DennisAjax.site_url+'/orders/view/?id='+wells[x].order_id+'"><span class="hidden-print">AHT</span>'+wells[x].order_id+"/<span class=\"test-id\">"+wells[x].test_id+'</span></a><br />'+wells[x].test_code);
+							}
+							if(results.other_wells !== undefined){
+							var otherWells = results.other_wells;
+								for (var x=0; x<otherWells.length; x++){
+									var well = otherWells[x].well;
+									$("#"+well+" > small.cell_id").hide();
+									$("#"+well+" > small.contents").html('<span class="control">'+otherWells[x].well_contents+'</span>');
+								}
+							}
+							for (var x=1; x<=12; x++){
+								if (results['col'+x] !== undefined && results['col'+x] !== null){
+									var a = results['col'+x].split(":");
+									$("#col"+x).html('<a href="/plate/'+a[0]+'">'+a[0]+'</a>/'+a[1]);
+								}
 							}
 						}
 				});
@@ -113,7 +127,7 @@ jQuery(document).ready(function($) {
 				if (plateIDs.length > 0){
 					//var last = plateIDs.pop();
 					var last = plateIDs[0];
-					console.log(last);
+					// console.log(last);
 					var plateID = "";
 					if (plateType == 'extraction'){	
 						var id = parseInt(last.replace("Q", ""));
@@ -135,6 +149,7 @@ jQuery(document).ready(function($) {
 function clearPlate(){
 	$("small.contents").html("");
 	$("small.cell_id").show();
+	$(".col_header").html("");
 	$("#details_plate").html("");
 }
 	
@@ -142,5 +157,5 @@ function clearPlate(){
 var postPlateForm = function() {
 	var plateType = $('#plate_type').val();
 	var plateID = $('#new_plate').val();
-	console.log(plateType+" - "+plateID);
+	// console.log(plateType+" - "+plateID);
 }

@@ -281,8 +281,11 @@ foreach (array_keys($plates) as $plate_type){
 					echo '<td style="border:0px">&nbsp;</td>';
 				}
 				elseif($r == 0){ 
-					if (isset($plate_details->{'col'.$c})) { echo '<th>'.str_replace(':', '/', $plate_details->{'col'.$c}).'</th>'; } 
-					else { echo '<th>'.$c.'</th>'; }
+					if (isset($plate_details->{'col'.$c})) {
+						$a = explode(':', $plate_details->{'col'.$c});
+						echo '<th><a href="/plate/'.$a[0].'">'.$a[0].'</a>/'.$a[1].'</th>'; 
+					} 
+					else { echo '<th id="col'.$c.'" class="col_header">'.$c.'</th>'; }
 				}
 				elseif($c == 0){ echo '<th>'.$letters[$r-1].'</th>'; }
 				else{ 

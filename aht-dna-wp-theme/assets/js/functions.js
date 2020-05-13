@@ -586,14 +586,20 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 				for (var i = 0; i < TestDetails.swabs.length; ++i) {
 					if (TestDetails.swabs[i].extraction_plate !== null){
 						if (i > 0){ extraction += '<br />'; extraction_date += '<br />'; extracted_by += '<br />';}
-						
-						extraction_date += TestDetails.swabs[i].extraction_date;
-						extracted_by += TestDetails.swabs[i].extracted_by;
 
-						plateLink = DennisAjax.site_url+'/plate/' + TestDetails.swabs[i].extraction_plate;
-						if (TestDetails.swabs[i].extraction_well != '') { plateLink += '/well/'+TestDetails.swabs[i].extraction_well; }
-						extraction += '<a href="'+ plateLink + '">' + TestDetails.swabs[i].extraction_plate + '</a>';
-						if (TestDetails.swabs[i].extraction_well != ''){ extraction += '&nbsp;(' +TestDetails.swabs[i].extraction_well+ ')'; }
+						if (TestDetails.swabs[i].extraction_date !== null){
+							extraction_date += TestDetails.swabs[i].extraction_date;
+							extracted_by += TestDetails.swabs[i].extracted_by;
+						}
+						
+						if (TestDetails.swabs[i].extraction_plate == 'dennis'){
+							extraction += '<em>'+TestDetails.swabs[i].extraction_plate+'</em>';
+						} else {
+							plateLink = DennisAjax.site_url+'/plate/' + TestDetails.swabs[i].extraction_plate;
+							if (TestDetails.swabs[i].extraction_well != '' && TestDetails.swabs[i].extraction_well != null) { plateLink += '/well/'+TestDetails.swabs[i].extraction_well; }
+							extraction += '<a href="'+ plateLink + '">' + TestDetails.swabs[i].extraction_plate + '</a>';
+							if (TestDetails.swabs[i].extraction_well != '' && TestDetails.swabs[i].extraction_well != null){ extraction += '&nbsp;(' +TestDetails.swabs[i].extraction_well+ ')'; }
+						}
 					}
 				}
 			}
@@ -616,9 +622,15 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 							analysed_date += TestDetails.analysis[i].result_entered_date;
 							analysed_by += TestDetails.analysis[i].result_entered_by;
 						}
-						
-						analysis += '<a href="'+DennisAjax.site_url+'/plate/' + TestDetails.analysis[i].test_plate + '">' + TestDetails.analysis[i].test_plate + '</a>';
-						if (TestDetails.results[i].test_plate_well != ''){ analysis += '&nbsp;(' +TestDetails.analysis[i].test_plate_well+ ')'; }
+
+						if (TestDetails.analysis[i].test_plate == 'dennis'){
+							analysis += '<em>'+TestDetails.analysis[i].test_plate+'</em>';
+						} else {
+							plateLink = DennisAjax.site_url+'/plate/' + TestDetails.analysis[i].test_plate;
+							if (TestDetails.analysis[i].test_plate_well != '' && TestDetails.results[i].test_plate_well != null) { plateLink += '/well/'+TestDetails.analysis[i].test_plate_well; }						
+							analysis += '<a href="'+ plateLink + '">' + TestDetails.analysis[i].test_plate + '</a>';
+							if (TestDetails.results[i].test_plate_well != '' && TestDetails.results[i].test_plate_well != null){ analysis += '&nbsp;(' +TestDetails.analysis[i].test_plate_well+ ')'; }
+						}
 					}
 				}
 			}
