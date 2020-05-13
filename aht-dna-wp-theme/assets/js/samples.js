@@ -101,6 +101,7 @@ function updatePlate(testCode, testGroup, data){
 		wellCount++;
 	}
 
+	//	Adds the 2nd MQ if there is space...
 	if ((8-wellCount) >= 1){ 
 		var well = String.fromCharCode(65 + controls.length)+colCount.toString();
 		$("#"+well).html('<small class="text-muted">'+controls[(controls.length - 1)]+"</small>");
