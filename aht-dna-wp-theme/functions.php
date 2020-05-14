@@ -56,7 +56,7 @@ function rememberme_checked() {
 }
 
 function add_query_vars($aVars) {
-	//$aVars[] = "plate_type"; // represents the name of the plate type as shown in the URL
+	$aVars[] = "download_type"; // represents the name of the plate type as shown in the URL
 	//$aVars[] = "plate_id"; // represents the name of the plate id as shown in the URL
 	$aVars[] = "plate"; // represents the name of the plate id as shown in the URL
 	$aVars[] = "hilight"; // represents the name of the plate id as shown in the URL
@@ -67,7 +67,8 @@ add_filter('query_vars', 'add_query_vars');
 
 function add_rewrite_rules($aRules) {
 	$aNewRules = array(
-//		'plates/add-plate/([^/]+)/([^/]+)/?$' => 'index.php?pagename=add-plate&plate_type=$matches[1]&plate_id=$matches[2]',
+	//		'plates/add-plate/([^/]+)/([^/]+)/?$' => 'index.php?pagename=add-plate&plate_type=$matches[1]&plate_id=$matches[2]',
+		'downloads/plate/([^/]+)/?$' => 'index.php?pagename=downloads&plate=$matches[1]&download_type=plate',
 		'plate/([^/]+)/well/([^/]+)/?$' => 'index.php?pagename=plates&plate=$matches[1]&hilight=$matches[2]',
 		'plate/([^/]+)/?$' => 'index.php?pagename=plates&plate=$matches[1]',
 //		'plate/([^/]+)/?$' => 'index.php?pagename=plates&plate_type=$matches[1]',
@@ -92,10 +93,6 @@ function change_my_title($title) {
     
     return $title;
 }
-
-
-
-
 
 
 

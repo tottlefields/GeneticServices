@@ -365,7 +365,8 @@ function add_plate() {
 			
 		}
 		else{
-			$wpdb->insert('plate_wells', array( 'test_plate' => $new_plate, 'well_id' => $well, 'well_contents' => $swab ));
+			$swab_data = explode(':', $swab);
+			$wpdb->insert('plate_wells', array( 'test_plate' => $new_plate, 'well_id' => $well, 'well_contents' => $swab_data[1], 'test_code' => $swab_data[0] ));
 		}
 	}
 	

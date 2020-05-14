@@ -230,7 +230,9 @@ if ($order_details->paid == 0){
 				    $resultHTML = '<span class="label label-default">Failed</span>';
 				}
 				elseif (count($test->results)>0 && $test->results[0]->cert_code !== null){
+					$cert_code_seen = array();
 				    foreach ($test->results as $result){
+				    	if (isset($cert_code_seen[$test->cert_code])){ continue; }
 				        if ($resultHTML != ''){ $resultHTML .= '<hr style="height: 1px; margin: 0px; width: 1px;">'; }
 				        switch ($result->test_result) {
 				            case 'AFFECTED':
@@ -243,16 +245,15 @@ if ($order_details->paid == 0){
 				                $label_class = 'success';
 				                break;
 				            case 'PROFILE':
-				                $test->test_result = 'VIEW';
+				                // $test->test_result = 'VIEW';
 				                $label_class = 'default';
 				                break;
 				        }
-				        if (count($test->results) == 1){
-				            $resultHTML = '<button class="btn btn-xs btn-'.$label_class.'" style="border-radius:0px;" type="button">'.$result->test_result.'</button>';
-				        }
-				        else {
-				            $resultHTML .=  '<button class="btn btn-xs btn-'.$label_class.'" style="border-radius:0px;" type="button"><span class="badge">'.$result->test_code.'</span>&nbsp;'.$result->test_result.'</button>';
-				        }
+				        $resultHTML .=  '<button class="btn btn-xs btn-'.$label_class.' viewCert" style="border-radius:0px;" type="button" data-order="'.$order_id.'" data-test="'.$test->id.'">';
+				        if (count($test->results) == 1 || preg_match('/CP-/i', $result->test_code) ){ $resultHTML .= $result->test_result; }
+				        else { $resultHTML .= '<span class="badge">'.$result->test_code.'</span>&nbsp;'.$result->test_result; }
+				        $resultHTML .=  '</button>';
+				        $cert_code_seen[$test->cert_code]++;
 				    }
 					
 				}
@@ -369,9 +370,14 @@ jQuery(document).ready(function($) {
 				]
 			});
 	});
+	
 			
 	var table = $('#orderDetails').DataTable({
-		select : true,
+		// select : true,
+		select: {
+	        selector:'td:not(:last-child)',
+	        style:    'os'
+	    },
 		responsive: {
             details: false
         },
@@ -383,6 +389,11 @@ jQuery(document).ready(function($) {
 			visible : false
 		} ]
 	});
+
+	table.on( 'click', 'button.viewCert', function (e) {
+		e.stopPropagation();
+		viewCert($(this).data('order'),$(this).data('test'))
+	} );
 
 	table.on('select', function(e, dt, type, indexes) {
 		if (table.rows('.selected').data().length === 1) {

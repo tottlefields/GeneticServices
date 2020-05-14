@@ -668,7 +668,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 				            	labelClass = 'success';
 				                break;
 				            case 'PROFILE':
-				            	TestDetails.results[i].test_result = 'VIEW';
+				            	TestDetails.results[i].test_result = 'VIEW PROFILE';
 				                labelClass = 'default';
 				                break;
 				        }

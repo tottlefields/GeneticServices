@@ -328,6 +328,9 @@ foreach (array_keys($plates) as $plate_type){
 					<div class="row"><div class="col-xs-5">Plate</div><div class="col-xs-7"><?php echo $plate_q; ?></div></div>
 					<div class="row"><div class="col-xs-5">Owner</div><div class="col-xs-7"><strong><?php echo $plate_details->created_by; ?></strong></div></div>
 					<div class="row"><div class="col-xs-5">Generated</div><div class="col-xs-7"><?php echo $created_date; ?></div></div>
+					<?php if ($plate_details->plate_type != 'extraction'){?>
+					<div class="row"><div class="col-xs-12"><a href="/downloads/plate/<?php echo $plate_q; ?>/" class="btn btn-block btn-primary" type="button" style="margin-top:5px;margin-bottom:0px">Plate Import Record</a></div></div>
+					<?php } ?>
 				<?php } ?>
 				</div>
 			</div>
