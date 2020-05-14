@@ -97,7 +97,7 @@ function updatePlate(testCode, testGroup, data){
 	for (var i=0; i<controls.length; i++){
 		var well = String.fromCharCode(65 + i)+colCount.toString();
 		$("#"+well).html('<small class="text-muted">'+controls[i]+"</small>");
-		plateJson.wells[well] = controls[i];
+		plateJson.wells[well] = testCode+":"+controls[i];
 		wellCount++;
 	}
 
@@ -105,7 +105,7 @@ function updatePlate(testCode, testGroup, data){
 	if ((8-wellCount) >= 1){ 
 		var well = String.fromCharCode(65 + controls.length)+colCount.toString();
 		$("#"+well).html('<small class="text-muted">'+controls[(controls.length - 1)]+"</small>");
-		plateJson.wells[well] = controls[(controls.length - 1)];
+		plateJson.wells[well] = testCode+":"+controls[(controls.length - 1)];
 		wellCount++;
 	}
 

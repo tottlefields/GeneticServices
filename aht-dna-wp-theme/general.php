@@ -304,12 +304,11 @@ function getPlateDetails($plate_id){
 		order by 4,5";		
 	}
 	else {
-		$sql = "select well_id as well, well_contents from plate_wells where test_plate='".$plate_id."'";
+		$sql = "select well_id as well, well_contents, test_code from plate_wells where test_plate='".$plate_id."'";
 		$plate_details[0]->other_wells = $wpdb->get_results($sql, OBJECT);
 		
-		$sql = "select distinct t.order_id, r.test_id, t.test_code, r.test_plate_well as well 
-		from test_swab_results r inner join order_tests t on t.id=test_id where test_plate='".$plate_id."'
-		order by 4";
+		$sql = "select distinct t.order_id, r.test_id, r.swab_id, t.test_code, r.test_plate_well as well 
+		from test_swab_results r inner join order_tests t on t.id=test_id where test_plate='".$plate_id."'";
 		
 	}
 	$wells = $wpdb->get_results($sql, OBJECT);	
