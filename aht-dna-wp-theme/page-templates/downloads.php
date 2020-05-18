@@ -138,7 +138,7 @@ if (isset($wp_query->query_vars['download_type']) && isset($wp_query->query_vars
 				}			
 				
 			}
-		}		
+		}
 		
 	}
 	
