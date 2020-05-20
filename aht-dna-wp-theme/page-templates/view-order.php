@@ -54,7 +54,8 @@ foreach ($test_details as $test){
 		}
 		
 		if ($test->swabs[0]->extraction_date == ''){
-		    array_push($extracted_date, $test->swabs[0]->extraction_date);		
+		    if ($test->swabs[0]->extracted_by == 'dennis'){ $test->order_status = $order_steps[3]; array_push($extracted_date, '00/00/0000');}
+		    else{ array_push($extracted_date, $test->swabs[0]->extraction_date); }
 		}
 		else {
 		    foreach ($test->swabs as $swab){
@@ -66,7 +67,7 @@ foreach ($test_details as $test){
 		}
 		
 		if ($test->results[0]->result_entered_date == ''){
-		    array_push($analysis_date, $test->results[0]->result_entered_date);		
+		    array_push($analysis_date, $test->results[0]->result_entered_date);	
 		}
 		else {
 		    foreach ($test->results as $result){
@@ -110,6 +111,7 @@ if (in_array('', $extracted_date)){ $this_order_status[3] = ''; } else { $this_o
 if (in_array('', $analysis_date)){ $this_order_status[4] = ''; } else { $this_order_status[4] = max($analysis_date); }
 if (in_array('', $qc_date)){ $this_order_status[4] = ''; } else { $this_order_status[4] = max($qc_date); }
 if (in_array('', $finished_date)){ $this_order_status[5] = ''; } else { $this_order_status[5] = max($finished_date); }
+
 	
 ?>
 <?php get_header(); ?>
@@ -197,7 +199,7 @@ if ($order_details->paid == 0){
 					$class_disabled = ' disabled'; 
 				}
 				
-				$actions = '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fas fa-redo link"></i>&nbsp;Request Repeat</a></li>';
+				$actions = '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fas fa-redo link"></i>&nbsp;Request New Sample</a></li>';
 				switch ($test->order_status) {
 					case 'Order Placed':
 						$actions = '
@@ -232,7 +234,7 @@ if ($order_details->paid == 0){
 				elseif (count($test->results)>0 && $test->results[0]->cert_code !== null){
 					$cert_code_seen = array();
 				    foreach ($test->results as $result){
-				    	if (isset($cert_code_seen[$test->cert_code])){ continue; }
+				    	if (isset($cert_code_seen[$result->cert_code])){ continue; }
 				        if ($resultHTML != ''){ $resultHTML .= '<hr style="height: 1px; margin: 0px; width: 1px;">'; }
 				        switch ($result->test_result) {
 				            case 'AFFECTED':
@@ -253,7 +255,7 @@ if ($order_details->paid == 0){
 				        if (count($test->results) == 1 || preg_match('/CP-/i', $result->test_code) ){ $resultHTML .= $result->test_result; }
 				        else { $resultHTML .= '<span class="badge">'.$result->test_code.'</span>&nbsp;'.$result->test_result; }
 				        $resultHTML .=  '</button>';
-				        $cert_code_seen[$test->cert_code]++;
+				        $cert_code_seen[$result->cert_code]++;
 				    }
 					
 				}

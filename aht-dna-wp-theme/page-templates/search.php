@@ -19,6 +19,16 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 		}
 	}
 	
+	if (preg_match('/^P\d{3,5}$/', strtoupper($query)) || preg_match('/^AC\d{5,8}$/', strtoupper($query))){
+		//Certificate Code - Pxxxx for a profile; ACxxxxxxx for disease cert
+		$sql = "select distinct animal_id from test_swab_results r inner join order_tests t on r.test_id=t.id where cert_code ='".strtoupper($query)."'";
+		$results = $wpdb->get_results($sql);
+		if (count($results) == 1 && $results[0]->animal_id > 0){
+			wp_redirect(get_site_url().'/animals/view?id='.$results[0]->animal_id);
+			exit;
+		}
+	}
+	
 	if (preg_match('/^AHT\d{1,5}$/', strtoupper($query))){
 		//Dennis (AHT) ID - between 1 & 5 digits [OrderID] pre-pended by 'AHT'
 		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, orders.ShippingCountry, count(*) as TestCount 

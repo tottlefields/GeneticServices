@@ -342,11 +342,13 @@ function add_plate() {
 	}
 	$result = $wpdb->update('plates', $update_args, array('test_plate' => $new_plate));
 	
+	$swabs_seen = array();
+	
 	foreach ($_POST['plate_data']['wells'] as $well => $swab){
 		if (preg_match ( '/^\d{5,}$/', $swab )) {
 			$sql = "select t1.id, t1.test_id, t2.test_code,  no_results, sub_tests 
 			from test_swabs t1 inner join order_tests t2 on t1.test_id=t2.id 
-			inner join test_codes t3 using (test_code) where t1.id=".$swab;			
+			inner join test_codes t3 using (test_code) where t1.id=".$swab;
 			$results = $wpdb->get_results($sql, OBJECT );
 			
 			foreach ($results as $r){
@@ -356,13 +358,19 @@ function add_plate() {
 						VALUES (".$r->test_id.",".$swab.",'".$test_code."','".$new_plate."','".$well."')");
 					}
 				}
+				elseif (isset($r->sub_tests)){
+					$sub_tests = explode(':', $r->sub_tests);
+					if (!isset($swabs_seen[$swab])){ $swabs_seen[$swab] = 0; }
+					$wpdb->query("INSERT INTO test_swab_results (test_id, swab_id, test_code, test_plate, test_plate_well)
+						VALUES (".$r->test_id.",".$swab.",'".$sub_tests[$swabs_seen[$swab]]."','".$new_plate."','".$well."')");
+				}
 				else{
 					$wpdb->query("INSERT INTO test_swab_results (test_id, swab_id, test_code, test_plate, test_plate_well)
 					VALUES (".$r->test_id.",".$swab.",'".$r->test_code."','".$new_plate."','".$well."')");
 				}
 			}
 			$result = $wpdb->update('test_swabs', array('plate_allocated' => 1), array('id' => $swab));
-			
+			$swabs_seen[$swab]++;
 		}
 		else{
 			$swab_data = explode(':', $swab);

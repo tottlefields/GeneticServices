@@ -25,6 +25,13 @@ foreach ( $results as $test_code ) {
 	$controls [$test_code->test_code] = $test_code->controls;
 }
 
+$sql = "select test_code, sub_tests from test_codes where sub_tests is not null order by 1";
+$results = $wpdb->get_results ( $sql, OBJECT );
+$sub_tests = array ();
+foreach ( $results as $test_code ) {
+	$sub_tests [$test_code->test_code] = $test_code->sub_tests;
+}
+
 $sql = 'select order_id, t.id as ID, concat("AHT",order_id,"/",t.id) as barcode, due_date, datediff(due_date, date(NOW())) as days, a.breed_id, b.breed, 
 t.test_code, test_type, s.id as swab_id, swab, s.extraction_plate, s.extraction_well, concat(test_type, type_group) as type_group, multiplex
 from order_tests t inner join test_swabs s on t.id=s.test_id  
@@ -35,7 +42,7 @@ left outer join test_codes on t.test_code=test_codes.test_code
 inner join animal a on a.id=animal_id  
 inner join breed_list b on b.id=breed_id  
 where s.extraction_plate is not null and s.plate_allocated=0 
-and ((tmp.plate_allocated is NULL and tmp.swab_failed is not NULL) OR tmp.plate_allocated is NULL)
+and ((tmp.plate_allocated = 1 and tmp.swab_failed is not NULL) OR tmp.plate_allocated is NULL)
 and cancelled_date is null and b.is_primary=1 
 order by extraction_plate, right(extraction_well,1) asc, left(extraction_well,1) desc, swab';
 $results = $wpdb->get_results ( $sql, OBJECT );
@@ -256,6 +263,7 @@ if ($counts ['test_type'] ['T'] == '') {
 
 <script type="text/javascript">
 	var testControls = <?php echo json_encode($controls); ?>;
+	var allSubTests = <?php echo json_encode($sub_tests); ?>;
 	var plateJson = {'cols': [], 'wells' : {}, 'groups' : []};
 	//var controls = ['N','A','C','MQ'];
 </script>
@@ -292,10 +300,10 @@ function footer_js() {
 
 			$('.sampleList').DataTable()
 				.on('select', function(e, dt, type, indexes) {
-					countSamples(table);
+					countSamples(table, 1);
 				})
 				.on('deselect', function(e, dt, type, indexes) {
-					countSamples(table);
+					countSamples(table, 1);
 					if (table.rows('.selected').count() == 0){ plateJson = {'cols': [], 'wells' : {}}; $("#createPlate").attr('disabled', true);}
 				});
 
