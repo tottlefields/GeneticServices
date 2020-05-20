@@ -54,7 +54,7 @@ function countUntested(){
 			SELECT id, test_id, swab_failed, plate_allocated FROM test_swabs WHERE plate_allocated=1
 		) t2 USING (test_id) 
 		WHERE t1.plate_allocated=0 AND extraction_plate IS NOT NULL AND  
-		((t2.plate_allocated IS NULL AND t2.swab_failed IS NOT NULL) OR t2.plate_allocated IS NULL) ";
+		((t2.plate_allocated = 1 AND t2.swab_failed IS NOT NULL) OR t2.plate_allocated IS NULL) ";
 	$count = $wpdb->get_var($sql);
 	return $count;
 }
@@ -307,8 +307,10 @@ function getPlateDetails($plate_id){
 		$sql = "select well_id as well, well_contents, test_code from plate_wells where test_plate='".$plate_id."'";
 		$plate_details[0]->other_wells = $wpdb->get_results($sql, OBJECT);
 		
-		$sql = "select distinct t.order_id, t.DDT_ID, r.test_id, r.swab_id, t.test_code, r.test_plate_well as well 
-		from test_swab_results r inner join order_tests t on t.id=test_id where test_plate='".$plate_id."'";
+		$sql = "select t.order_id, t.DDT_ID, r.test_id, r.swab_id, t.test_code, r.test_plate_well as well, 
+		group_concat(r.test_code) as test_result, count(r.test_code) as multi_results
+		from test_swab_results r inner join order_tests t on t.id=test_id where test_plate='".$plate_id."'
+		group by order_id, DDT_ID, test_id, swab_id, t.test_code, well";
 		
 	}
 	$wells = $wpdb->get_results($sql, OBJECT);	

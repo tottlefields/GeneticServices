@@ -5,11 +5,12 @@ jQuery(document).ready(function($) {
 		});
 }); 
 
-function countSamples(table){
+function countSamples(table, duplicateProfiles=0){
 	var sampleCount = table.rows('.selected').count();
 	if (sampleCount == 0 ){ $("#createQPlate").prop("disabled", true); }
 	else{ $("#createQPlate").prop("disabled", false); }
 	if ($('.duplicateSwab:checked').length > 0){ sampleCount += ' ('+$('.duplicateSwab:checked').length+')'}
+	if (duplicateProfiles){  sampleCount += table.rows('.selected.test-CP').count(); }
 	$('#sample_count').text(sampleCount);
 }
 
@@ -43,74 +44,87 @@ function updatePlate(testCode, testGroup, data){
 	var wellCount = 0;
 	var rowLetters = ['H','G','F','E','D','C','B','A'];
 	var plateType = 'taqman';
+	var isProfiles = 0;
+	if (testCode === 'CP'){ isProfiles = 1; }
+	var controlCode = testCode;
+	
+	for (var x=0; x<=isProfiles; x++){
+		
+		if (x>0){ testGroup = 'GX'; }
+		
+		// make sure genotyping plates are in blocks of 16 for each grouping
+		if (testGroup.charAt(0) == 'G'){
+			plateType = 'genotype';
+			if(colCount%2 != 0){	// we are on an odd column... need to check previous group
+				if(testGroup != plateJson.groups[plateJson.cols.length-1]){
+					colCount++;
+					plateJson.cols.push('empty');
+					plateJson.groups.push(testGroup);
+					wellCount = 0;
+				}
+			}
+		}
 
-	// make sure genotyping plates are in blocks of 16 for each grouping
-	if (testGroup.charAt(0) == 'G'){
-		plateType = 'genotype';
-		if(colCount%2 != 0){	// we are on an odd column... need to check previous group
-			if(testGroup != plateJson.groups[plateJson.cols.length-1]){
+		for (var i=0; i<data.length; i++){
+			rowData = data[i];
+	
+			plate = rowData[11];
+			well = rowData[10];
+			letter = well.substring(0,1);
+			num = well.substring(1);
+	
+			if (lastCol != num){
 				colCount++;
-				plateJson.cols.push('empty');
+				
+				colID = 'col'+colCount.toString();
+				plateJson.cols.push(plate+':'+num);
+				$("#"+colID).text(plate+'/'+num);
 				plateJson.groups.push(testGroup);
 				wellCount = 0;
 			}
+			lastCol = num;
+	
+			newWell = rowLetters[wellCount]+colCount.toString();
+			$("#"+newWell).text(rowData[7]);
+			plateJson.wells[newWell] = rowData[0];
+			
+			wellCount++;
 		}
-	}
-
-	for (var i=0; i<data.length; i++){
-		rowData = data[i];
-
-		plate = rowData[11];
-		well = rowData[10];
-		letter = well.substring(0,1);
-		num = well.substring(1);
-
-		if (lastCol != num){
+	
+		controls = testControls[testCode].split(':');
+		
+		if (x>0){ 
+			subTests = allSubTests[testCode].split(':');
+			controlCode = subTests[x];
+		}
+	
+		if((8-wellCount) < controls.length){
 			colCount++;
-			colID = 'col'+colCount.toString();
-			//plateJson.cols.push({ [colID] : plate+':'+num});
-			plateJson.cols.push(plate+':'+num);
-			$("#"+colID).text(plate+'/'+num);
+	
+			plateJson.cols.push(testCode+'_controls');
 			plateJson.groups.push(testGroup);
+			
 			wellCount = 0;
 		}
-		lastCol = num;
-
-		newWell = rowLetters[wellCount]+colCount.toString();
-
-		//var well = letter+colCount.toString();
-		$("#"+newWell).text(rowData[7]);
-		plateJson.wells[newWell] = rowData[0];
-		wellCount++;
-	}
-
-	controls = testControls[testCode].split(':');
-
-	if((8-wellCount) < controls.length){
-		colCount++;
-		//plateJson.cols.push({ ['col'+colCount] : testCode+'_controls'});
-		plateJson.cols.push(testCode+'_controls');
-		plateJson.groups.push(testGroup);
-		wellCount = 0;
-	}
-
-	for (var i=0; i<controls.length; i++){
-		var well = String.fromCharCode(65 + i)+colCount.toString();
-		$("#"+well).html('<small class="text-muted">'+controls[i]+"</small>");
-		plateJson.wells[well] = testCode+":"+controls[i];
-		wellCount++;
-	}
-
-	//	Adds the 2nd MQ if there is space...
-	if ((8-wellCount) >= 1){ 
-		var well = String.fromCharCode(65 + controls.length)+colCount.toString();
-		$("#"+well).html('<small class="text-muted">'+controls[(controls.length - 1)]+"</small>");
-		plateJson.wells[well] = testCode+":"+controls[(controls.length - 1)];
-		wellCount++;
+	
+		
+		for (var i=0; i<controls.length; i++){
+			var well = String.fromCharCode(65 + i)+colCount.toString();
+			$("#"+well).html('<small class="text-muted">'+controls[i]+"</small>");
+			plateJson.wells[well] = controlCode+":"+controls[i];
+			wellCount++;
+		}
+	
+		//	Adds the 2nd MQ if there is space...
+		if ((8-wellCount) >= 1){ 
+			var well = String.fromCharCode(65 + controls.length)+colCount.toString();
+			$("#"+well).html('<small class="text-muted">'+controls[(controls.length - 1)]+"</small>");
+			plateJson.wells[well] = controlCode+":"+controls[(controls.length - 1)];
+			wellCount++;
+		}
 	}
 
 	$("#plate_type").val(plateType);
-	//$("#plateStructure").val(JSON.stringify(plateJson));
 }
 
 function createPlate(){

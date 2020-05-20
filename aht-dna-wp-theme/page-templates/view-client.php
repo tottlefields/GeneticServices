@@ -119,7 +119,7 @@ $note_details = array();
 				$actions = array(				    
 				    'print_order'   => '<li><a href="javascript:generatePDFs(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="far fa-file-pdf link"></i>&nbsp;Print Order</a></li>',
 				    'cancel_test'   => '<li><a href="javascript:cancelTest(\''.$test->id.'\')"><i class="fas fa-ban link"></i>&nbsp;Cancel Test</a></li>',
-				    'repeat'        => '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fas fa-redo link"></i>&nbsp;Request Repeat</a></li>',
+				    'repeat'        => '<li><a href="javascript:repeatTest(\''.$test->id.'\')"><i class="fas fa-redo link"></i>&nbsp;Request New Sample</a></li>',
 				    'dispatch'      => '<li><a href="javascript:sendSample(\''.$test->id.'\')"><i class="far fa-paper-plane link"></i>&nbsp;Dispatch Sample</a></li>',
 				    'receive'       => '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="far fa-check-square link"></i>&nbsp;Receive Sample</a></li>',
 				    'view_certs'    => '<li><a href="javascript:viewCert(\''.$test->order_id.'\',\''.$test->id.'\')"><i class="far fa-file-pdf link"></i>&nbsp;Print Certificate(s)</a></li>'
@@ -130,11 +130,11 @@ $note_details = array();
 					case 'Order Placed':
 					    $action_menu = implode("\n", array($actions['print_order'], $actions['cancel_test'], $actions['dispatch']));
 						break;
-					case 'Kit(s) Dispatched':
+					case 'Dispatched':
 					    //$next_action = '<li><a href="javascript:receiveSample(\''.$test->id.'\')"><i class="far fa-check-square link"></i>&nbsp;Receive Sample</a></li>';
 					    $action_menu = implode("\n", array($actions['cancel_test'], $actions['receive']));
 					    break;
-					case 'Result(s) Sent':
+					case 'Results':
 					    $action_menu = implode("\n", array($actions['view_certs']));
 					    break;
 				}
@@ -151,11 +151,16 @@ $note_details = array();
 				}
 				
 				$resultHTML = '';
+				$cert = array();
+				$cert_code_seen = array();
+				
 				if ($test->swab_failed >= 1){
 				    $resultHTML = '<span class="label label-default">Failed</span>';
 				}
 				elseif (count($test->results)>0){
-				    foreach ($test->results as $result){
+					foreach ($test->results as $result){
+						if (isset($cert_code_seen[$test->cert_code])){ continue; }
+						
 				        if ($resultHTML != ''){ $resultHTML .= '<hr style="height: 1px; margin: 0px; width: 1px;">'; }
 				        switch ($result->test_result) {
 				            case 'AFFECTED':
@@ -172,12 +177,18 @@ $note_details = array();
 				                $label_class = 'default';
 				                break;
 				        }
-				        if (count($test->results) == 1){
-				            $resultHTML = '<button class="btn btn-xs btn-'.$label_class.'" style="border-radius:0px;" type="button">'.$result->test_result.'</button>';
+				        
+				        $resultHTML .=  '<button class="btn btn-xs btn-'.$label_class.' viewCert" style="border-radius:0px;" type="button" data-order="'.$test->order_id.'" data-test="'.$test->id.'">';
+				        if (count($test->results) == 1 || preg_match('/CP-/i', $result->test_code) ){ $resultHTML .= $result->test_result; }
+				        else { $resultHTML .= '<span class="badge">'.$result->test_code.'</span>&nbsp;'.$result->test_result; }
+				        $resultHTML .=  '</button>';
+				        
+				        // push cert codes to array
+				        if ($result->cert_code && (preg_match('/AC\d+/',$result->cert_code) || preg_match('/P\d+/',$result->cert_code))){
+				        	array_push($cert, '<a href="javascript:viewCert(\''.$test->order_id.'\', \''.$test->id.'\')"><i class="fas fa-certificate" aria-hidden="true"></i>&nbsp;'.$result->cert_code.'</a>');
 				        }
-				        else {
-				            $resultHTML .=  '<button class="btn btn-xs btn-'.$label_class.'" style="border-radius:0px;" type="button"><span class="badge">'.$result->test_code.'</span>&nbsp;'.$result->test_result.'</button>';
-				        }
+				        
+				        $cert_code_seen[$test->cert_code]++;
 				    }
 				}
 				
@@ -194,7 +205,11 @@ $note_details = array();
 					<td class="text-center">'.$status_label.'</td>
 					<td class="text-center">'.$notes.'</td>
 					<td class="text-center">'.$resultHTML.'</td>
-					<td class="text-center">
+					<td class="text-center">';
+				if ($cert != ''){
+					echo implode('<br>', $cert);
+				} else {
+					echo '
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle'.$class_disabled.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
@@ -202,7 +217,9 @@ $note_details = array();
 								<li role="separator" class="divider"></li>
 								<li><a href="#" class="notes" id="note'.$test->id.'" data-toggle="modal" data-target="#addNoteModal"><i class="far fa-file-alt link"></i>&nbsp;Add Note</a></li>
 							</ul>
-						</div>
+						</div>';
+				}
+				echo '
 					</td>
 				</tr>';
 				$test_count++;
@@ -276,6 +293,11 @@ jQuery(document).ready(function($) {
 			orderable : false	
 		} ]
 	});
+
+	table.on( 'click', 'button.viewCert', function (e) {
+		e.stopPropagation();
+		viewCert($(this).data('order'),$(this).data('test'))
+	} );
 })
 </script>
 <?php } 

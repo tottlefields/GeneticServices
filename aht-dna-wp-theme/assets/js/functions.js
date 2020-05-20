@@ -256,7 +256,12 @@ function viewCert(orderId, swabID) {
 		dataType : "json",
 		url : DennisAjax.ajax_url,
 		data : data,
-		success : function(results) {	
+		success : function(results) {
+			
+			console.log(results);
+			return;
+			
+			
 			details = results[0];
 			OrderDetails = details.order;
 			TestDetails = details.order.test_details[0];
@@ -646,8 +651,13 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 				results_date = '';
 				results_by = '';
 				
+				cert_code_seen = {};
+				
 				for (var i = 0; i < TestDetails.results.length; ++i) {
 					if (TestDetails.results[i].cert_code != ''){
+
+						if (cert_code_seen[TestDetails.results[i].cert_code] === 1){ continue; }
+						
 						if (i > 0){ results += '<br />'; results_date += '<br />'; results_by += '<br />';}
 						
 						results_date += TestDetails.results[i].result_reported_date;
@@ -675,14 +685,15 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 											
 						
 						results += TestDetails.results[i].cert_code;
-						if (TestDetails.results.length > 1 ){ 
-							results += '&nbsp;('+TestDetails.results[i].test_code+')'; 
-							testResults += '<button class="btn btn-block btn-'+labelClass+'" type="button"><span class="badge">'+TestDetails.results[i].test_code+'</span>&nbsp;'+TestDetails.results[i].test_result+'</button>';
+						if (TestDetails.results.length === 1 || (TestDetails.results[i].test_code).match(/^CP-/i)){ 
+							testResults += '<button class="btn btn-block btn-'+labelClass+'" type="button" onClick="viewCert(\''+TestDetails.order_id+'\', \''+TestDetails.id+'\')">'+TestDetails.results[i].test_result+'</button>';
 						}
 						else{
-							testResults += '<button class="btn btn-block btn-'+labelClass+'" type="button">'+TestDetails.results[i].test_result+'</button>';
+							results += '&nbsp;('+TestDetails.results[i].test_code+')'; 
+							testResults += '<button class="btn btn-block btn-'+labelClass+'" type="button" onClick="viewCert(\''+TestDetails.order_id+'\', \''+TestDetails.id+'\')"><span class="badge">'+TestDetails.results[i].test_code+'</span>&nbsp;'+TestDetails.results[i].test_result+'</button>';
 						}
 						
+				        cert_code_seen[TestDetails.results[i].cert_code] = 1;						
 					}
 				}
 			}
