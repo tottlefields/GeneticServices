@@ -19,8 +19,8 @@ if (isset($wp_query->query_vars['download_type']) && isset($wp_query->query_vars
 	if (count($plate_details->wells) > 0){
 		foreach ($plate_details->wells as $well){
 			$test_code = ($well->multi_results == 1) ? $well->test_result : $well->test_code;
-			$wells[$well->well] = array('sample' => $well->swab_id, 'test_code' => $test_code, 'task' => 'UNKNOWN');
-			//$wells[$well->well] = array('sample' => $well->DDT_ID, 'test_code' => $well->test_code, 'task' => 'UNKNOWN');
+			//$wells[$well->well] = array('sample' => $well->swab_id, 'test_code' => $test_code, 'task' => 'UNKNOWN');
+			$wells[$well->well] = array('sample' => $well->DDT_ID, 'test_code' => $test_code, 'task' => 'UNKNOWN');
 		}
 	}
 	if (isset($plate_details->other_wells) && count($plate_details->other_wells) > 0){
@@ -45,7 +45,7 @@ if (isset($wp_query->query_vars['download_type']) && isset($wp_query->query_vars
 	
 	if ($plate_details->plate_type == 'genotype'){
 		$filename = urlencode( $plate_q.'.plt' );
-		//header("Content-Disposition: attachment; filename=".$filename);	
+		header("Content-Disposition: attachment; filename=".$filename);	
 		
 		echo "Container Name\tDescription\tContainerType\tAppType Owner\tOperator\n";
 		echo $plate_q."\t\t96-Well Regular\t".$plate_details->created_by."\t".$plate_details->created_by."\n";
