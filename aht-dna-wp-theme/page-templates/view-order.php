@@ -15,12 +15,14 @@ $test_details = getTestsByOrder($order_id);
 
 $this_order_status = array();
 $this_order_status = array_pad($this_order_status, count($order_steps), "");
+$order_cancelled = 0;
 
 if (isset($order_details->OrderDate)){
 	$myDate = new DateTime($order_details->OrderDate);
 	$this_order_status[0] = $myDate->format('d/m/y');
 }
 
+$cancelled_tests = array();
 $kit_sent = array();
 $returned_date = array();
 $extracted_date = array();
@@ -33,6 +35,8 @@ foreach ($test_details as $test){
 	
 	if($test->cancelled_date != ''){
 		$test->order_status = 'Cancelled';
+		$cancelledDate = new DateTime($test->cancelled_date);
+		array_push($cancelled_tests, $cancelledDate->format('d/m/y'));
 	}
 	else{
 		if ($test->kit_sent == ''){
@@ -105,18 +109,33 @@ foreach ($test_details as $test){
 	}
 }
 
-if (in_array('', $kit_sent)){ $this_order_status[1] = ''; } else { $this_order_status[1] = max($kit_sent); }
-if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_order_status[2] = max($returned_date); }
-if (in_array('', $extracted_date)){ $this_order_status[3] = ''; } else { $this_order_status[3] = max($extracted_date); }
-if (in_array('', $analysis_date)){ $this_order_status[4] = ''; } else { $this_order_status[4] = max($analysis_date); }
-if (in_array('', $qc_date)){ $this_order_status[4] = ''; } else { $this_order_status[4] = max($qc_date); }
-if (in_array('', $finished_date)){ $this_order_status[5] = ''; } else { $this_order_status[5] = max($finished_date); }
+if (count($cancelled_tests) != count($test_details)){
+	if (in_array('', $kit_sent)){ $this_order_status[1] = ''; } else { $this_order_status[1] = max($kit_sent); }
+	if (in_array('', $returned_date)){ $this_order_status[2] = ''; } else { $this_order_status[2] = max($returned_date); }
+	if (in_array('', $extracted_date)){ $this_order_status[3] = ''; } else { $this_order_status[3] = max($extracted_date); }
+	if (in_array('', $analysis_date)){ $this_order_status[4] = ''; } else { $this_order_status[4] = max($analysis_date); }
+	if (in_array('', $qc_date)){ $this_order_status[4] = ''; } else { $this_order_status[4] = max($qc_date); }
+	if (in_array('', $finished_date)){ $this_order_status[5] = ''; } else { $this_order_status[5] = max($finished_date); }
+}
+else{
+	$order_cancelled = 1;
+	$this_order_status[1] = max($cancelled_tests);
+	//....?
+}
+
+$cancel_order = '';
+if (!$order_cancelled) {
+	if (current_user_can('editor') || current_user_can('administrator') || $this_order_status[1] == '' || $this_order_status[2] == '' || $this_order_status[3] == ''){
+		$cancel_order = '<a class="btn btn-sm btn-danger" style="margin-top:-5px;" href="javascript:cancelOrder(\''.$order_id.'\')">Cancel Order</a>';
+	}
+}
 
 	
 ?>
 <?php get_header(); ?>
 
-	<h1><?php wp_title('', true,''); ?> #<?php echo $order_id; ?><ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
+	<h1><?php wp_title('', true,''); ?> #<?php echo $order_id; ?><?php echo $cancel_order?>	
+	<ul class="breadcrumb pull-right" style="font-size:50%"><?php custom_breadcrumbs(); ?></h1>
 	
 <?php
 if ($order_details->paid == 0){
@@ -134,19 +153,23 @@ if ($order_details->paid == 0){
 		<div class="col-sm-12">
 		<div class="sw-theme-arrows">
 			<ul class="nav nav-tabs nav-justified step-anchor">
-			<?php for ($i=0; $i<count($order_steps); $i++){
-				if($this_order_status[$i] == ''){
-					echo '<li><span>'.$order_steps[$i].'<br /><small>&nbsp;</small></span></li>';
-				}
-				else{
-					$class = 'done';
-					if(isset($this_order_status[$i+1]) && $this_order_status[$i+1] == ''){
-						$class = 'active';
+			<?php 
+			if ($order_cancelled){
+				echo '<li class="done"><span>'.$order_steps[0].'<br /><small>'.$this_order_status[0].'</small></span></li>';
+				echo '<li class="done"><span>Cancelled<br /><small>'.$this_order_status[1].'</small></span></li>';
+			}
+			else{
+				for ($i=0; $i<count($order_steps); $i++){
+					if($this_order_status[$i] == ''){
+						echo '<li><span>'.$order_steps[$i].'<br /><small>&nbsp;</small></span></li>';
 					}
-				//	elseif($i+1 == count($order_steps)){
-				//		
-				//	}
-					echo '<li class="'.$class.'"><span>'.$order_steps[$i].'<br /><small>'.$this_order_status[$i].'</small></span></li>';
+					else{
+						$class = 'done';
+						if(isset($this_order_status[$i+1]) && $this_order_status[$i+1] == ''){
+							$class = 'active';
+						}
+						echo '<li class="'.$class.'"><span>'.$order_steps[$i].'<br /><small>'.$this_order_status[$i].'</small></span></li>';
+					}
 				}
 			}?>
 			</ul>

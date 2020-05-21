@@ -8,6 +8,9 @@ add_action ( 'wp_ajax_nopriv_order_details', 'get_order_details' );
 add_action ( 'wp_ajax_cancel_test', 'do_cancel_test' );
 add_action ( 'wp_ajax_nopriv_cancel_test', 'do_cancel_test' );
 
+add_action ( 'wp_ajax_cancel_order', 'do_cancel_order' );
+add_action ( 'wp_ajax_nopriv_cancel_order', 'do_cancel_order' );
+
 add_action ( 'wp_ajax_request_repeat', 'do_request_repeat' );
 add_action ( 'wp_ajax_nopriv_request_repeat', 'do_request_repeat' );
 
@@ -50,6 +53,40 @@ function do_cancel_test() {
 			'results' => 'Successfully cancelled test with id of ' . $swabId
 	) );
 
+	wp_die ();
+}
+
+function do_cancel_order() {
+	global $wpdb, $current_user; // this is how you get access to the database
+	
+	$orderId = intval ( $_POST ['orderId'] );
+	$reason = $_POST['reason'];
+	
+	$update_args = array (
+		'cancelled_by' => $current_user->user_login,
+		'cancelled_date' => date ( 'Y-m-d' )
+	);
+	
+	$wpdb->update ( 'order_tests', $update_args, array (
+		'order_id' => $orderId
+	) );	
+	
+	
+	$sql = "select id from order_tests where order_id=".$orderId;
+	$test_ids = $wpdb->get_results($sql, ARRAY_N );
+	foreach ($test_ids as $row){
+		$note_data = array (
+				'test_id' => $row[0],
+				'note_by' => $current_user->user_login,
+				'note_text' => base64_encode ( stripslashes ( "Order cancelled - ".$reason ) )
+		);
+		$wpdb->insert ( 'order_test_notes', $note_data );
+	}
+	
+	echo json_encode ( array (
+		'results' => 'Successfully cancelled order with id of ' . $orderId
+	) );
+	
 	wp_die ();
 }
 

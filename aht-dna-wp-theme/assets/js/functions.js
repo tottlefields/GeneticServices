@@ -393,6 +393,45 @@ function repeatTest(swabID){
 	});
 }
 
+function cancelOrder(orderID){
+	
+	bootbox.prompt({
+			title: "Are you sure you wish to cancel this order?",
+			message: "<p>You must provide a reason below prior to confirming.</p>",
+			required: true,
+			buttons: {
+				confirm: {
+					label: 'Yes',
+					className: 'btn-success'
+				},
+				cancel: {
+					label: 'No',
+					className: 'btn-danger'
+				}
+			},
+			callback: function (result) {
+				if (result){
+					console.log(result);
+					var data = {
+						'action' : 'cancel_order',
+						'reason' : result,
+						'orderId' : orderID
+					};
+				
+					jQuery.ajax({
+						type : "post",
+						dataType : "json",
+						url : DennisAjax.ajax_url,
+						data : data,
+						success : function(results) {
+							location.reload();
+						}
+					});
+				}
+			}
+	});
+}
+
 function cancelTest(swabID){
 	
 	bootbox.confirm({

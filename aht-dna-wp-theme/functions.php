@@ -141,7 +141,7 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'jquery-validate' );
 	
 	// Bootbox.js
-	wp_register_script ( 'bootbox-js', '//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js', array ('jquery','bootstrap-js'), '4.4.0', true );
+	wp_register_script ( 'bootbox-js', 'https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js', array ('jquery','bootstrap-js'), '5.4.0', true );
 	wp_enqueue_script ( 'bootbox-js' );
 	
 	// Summernote JS
