@@ -126,7 +126,7 @@ else{
 $cancel_order = '';
 if (!$order_cancelled) {
 	if (current_user_can('editor') || current_user_can('administrator') || $this_order_status[1] == '' || $this_order_status[2] == '' || $this_order_status[3] == ''){
-		$cancel_order = '<a class="btn btn-sm btn-danger" style="margin-top:-5px;" href="javascript:cancelOrder(\''.$order_id.'\')">Cancel Order</a>';
+		$cancel_order = '<a class="btn btn-sm btn-danger" style="margin-top:-5px;margin-left:10px;" href="javascript:cancelOrder(\''.$order_id.'\')">Cancel Order</a>';
 	}
 }
 
