@@ -130,7 +130,7 @@ if (isset($_REQUEST) && count($_REQUEST)>0){
 							<div class="statbox yellow">
 								<div class="number"><i class="fas fa-flask"></i>&nbsp;<?php echo $count; ?></div>
 								<div class="title">Untested Samples</div>
-								<?php if ($count>0){ ?><div class="footer"><a href="<?php echo get_site_url(); ?>/samples/"> View list</a></div><?php } ?>
+								<?php if ($count>0){ ?><div class="footer"><a href="<?php echo get_site_url(); ?>/samples/unextracted/"> View list</a></div><?php } ?>
 							</div>
 						</div>
 						<?php $count = countRepeats(); ?>
