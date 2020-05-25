@@ -39,6 +39,7 @@ function do_cancel_test() {
 	global $wpdb, $current_user; // this is how you get access to the database
 
 	$swabId = intval ( $_POST ['swabId'] );
+	$reason = $_POST['reason'];
 
 	$update_args = array (
 			'cancelled_by' => $current_user->user_login,
@@ -48,6 +49,13 @@ function do_cancel_test() {
 	$wpdb->update ( 'order_tests', $update_args, array (
 			'id' => $swabId
 	) );
+	
+	$note_data = array (
+			'test_id' => $swabId,
+			'note_by' => $current_user->user_login,
+			'note_text' => base64_encode ( stripslashes ( "Order cancelled - ".$reason ) )
+	);
+	$wpdb->insert ( 'order_test_notes', $note_data );
 
 	echo json_encode ( array (
 			'results' => 'Successfully cancelled test with id of ' . $swabId

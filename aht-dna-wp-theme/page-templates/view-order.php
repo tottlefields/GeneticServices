@@ -331,7 +331,7 @@ if ($order_details->paid == 0){
 		<div class="col-md-6 col-lg-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
+				<?php if (!$order_cancelled && (current_user_can('editor') || current_user_can('administrator'))) { ?>
 					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="client" disabled="disabled" data-toggle="modal" data-target="#clientModal">
 						<i class="far fa-edit" aria-hidden="true"></i>Edit
 					</button>
@@ -345,7 +345,7 @@ if ($order_details->paid == 0){
 		<div class="col-md-6 col-lg-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-				<?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
+				<?php if (!$order_cancelled && (current_user_can('editor') || current_user_can('administrator'))) { ?>
 					<button type="button" class="btn btn-primary btn-xs pull-right details-btn btn-edit" id="animal" disabled="disabled" data-toggle="modal" data-target="#animalModal">
 						<i class="far fa-edit" aria-hidden="true"></i>Edit
 					</button>
@@ -414,7 +414,7 @@ jQuery(document).ready(function($) {
 			visible : false
 		} ]
 	});
-
+	
 	table.on( 'click', 'button.viewCert', function (e) {
 		e.stopPropagation();
 		viewCert($(this).data('order'),$(this).data('test'))
