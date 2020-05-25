@@ -411,7 +411,6 @@ function cancelOrder(orderID){
 			},
 			callback: function (result) {
 				if (result){
-					console.log(result);
 					var data = {
 						'action' : 'cancel_order',
 						'reason' : result,
@@ -434,9 +433,10 @@ function cancelOrder(orderID){
 
 function cancelTest(swabID){
 	
-	bootbox.confirm({
-			title: "Confirmation required",
-			message: "Are you sure you wish to cancel this part of the order?",
+	bootbox.prompt({
+		title: "Are you sure you wish to cancel this part of the order?",
+		message: "<p>You must provide a reason below prior to confirming.</p>",
+		required: true,
 			buttons: {
 				confirm: {
 					label: 'Yes',
@@ -451,6 +451,7 @@ function cancelTest(swabID){
 				if (result){		
 					var data = {
 						'action'  : 'cancel_test',
+						'reason' : result,
 						'swabId'  : swabID
 					};
 				
@@ -585,7 +586,7 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 			ClientDetails = details.client;
 
 			/* CLIENT DETAILS */
-			client_panel = '<div class="row"><div class="col-xs-4">Name</div><div class="col-xs-8"><a href="'+DennisAjax.site_url+'/clients/view?id=' + ClientDetails.id
+			client_panel = '<div class="row"><div class="col-xs-4">Name</div><div class="col-xs-8"><a href="'+DennisAjax.site_url+'/clients/view?id=' + ClientDetails.client_id
 					+ '"><strong>' + ClientDetails.FullName + '</strong></a></div></div>';
 			client_panel += '<div class="row"><div class="col-xs-4">Email</div><div class="col-xs-8">' + ClientDetails.Email + '</div></div>';
 			client_panel += '<div class="row"><div class="col-xs-4">Phone</div><div class="col-xs-8">' + ClientDetails.Tel + '</div></div>';

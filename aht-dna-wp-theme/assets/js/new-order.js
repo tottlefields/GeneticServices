@@ -34,9 +34,9 @@ jQuery(document).ready(function($) {
 					newRowContent += '<option value="'+breedID+'">'+ allBreeds[breedID]+ '</option>';
 				}
 				newRowContent += '</select></td>';
-				newRowContent += '<td><input type="text" class="form-control input-sm" placeholder="Registered Name" value="" name="registered-name_'+i+'" id="registered-name_'+i+'"/></td>';
+				newRowContent += '<td><input type="text" class="form-control input-sm required regName" placeholder="Registered Name" value="" name="registered-name_'+i+'" id="registered-name_'+i+'"/></td>';
 				newRowContent += '<td><input type="text" class="form-control input-sm" style="text-transform:uppercase" placeholder="Registration No." value="" name="registration-number_'+i+'" id="registration-number_'+i+'"/></td>';
-				newRowContent += '<td><input type="text" class="form-control input-sm required" placeholder="Pet Name" value="" name="pet-name_'+i+'" id="pet-name_'+i+'"/></td>';
+				newRowContent += '<td><input type="text" class="form-control input-sm required petName" placeholder="Pet Name" value="" name="pet-name_'+i+'" id="pet-name_'+i+'"/></td>';
 				newRowContent += '<td><input type="text" class="form-control input-sm datepicker-me num" value="" name="birth-date_'+i+'" id="birth-date_'+i+'" autocomplete="off" placeholder="dd/mm/yyyy" /></td>';
 				newRowContent += '<td><select id="sex_'+i+'" class="form-control input-sm" name="sex_'+i+'"><option value="">Unknown</option><option value="Male">Male</option><option value="Female">Female</option></select></td>';
 				newRowContent += '<td><input type="text" class="form-control input-sm" placeholder="Colour" value="" name="colour_'+i+'" id="colour_'+i+'"/></td>';
@@ -47,6 +47,25 @@ jQuery(document).ready(function($) {
 
 			$('.datepicker-me').datepicker("destroy");
 			$('.datepicker-me').datepicker({ format : 'dd/mm/yyyy' });
+			
+			$(".regName").on("input", function(event) {
+				var otherField = ($(this).attr('id')).replace('registered-name', 'pet-name');
+				if (($(this).val()).length > 9){
+					$("#"+otherField).removeClass("required");
+					$("#"+otherField).removeClass("error");
+				}
+				else{
+					$("#"+otherField).addClass("required");
+					$("#"+otherField).addClass("error");				
+				}
+			});			
+			$(".petName").on("input", function(event) {
+				if (($(this).val()).length > 2){
+					var otherField = ($(this).attr('id')).replace('pet-name', 'registered-name');
+					$("#"+otherField).removeClass("required");
+					$("#"+otherField).removeClass("error");
+				}
+			});
 
 			$('.breed-select').change(function(event) {
 				selectedBreed = $('#'+$(this).attr("id")+' option:selected').val();

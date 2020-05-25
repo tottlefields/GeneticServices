@@ -334,7 +334,6 @@ $js_for_footer = '
 <script type="text/javascript">
 	var allBreeds = '.json_encode($allBreeds).';
     var breedTests = '.json_encode($breedTests).';
-console.log(breedTests);
 </script>';
 ?> 
 		
