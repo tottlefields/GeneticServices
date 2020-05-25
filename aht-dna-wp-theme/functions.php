@@ -137,7 +137,7 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script ( 'jquery-barcode-js' );
 	
 	// jQuery Validate
-	wp_register_script ( 'jquery-validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js', array ('jquery' ), '1.17.0', true );
+	wp_register_script ( 'jquery-validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js', array ('jquery' ), '1.19.1', true );
 	wp_enqueue_script ( 'jquery-validate' );
 	
 	// Bootbox.js
@@ -153,7 +153,7 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script( 'fontawesome-js');
 	
 	// Main functions js file
-	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.6', true );
+	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.7', true );
 	wp_enqueue_script ( 'js-functions' );
 
 	// Main utils js file
