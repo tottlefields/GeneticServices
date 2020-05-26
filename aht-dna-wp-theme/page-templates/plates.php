@@ -113,7 +113,17 @@ global $wpdb;
 	        $well_order = array_keys(getWellOrder());
 	        $wells_allocated = array();
 	        
-	        if($total_swabs == 96 || $col_estimate > 12){    // just fill up plate in order, no padding available!
+	        
+	        foreach ($swab_groups as $analysis => $group){
+	        	$test_order = array_intersect_key($test_codes_seen, $group);
+	        	arsort($test_order);
+	        	foreach ($test_order as $test_code => $test_count){
+	        		$tmp = array_merge($wells_allocated, $group[$test_code]);
+	        		$wells_allocated = $tmp;
+	        	}
+	        }
+	        
+/*	        if($total_swabs == 96 || $col_estimate > 12){    // just fill up plate in order, no padding available!
 	            foreach ($swab_groups as $analysis => $group){
 	                $test_order = array_intersect_key($test_codes_seen, $group);
 	                arsort($test_order);
@@ -161,6 +171,7 @@ global $wpdb;
     	            }
     	        }
 	        }
+	        */
 	        
 	        if (count($wells_allocated) > count($well_order)){
 	            $error = "ERROR: More wells have been allocated than are available in a single plate (".$new_plate.")."; 
