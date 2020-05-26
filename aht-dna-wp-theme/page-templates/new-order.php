@@ -165,17 +165,17 @@ $client_details = $clients[0];?>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Name</label>
 									<div class="col-sm-3">
-										<input type="text" class="form-control required<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->FullName; ?>" name="owner-name" id="owner-name"/>
+										<input type="text" class="form-control required<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->FullName; ?>" name="owner-name" id="owner-name" tabindex="1"/>
 									</div>
 									<label class="col-sm-2 control-label">Address</label>
 									<div class="col-sm-5">
-									 	<input type="text" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Address; ?>" name="owner-address" id="owner-address"/>
+									 	<input type="text" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Address; ?>" name="owner-address" id="owner-address" tabindex="2"/>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Email</label>
 									<div class="col-sm-3">
-										<input type="email" class="form-control required<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Email; ?>" name="owner-email" id="owner-email"/>
+										<input type="email" class="form-control required<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Email; ?>" name="owner-email" id="owner-email" tabindex="1"/>
 									</div>
 									<label class="col-sm-2 control-label">Town</label>
 									<div class="col-sm-2">
@@ -189,12 +189,12 @@ $client_details = $clients[0];?>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Phone</label>
 									<div class="col-sm-3">
-										<input type="tel" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Tel; ?>" name="owner-phone" id="owner-phone"/>
+										<input type="tel" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Tel; ?>" name="owner-phone" id="owner-phone" tabindex="1"/>
 									</div>
 									<label class="col-sm-2 control-label">Country</label>
 									<?php if (isset($client_details->Country) && $client_details->Country != '') {?>
 									<div class="col-sm-2">
-										<input type="text" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Country; ?>" name="owner-country" id="owner-country"/>
+										<input type="text" class="form-control<?php if($client_id > 0){echo ' valid" disabled="disabled';} ?>" value="<?php echo $client_details->Country; ?>" name="owner-country" id="owner-country" tabindex="2"/>
 									</div>
 									<?php } else { ?>
 									<div class="col-sm-2">
@@ -224,7 +224,7 @@ $client_details = $clients[0];?>
 								<div class="col-xs-3 col-md-2 col-lg-1"
 									style="text-align: center">
 									How many dogs do you wish to order tests for?<br> 
-									<input class="form-control" type="text" size="2" value="0" id="noDogs" name="noDogs" style="text-align: center; font-weight: bold; font-size: 1.5em;">
+									<input class="form-control" type="text" size="2" value="0" id="noDogs" name="noDogs" style="text-align: center; font-weight: bold; font-size: 1.5em;" tabindex="3">
 								</div>
 								<div class="col-xs-9 col-md-10 col-lg-11">
 									<table class="table table-condensed table-responsive table-striped" id="dogsTable" style="display: none">
@@ -307,7 +307,8 @@ $allBreeds = array();
 $breedTests = array("all" => array());
 
 foreach ( $results as $breedObj ){
-    $allBreeds[$breedObj->ID] = $breedObj->breed;
+    //$allBreeds[$breedObj->ID] = $breedObj->breed;
+	$allBreeds[$breedObj->breed] = $breedObj->ID;
     $sql2 = "SELECT test_code, test_name, concat('\"',test_code, '\":\"', test_name,'\"') as test
     from breed_test_lookup inner join test_codes using (test_code) 
     WHERE breed_id = {$breedObj->ID}

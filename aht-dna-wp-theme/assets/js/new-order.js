@@ -30,8 +30,11 @@ jQuery(document).ready(function($) {
 			for (i = 1; i <= noDogs; i++) {
 				var newRowContent = '<tr><td style="vertical-align:top">'+ i + '</td>';
 				newRowContent += '<td><select id="breed-select_'+i+'" class="form-control required input-sm breed-select" name="breed_'+i+'"><option value="">Select Breed...</option>';
-				for (breedID in allBreeds){
-					newRowContent += '<option value="'+breedID+'">'+ allBreeds[breedID]+ '</option>';
+				//console.log(allBreeds);
+				for (breed in allBreeds){
+				//for (breedID in allBreeds){
+					//newRowContent += '<option value="'+breedID+'">'+ allBreeds[breedID]+ '</option>';
+					newRowContent += '<option value="'+allBreeds[breed]+'">'+breed+ '</option>';
 				}
 				newRowContent += '</select></td>';
 				newRowContent += '<td><input type="text" class="form-control input-sm required regName" placeholder="Registered Name" value="" name="registered-name_'+i+'" id="registered-name_'+i+'"/></td>';
