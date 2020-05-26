@@ -46,16 +46,32 @@ if (isset($_REQUEST['q']) && $_REQUEST['q'] !== ''){
 	}
 	
 	if (preg_match('/^[a-zA-Z]{2,5}\d{1,3}$/', $query)){
-		//Portal ID - between 2 & 5 letters followed by between 1 and 3 digits
+		//Portal ID - between 2 & 5 letters followed by between 1 and 3 digits (some DDT IDs drop into here as well....!)
 		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, orders.ShippingCountry, count(*) as TestCount 
 				from orders left outer join client on client.id=client_id 
 				left outer join order_tests on orders.id=order_id
-				WHERE PortalID='".$query."'
+				WHERE PortalID='".$query."' OR DDT_ID='".$query."'
 				GROUP BY orders.id";
 		$results = $wpdb->get_results($sql);
 		if (count($results) == 1 && $results[0]->ID > 0){
 			wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
 			exit;	
+		}
+		if(!isset($allResults['orders'])) { $allResults['orders'] = array(); }
+		if (count($results) >= 1){ $allResults['orders'] = array_merge($allResults['orders'], $results); }
+	}
+	
+	if (preg_match('/^[a-zA-Z]{2,5}\d{3,6}$/', $query)){
+		//DDT ID - between 2 & 5 letters followed by between 3 and 6 digits
+		$sql = "select orders.OrderID as webshop_id, orders.id as ID, OrderDate, ReportFormat, client_id, FullName, Email, orders.ShippingCountry, count(*) as TestCount
+				from orders left outer join client on client.id=client_id
+				left outer join order_tests on orders.id=order_id
+				WHERE DDT_ID='".$query."'
+				GROUP BY orders.id";
+		$results = $wpdb->get_results($sql);
+		if (count($results) == 1 && $results[0]->ID > 0){
+			wp_redirect(get_site_url().'/orders/view?id='.$results[0]->ID);
+			exit;
 		}
 		if(!isset($allResults['orders'])) { $allResults['orders'] = array(); }
 		if (count($results) >= 1){ $allResults['orders'] = array_merge($allResults['orders'], $results); }
