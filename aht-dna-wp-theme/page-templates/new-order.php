@@ -311,7 +311,7 @@ foreach ( $results as $breedObj ){
 	$allBreeds[$breedObj->breed] = $breedObj->ID;
     $sql2 = "SELECT test_code, test_name, concat('\"',test_code, '\":\"', test_name,'\"') as test
     from breed_test_lookup inner join test_codes using (test_code) 
-    WHERE breed_id = {$breedObj->ID}
+    WHERE breed_id = {$breedObj->ID} AND no_swabs=1
     order by test_name";
     $results2 = $wpdb->get_results($sql2, OBJECT );
     if (count($results2) > 0){
