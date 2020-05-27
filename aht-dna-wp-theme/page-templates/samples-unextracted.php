@@ -252,7 +252,7 @@ function footer_js()
 			$("#createQPlate").on('click', function(e) {
 				var orderIds = [];
 				var rows_selected = table.column(0).checkboxes.selected();
-				window.location.href = "http://dennis.local/plates/?add-plate&plate_type=extraction&samples=" + rows_selected.join() + "&duplicates=" + duplicates.join();
+				window.location.href = "/plates/?add-plate&plate_type=extraction&samples=" + rows_selected.join() + "&duplicates=" + duplicates.join();
 			});
 
 			$(".selectProcess").on('click', function(e) {
