@@ -271,7 +271,7 @@ function getTestResults($swab_id){
 	
 	$sql = 'select test_code, test_plate, test_plate_well, test_result, result_entered_by, date_format(date(result_entered_date), "%d/%m/%Y") as result_entered_date, 
     result_authorised_by, date_format(date(result_authorised_date), "%d/%m/%Y") as result_authorised_date, date_format(date(result_reported_date), "%d/%m/%Y") as result_reported_date, cert_code
-	from test_swab_results WHERE test_id='.$swab_id;
+	from test_swab_results WHERE swab_failed=0 and test_id='.$swab_id;
 	$results = $wpdb->get_results($sql, OBJECT );
 	
 	return $results;
