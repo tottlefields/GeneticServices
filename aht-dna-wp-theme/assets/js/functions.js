@@ -672,9 +672,9 @@ function getTestDetails(orderId, swabID, orderDiv, clientDiv, animalDiv) {
 							analysis += '<em>'+TestDetails.analysis[i].test_plate+'</em>';
 						} else {
 							plateLink = DennisAjax.site_url+'/plate/' + TestDetails.analysis[i].test_plate;
-							if (TestDetails.analysis[i].test_plate_well != '' && TestDetails.results[i].test_plate_well != null) { plateLink += '/well/'+TestDetails.analysis[i].test_plate_well; }						
+							if (TestDetails.analysis[i].test_plate_well != '' && TestDetails.analysis[i].test_plate_well != null) { plateLink += '/well/'+TestDetails.analysis[i].test_plate_well; }						
 							analysis += '<a href="'+ plateLink + '">' + TestDetails.analysis[i].test_plate + '</a>';
-							if (TestDetails.results[i].test_plate_well != '' && TestDetails.results[i].test_plate_well != null){ analysis += '&nbsp;(' +TestDetails.analysis[i].test_plate_well+ ')'; }
+							if (TestDetails.analysis[i].test_plate_well != '' && TestDetails.analysis[i].test_plate_well != null){ analysis += '&nbsp;(' +TestDetails.analysis[i].test_plate_well+ ')'; }
 						}
 					}
 				}
