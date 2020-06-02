@@ -44,7 +44,7 @@ inner join breed_list b on b.id=breed_id
 where s.extraction_plate is not null and s.plate_allocated=0 
 and ((tmp.plate_allocated = 1 and tmp.swab_failed is not NULL) OR tmp.plate_allocated is NULL)
 and cancelled_date is null and b.is_primary=1 
-order by extraction_plate, right(extraction_well,1) asc, left(extraction_well,1) desc, swab';
+order by extraction_plate, right(extraction_well,length(extraction_well)-1) asc, left(extraction_well,1) desc, swab';
 $results = $wpdb->get_results ( $sql, OBJECT );
 
 $table_G = '';
