@@ -47,8 +47,8 @@ if (isset($wp_query->query_vars['download_type']) && isset($wp_query->query_vars
 		$filename = urlencode( $plate_q.'.plt' );
 		header("Content-Disposition: attachment; filename=".$filename);	
 		
-		echo "Container Name\tDescription\tContainerType\tAppType Owner\tOperator\n";
-		echo $plate_q."\t\t96-Well Regular\t".$plate_details->created_by."\t".$plate_details->created_by."\n";
+		echo "Container Name\tDescription\tContainerType\tAppType\tOwner\tOperator\n";
+		echo $plate_q."\t\t96-Well\tRegular\t".$plate_details->created_by."\t".$plate_details->created_by."\n";
 		echo "AppServer\tAppInstance\n";
 		echo "GeneMapper\tGeneMapper_Generic_Instance\n";
 		echo "Well\tSample Name\tComment\tPriority\tSize Standard\tSnp Set\tUser-Defined 3\tUser-Defined 2\tUser-Defined 1\tPanel\tStudy\tSample Type\tAnalysis Method\tResults Group 1\tInstrument Protocol 1\n";
@@ -88,7 +88,7 @@ if (isset($wp_query->query_vars['download_type']) && isset($wp_query->query_vars
 		
 		
 		foreach ($export as $row){
-			echo $row['cell']."\t".$row['sample']."\t100\t\t\t\t\t\t\t\t\t\tData2\t";
+			echo $row['cell']."\t".$row['sample']."\t\t100\t\t\t\t\t\t\t\t\t\tData2\t";
 			
 			if ($row['protocol'] == "PROBLEM"){
 				if (isset($col_protocols[$row['column']]) && $col_protocols[$row['column']] != ''){
