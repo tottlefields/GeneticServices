@@ -137,7 +137,7 @@ global $wpdb;
 	        else {
 	           // TODO: loop to split different analyses up but not each test code
 	           
-	            // This loop assumes we can pad the samples quire a lot - if more than 8 sampels for a test code do them as a block; 
+	            // This loop assumes we can pad the samples quite a lot - if more than 8 samples for a test code do them as a block; 
 	            // then start new col; group tests together where under 8 but don't split across columns.
     	        foreach ($swab_groups as $analysis => $group){
     	            $test_order = array_intersect_key($test_codes_seen, $group);

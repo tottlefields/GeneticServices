@@ -153,7 +153,7 @@ function mytheme_enqueue_scripts() {
 	wp_enqueue_script( 'fontawesome-js');
 	
 	// Main functions js file
-	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.7', true );
+	wp_register_script ( 'js-functions', get_template_directory_uri () . '/assets/js/functions.js', array ('jquery','datatables-js'), '0.1.8', true );
 	wp_enqueue_script ( 'js-functions' );
 
 	// Main utils js file
