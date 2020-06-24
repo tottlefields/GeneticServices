@@ -307,7 +307,7 @@ function getPlateDetails($plate_id){
 		$sql = "select well_id as well, well_contents, test_code from plate_wells where test_plate='".$plate_id."'";
 		$plate_details[0]->other_wells = $wpdb->get_results($sql, OBJECT);
 		
-		$sql = "select t.order_id, t.DDT_ID, r.test_id, r.swab_id, t.test_code, r.test_plate_well as well, 
+		$sql = "select t.order_id, PortalID, t.DDT_ID, r.test_id, r.swab_id, t.test_code, r.test_plate_well as well, 
 		group_concat(r.test_code) as test_result, count(r.test_code) as multi_results
 		from test_swab_results r inner join order_tests t on t.id=test_id where test_plate='".$plate_id."'
 		group by order_id, DDT_ID, test_id, swab_id, t.test_code, well";
