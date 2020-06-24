@@ -19,8 +19,10 @@ if (isset($wp_query->query_vars['download_type']) && isset($wp_query->query_vars
 	if (count($plate_details->wells) > 0){
 		foreach ($plate_details->wells as $well){
 			$test_code = ($well->multi_results == 1) ? $well->test_result : $well->test_code;
+			$sample_name = (isset($well->DDT_ID)) ? $well->DDT_ID : $well->swab_id;
+			$wells[$well->well] = array('sample' => $sample_name, 'test_code' => $test_code, 'task' => 'UNKNOWN');
 			//$wells[$well->well] = array('sample' => $well->swab_id, 'test_code' => $test_code, 'task' => 'UNKNOWN');
-			$wells[$well->well] = array('sample' => $well->DDT_ID, 'test_code' => $test_code, 'task' => 'UNKNOWN');
+			//$wells[$well->well] = array('sample' => $well->DDT_ID, 'test_code' => $test_code, 'task' => 'UNKNOWN');
 		}
 	}
 	if (isset($plate_details->other_wells) && count($plate_details->other_wells) > 0){
@@ -38,9 +40,7 @@ if (isset($wp_query->query_vars['download_type']) && isset($wp_query->query_vars
 			}					
 			$wells[$well->well] = array('sample' => $well->well_contents, 'test_code' => $well->test_code, 'task' => $task);
 		}
-	}
-	
-	
+	}	
 	
 	
 	if ($plate_details->plate_type == 'genotype'){
@@ -116,6 +116,7 @@ if (isset($wp_query->query_vars['download_type']) && isset($wp_query->query_vars
 		echo "* Experiment Run End Time = Not Started\n";
 		echo "* Instrument Type = steponeplus\n";
 		echo "* Passive Reference = ROX\n";
+		echo "\n";
 		echo "[Sample Setup]\n";
 		echo "Well\tSample Name\tSample Color\tSNP Assay Name\tSNP Assay Color\tTask\tAllele1 Name\tAllele1 Color\tAllele1 Reporter\tAllele1 Quencher\tAllele2 Name\tAllele2 Color\tAllele2 Reporter\tAllele2 Quencher\tComments\n";
 		
