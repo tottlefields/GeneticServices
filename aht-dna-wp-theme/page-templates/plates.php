@@ -209,8 +209,10 @@ if(isset($wp_query->query_vars['plate'])) {
 		$wells = array();
 		if (count($plate_details->wells) > 0){
 			foreach ($plate_details->wells as $well){
+				$sample_name = '<span class="hidden-print">AHT</span>'.$well->order_id.'/</span><span class="test-id">'.$well->test_id.'</span>';
+				if (isset($well->PortalID) && $well->PortalID != ''){ $sample_name = $well->PortalID.'</span>'; }
 				$wells[$well->well] = '<a href="'.get_site_url().'/orders/view/?id='.$well->order_id.'">
-				<span class="hide-small"><span class="hidden-print">AHT</span>'.$well->order_id.'/</span><span class="test-id">'.$well->test_id.'</span></a><br />'.$well->test_code;
+				<span class="hide-small">'.$sample_name.'</a><br />'.$well->test_code;
 			}
 		}
 		if (isset($plate_details->other_wells) && count($plate_details->other_wells) > 0){
