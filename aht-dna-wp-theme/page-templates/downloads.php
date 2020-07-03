@@ -19,9 +19,9 @@ if (isset($wp_query->query_vars['download_type']) && isset($wp_query->query_vars
 	if (count($plate_details->wells) > 0){
 		foreach ($plate_details->wells as $well){
 			$test_code = ($well->multi_results == 1) ? $well->test_result : $well->test_code;
-			$sample_name = (isset($well->DDT_ID)) ? $well->DDT_ID : $well->swab_id;
+			$sample_name = (isset($well->DDT_ID)) ? $well->DDT_ID : $well->test_id;
 			$wells[$well->well] = array('sample' => $sample_name, 'test_code' => $test_code, 'task' => 'UNKNOWN');
-			//$wells[$well->well] = array('sample' => $well->swab_id, 'test_code' => $test_code, 'task' => 'UNKNOWN');
+			//$wells[$well->well] = array('sample' => $well->test_id, 'test_code' => $test_code, 'task' => 'UNKNOWN');
 			//$wells[$well->well] = array('sample' => $well->DDT_ID, 'test_code' => $test_code, 'task' => 'UNKNOWN');
 		}
 	}
