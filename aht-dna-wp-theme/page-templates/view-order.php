@@ -185,7 +185,6 @@ if ($order_details->paid == 0){
 					<th></th>
 					<th></th>
 					<th class="text-center" data-priority="1">TestID</th>
-					<th class="text-center" data-priority="1">DDT</th>
 					<th data-priority="2">Test</th>
 					<th>Breed</th>
 					<th data-priority="2">Animal</th>
@@ -289,7 +288,6 @@ if ($order_details->paid == 0){
 					<td>'.$order_id.'</td>
 					<td>'.$test->id.'</td>
 					<td class="text-center">'.$test->id.'<span class="hidden-sm hidden-xs">&nbsp;<em><small>'.$other_id.'</small></em></td>
-					<td class="text-center">'.$test->DDT_ID.'</em></td>
 					<td>'.$test->test_name.'</td>
 					<td>'.$test->breed.'</td>
 					<td>'.$animal.'</td>

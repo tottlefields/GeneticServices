@@ -18,7 +18,7 @@
 		}
 
 
-		$sql = 'select order_id, t.id as ID, concat("AHT",order_id,"/",t.id) as barcode, due_date, datediff(due_date, date(NOW())) as days, a.breed_id, b.breed, test_code, test_type, swab, concat(test_type, type_group) as type_group
+		$sql = 'select order_id, t.id as ID, concat("CAGT",order_id,"/",t.id) as barcode, due_date, datediff(due_date, date(NOW())) as days, a.breed_id, b.breed, test_code, test_type, swab, concat(test_type, type_group) as type_group
 from order_tests t inner join test_swabs s on t.id=s.test_id 
 left outer join test_codes using (test_code) 
 inner join animal a on a.id=animal_id 
@@ -91,7 +91,7 @@ order by due_date, test_code';
 			<tr id="row' . $swab->ID . '" class="type-' . $swab->test_type . ' test-' . $swab->test_code . ' breed-' . $swab->breed_id . '">
                 <td>' . $swab->ID . '</td>
 				<!--<td class="text-center"><input type="checkbox" class="checkboxRow" name="sampleList[]" value="' . $swab->ID . '" /></td>-->
-				<td class="text-center"><a href="' . get_site_url() . '/orders/view?id=' . $swab->order_id . '">AHT' . $swab->order_id . '</a></td>
+				<td class="text-center"><a href="' . get_site_url() . '/orders/view?id=' . $swab->order_id . '">CAGT' . $swab->order_id . '</a></td>
 				<td class="text-center">' . $swab->barcode . '</td>
 				<td class="text-center">' . $repeat . '</td>
 				<td class="text-center">' . $due_date->format('d/m/Y') . '</td>

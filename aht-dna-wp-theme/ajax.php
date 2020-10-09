@@ -254,7 +254,7 @@ function extract_swabs() {
 		$return = array (
 				'status' => 'Success',
 				'data' => array (
-						'barcode' => 'AHT' . $barcode,
+						'barcode' => 'CAGT' . $barcode,
 						'order_id' => $sample_details [0],
 						'test_code' => $test_details->test_code
 				)
@@ -272,7 +272,7 @@ function pick_swabs() {
 	$return = array ();
 	$swab_ids = $_POST ['swabIds'];
 
-	$sql = 'select test_code, concat("AHT",order_id,"/",t.id) as barcode, due_date, datediff(due_date, date(NOW())) as days, test_type
+	$sql = 'select test_code, concat("CAGT",order_id,"/",t.id) as barcode, due_date, datediff(due_date, date(NOW())) as days, test_type
     from order_tests t inner join test_swabs s on t.id=s.test_id
     left outer join test_codes using (test_code)
     inner join animal a on a.id=animal_id

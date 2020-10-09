@@ -209,7 +209,7 @@ if(isset($wp_query->query_vars['plate'])) {
 		$wells = array();
 		if (count($plate_details->wells) > 0){
 			foreach ($plate_details->wells as $well){
-				$sample_name = '<span class="hidden-print">AHT</span>'.$well->order_id.'/</span><span class="test-id">'.$well->test_id.'</span>';
+				$sample_name = '<span class="hidden-print">CAGT</span>'.$well->order_id.'/</span><span class="test-id">'.$well->test_id.'</span>';
 				if (isset($well->PortalID) && $well->PortalID != ''){ $sample_name = $well->PortalID.'</span>'; }
 				$wells[$well->well] = '<a href="'.get_site_url().'/orders/view/?id='.$well->order_id.'">
 				<span class="hide-small">'.$sample_name.'</a><br />'.$well->test_code;
@@ -240,16 +240,52 @@ get_header(); ?>
 	<h1 class="visible-print-block" id="plate_id"><?php echo $plate_q; ?><span id="plate_details" class="pull-right"><small><?php echo $plate_details->created_by; ?> (<?php echo $plate_details->readable_date; ?>)</small></span></h1>
 	<?php if ($error){ ?><div class="alert alert-danger" role="alert"><?php echo $error; ?></div><?php } ?>
 	<section class="row">
-		<div class="col-md-3 hidden-print"<?php if(isset($plate_q) && $plate_q!=null){ echo ' style="display:none;"'; } ?>>
+		<div class="col-md-4 hidden-print">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"><i class="fas fa-vial fa-fw"></i>&nbsp;Extraction (Q)</h3>
+				</div>
+				<div class="panel-body">
+					<p>No plates of this type currently recorded on the system.</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 hidden-print">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"><i class="fas fa-dna fa-fw"></i>&nbsp;TaqMan (T)</h3>
+				</div>
+				<div class="panel-body">
+					<p>No plates of this type currently recorded on the system.</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 hidden-print">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"><i class="fas fa-dna fa-fw"></i>&nbsp;Fragment Length (F)</h3>
+				</div>
+				<div class="panel-body">
+					<p>No plates of this type currently recorded on the system.</p>
+				</div>
+			</div>
+		</div>
+	
+	
+	
+	
+	
+	
+<!-- 		<div class="col-md-4 hidden-print"<?php if(isset($plate_q) && $plate_q!=null){ echo ' style="display:none;"'; } ?>>
 			<div class="well" id="plate_selection">
 				<ul class="nav nav-tabs nav-justified" role="tablist">
 					<li role="plate_type" class="active"><a href="#extraction" aria-controls="extraction" role="tab" data-toggle="tab">Extraction</a></li>
 					<li role="plate_type"><a href="#taqman" aria-controls="taqman" role="tab" data-toggle="tab">TaqMan</a></li>
-					<li role="plate_type"><a href="#genotype" aria-controls="genotype" role="tab" data-toggle="tab">Genotype</a></li>
+					<li role="plate_type"><a href="#fraglength" aria-controls="fraglength" role="tab" data-toggle="tab">Fragment Length</a></li>
 				</ul>
 				<div class="tab-content" style="padding-top:20px;">
 <?php
-$plates = array('extraction' => array(), 'taqman' => array(), 'genotype' => array());
+$plates = array('extraction' => array(), 'taqman' => array(), 'fraglength' => array());
 foreach (array_keys($plates) as $plate_type){
 	
 	if ($plate_type == array_keys($plates)[0]){  echo '<div role="tabpanel" class="tab-pane active" id="'.$plate_type.'">'; }
@@ -265,16 +301,15 @@ foreach (array_keys($plates) as $plate_type){
 		echo '</select>';
 	}
 	else{
-		echo '<p>No '.ucfirst($plate_type).' plates currently recorded on the system.</p>';	
+		echo '<p>No plates of this type currently recorded on the system.</p>';	
 	}
 	echo '</div>';
 }
 ?>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-12">
-		<!-- <div class="<?php if(isset($plate_q) && $plate_q!=null){ echo 'col-md-12'; }else{ echo 'col-md-9'; } ?>"> -->
+		</div> -->
+		<!-- <div class="col-md-12">
 			<table width="100%" class="plate_table">
 		<?php
 		$wellRequest = (isset($wp_query->query_vars['hilight'])) ? urldecode($wp_query->query_vars['hilight']) : '';
@@ -323,7 +358,7 @@ foreach (array_keys($plates) as $plate_type){
 		}		
 		?>
 			</table>
-		</div>
+		</div>	-->
 	</section>
 	
 	<?php 
@@ -381,7 +416,7 @@ foreach (array_keys($plates) as $plate_type){
 											<option value="0">Select Plate Type...</option>
 											<option value="extraction">Extraction</option>
 											<option value="taqman">TaqMan</option>
-											<option value="genotype">Genotype</option>
+											<option value="fraglength">Fragment length</option>
 										</select>
 									</div>
 									<div class="col-sm-4"><input type="text" class="form-control" id="new_plate" name="new_plate" value="" placeholder="Plate ID"></div>

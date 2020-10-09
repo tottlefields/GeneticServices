@@ -32,7 +32,7 @@ foreach ( $results as $test_code ) {
 	$sub_tests [$test_code->test_code] = $test_code->sub_tests;
 }
 
-$sql = 'select order_id, t.id as ID, concat("AHT",order_id,"/",t.id) as barcode, due_date, datediff(due_date, date(NOW())) as days, a.breed_id, b.breed, 
+$sql = 'select order_id, t.id as ID, concat("CAGT",order_id,"/",t.id) as barcode, due_date, datediff(due_date, date(NOW())) as days, a.breed_id, b.breed, 
 t.test_code, test_type, s.id as swab_id, swab, s.extraction_plate, s.extraction_well, concat(test_type, type_group) as type_group, multiplex
 from order_tests t inner join test_swabs s on t.id=s.test_id  
 left outer join (
@@ -134,7 +134,7 @@ if (count ( $results ) > 0) {
 			<tr id="row' . $swab->swab_id . '" class="type-' . $swab->test_type . ' test-' . $test_code . ' breed-' . $swab->breed_id . ' plate-' . $swab->extraction_plate . '" data-plate="' . $swab->extraction_plate . '" data-well="' . $swab->extraction_well . '" data-test_code="' . $swab->test_code . '">
                 <td>' . $swab->swab_id . '</td>
 				<!--<td class="text-center"><input type="checkbox" class="checkboxRow" name="sampleList[]" value="' . $swab->swab_id . '" /></td>-->
-				<td class="text-center"><a href="' . get_site_url () . '/orders/view?id=' . $swab->order_id . '">AHT' . $swab->order_id . '</a></td>
+				<td class="text-center"><a href="' . get_site_url () . '/orders/view?id=' . $swab->order_id . '">CAGT' . $swab->order_id . '</a></td>
 				<td class="text-center">' . $swab->barcode . '</td>
 				<td class="text-center">' . $repeat . '</td>
 				<td class="text-center">' . $due_date->format ( 'd/m/Y' ) . '</td>
