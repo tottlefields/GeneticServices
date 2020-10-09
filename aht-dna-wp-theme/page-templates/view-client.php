@@ -50,7 +50,7 @@ $note_details = array();
 					?>
 				</div>
 			</div>
-			<a href="/orders/add-manual-order/?client=<?php echo $client_details->id; ?>" class="btn btn-primary btn-block hide-small">Create Manual Order</a>
+			<a href="<?php echo get_site_url(); ?>/orders/add-manual-order/?client=<?php echo $client_details->id; ?>" class="btn btn-primary btn-block hide-small">Create Manual Order</a>
 		</div>
 	
 		<div class="col-md-7 col-lg-9">
@@ -197,7 +197,7 @@ $note_details = array();
 				echo '
 				<tr class="'.$order_class.'">
 					<td>'.$test->id.'</td>
-					<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$test->order_id.'">AHT'.$test->order_id.'</a></td>
+					<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$test->order_id.'">CAGT'.$test->order_id.'</a></td>
 					<td class="text-center">'.$test->order_date.'</td>
 					<td>'.$test->test_name.'</td>
 					<td>'.$test->breed.'</td>

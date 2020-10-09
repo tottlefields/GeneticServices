@@ -53,8 +53,8 @@ function updatePlate(testCode, testGroup, data){
 		if (x>0){ testGroup = 'GX'; }
 		
 		// make sure genotyping plates are in blocks of 16 for each grouping
-		if (testGroup.charAt(0) == 'G'){
-			plateType = 'genotype';
+		if (testGroup.charAt(0) == 'F'){
+			plateType = 'fraglength';
 			if(colCount%2 != 0){	// we are on an odd column... need to check previous group
 				if(testGroup != plateJson.groups[plateJson.cols.length-1]){
 					colCount++;

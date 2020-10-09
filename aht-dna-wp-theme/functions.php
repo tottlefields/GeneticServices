@@ -8,12 +8,12 @@ register_nav_menu ( 'main-menu', 'Main Menu' );
 
 // Function to change email address
 //function wpb_sender_email($original_email_address) {
-//	return 'dennis@aht.org.uk';
+//	return 'dennis@canine-genetics.org.uk';
 //}
 
 // Function to change sender name
 function wpb_sender_name($original_email_from) {
-	return 'DENNIS';
+	return 'Cambridge Animal Gentic Testing';
 }
 
 add_theme_support('title-tag');

@@ -210,7 +210,7 @@ $test_details = getTestsByAnimal($animal_id);
 				echo '
 				<tr class="'.$order_class.'">
 					<td>'.$test->id.'</td>
-					<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$test->order_id.'">AHT'.$test->order_id.'</a></td>
+					<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$test->order_id.'">CAGT'.$test->order_id.'</a></td>
 					<td class="text-center">'.$test->order_date.'</td>
 					<td class="text-center">'.$test->id.'<span class="hidden-sm hidden-xs">&nbsp;<em><small>'.$other_id.'</small></em></td>
 					<td>'.$test->test_name.'</td>

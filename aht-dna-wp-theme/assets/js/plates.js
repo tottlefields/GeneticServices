@@ -38,7 +38,7 @@ jQuery(document).ready(function($) {
 							for (var x=0; x<wells.length; x++){
 								var well = wells[x].well;
 								$("#"+well+" > small.cell_id").hide();
-								$("#"+well+" > small.contents").html('<a href="'+DennisAjax.site_url+'/orders/view/?id='+wells[x].order_id+'"><span class="hidden-print">AHT</span>'+wells[x].order_id+"/<span class=\"test-id\">"+wells[x].test_id+'</span></a><br />'+wells[x].test_code);
+								$("#"+well+" > small.contents").html('<a href="'+DennisAjax.site_url+'/orders/view/?id='+wells[x].order_id+'"><span class="hidden-print">CAGT</span>'+wells[x].order_id+"/<span class=\"test-id\">"+wells[x].test_id+'</span></a><br />'+wells[x].test_code);
 							}
 							if(results.other_wells !== undefined){
 							var otherWells = results.other_wells;
@@ -121,7 +121,7 @@ jQuery(document).ready(function($) {
 		
 		$('#plate_type').change(function(e){
 				var plateType = $(this).val();
-				//console.log(plateJSON);
+				console.log(plateJSON);
 				var plateIDs = plateJSON[plateType];
 				//console.log(plateIDs);
 				if (plateIDs.length > 0){
@@ -134,12 +134,12 @@ jQuery(document).ready(function($) {
 						plateID = "Q"+(id+1);
 					}
 					else if (plateType == 'taqman'){	
-						var id = parseInt(last.replace("TM", ""));
-						plateID = "TM"+(id+1);
+						var id = parseInt(last.replace("T", ""));
+						plateID = "T"+(id+1);
 					}
-					else if (plateType == 'genotype'){	
-						var id = parseInt(last.replace("G", ""));
-						plateID = (id+1)+"G";
+					else if (plateType == 'fraglength'){	
+						var id = parseInt(last.replace("F", ""));
+						plateID = "F"+(id+1);
 					}
 					$('#new_plate').val(plateID);
 				}

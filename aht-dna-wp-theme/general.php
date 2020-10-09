@@ -219,7 +219,7 @@ function getTestDetails($swab_id){
 	
 	$sql = 'select case when b.breed is NOT NULL then b.breed else a.Breed end as breed, date_format(o.OrderDate, "%d/%m/%Y") as order_date,
 		a.*, t.*, date(kit_sent) as date_sent, date(returned_date) as date_returned, date(cancelled_date) as date_cancelled,
-		test_name, ddt_sheet, no_results, no_swabs, sub_tests, date_format(a.BirthDate, "%d/%m/%Y") as DOB, case when Sex="f" then "Female" else "Male" end as sex
+		test_name, no_results, no_swabs, sub_tests, date_format(a.BirthDate, "%d/%m/%Y") as DOB, case when Sex="f" then "Female" else "Male" end as sex
 		from orders o inner join order_tests t on o.id=order_id 
 		left outer join animal a on animal_id=a.id 
 		left outer join breed_list b on a.breed_id=b.id 
@@ -299,7 +299,7 @@ function getPlateDetails($plate_id){
 	}
 	
 	if ($plate_details[0]->plate_type == 'extraction'){
-		$sql = "select distinct s.id as swab_id, t.order_id, s.test_id as test_id, PortalID, t.DDT_ID, t.test_code, s.swab, s.extraction_well as well 
+		$sql = "select distinct s.id as swab_id, t.order_id, s.test_id as test_id, PortalID, t.test_code, s.swab, s.extraction_well as well 
 		from test_swabs s inner join order_tests t on s.test_id=t.id where s.extraction_plate='".$plate_id."'
 		order by t.test_code, s.swab, t.order_id, s.test_id";		
 	}
@@ -307,10 +307,10 @@ function getPlateDetails($plate_id){
 		$sql = "select well_id as well, well_contents, test_code from plate_wells where test_plate='".$plate_id."'";
 		$plate_details[0]->other_wells = $wpdb->get_results($sql, OBJECT);
 		
-		$sql = "select t.order_id, PortalID, t.DDT_ID, r.test_id, r.swab_id, t.test_code, r.test_plate_well as well, 
+		$sql = "select t.order_id, PortalID, r.test_id, r.swab_id, t.test_code, r.test_plate_well as well, 
 		group_concat(r.test_code) as test_result, count(r.test_code) as multi_results
 		from test_swab_results r inner join order_tests t on t.id=test_id where test_plate='".$plate_id."'
-		group by order_id, DDT_ID, test_id, swab_id, t.test_code, well";
+		group by order_id, test_id, swab_id, t.test_code, well";
 		
 	}
 	$wells = $wpdb->get_results($sql, OBJECT);	
@@ -327,18 +327,22 @@ function getNextPlate($plate_type){
 	from plates where test_plate is not null and plate_type='".$plate_type."' 
 	order by 1 desc limit 1");
 	
+	if ($last_plate == '' || !isset($last_plate)){
+		$last_plate = '999';
+	}
+	
 	switch($plate_type){
 		case 'extraction':
 			$last_plate = str_replace('Q', '', $last_plate);
 			$new_plate = "Q".($last_plate+1);
 			break;
 		case 'taqman':
-			$last_plate = str_replace('TM', '', $last_plate);
-			$new_plate = "TM".($last_plate+1);
+			$last_plate = str_replace('T', '', $last_plate);
+			$new_plate = "T".($last_plate+1);
 			break;
-		case 'genotype':
-			$last_plate = str_replace('G', '', $last_plate);
-			$new_plate = ($last_plate+1)."G";
+		case 'fraglength':
+			$last_plate = str_replace('F', '', $last_plate);
+			$new_plate = "F"+($last_plate+1);
 			break;
 	}  
 	return $new_plate;

@@ -23,7 +23,7 @@
 				<th></th>
 				<td class="text-center"><input type="checkbox" id="checkAll" /></td>
 				<th class="text-center">OrderID</th>
-				<th class="text-center">Webshop</th>
+				<th class="text-center">CAGT #</th>
 				<th class="text-center">Date</th>
 				<th>Client</th>
 				<th class="text-center">#Swabs</th>
@@ -43,12 +43,20 @@
 				}
 			}
 			$order_date = new DateTime($order->OrderDate);
+			$webshop_link = '<small>N/A</small>';
+			if (isset($order->webshop_id) && $order->webshop_id > 0){
+				if (current_user_can('administrator')){
+					$webshop_link = '<a href="/cagt/wp-admin/post.php?post='.$order->webshop_id.'&action=edit" target="blank">'.$order->webshop_id.'</a>';
+				} else {
+					$webshop_link = $order->webshop_id;
+				}				
+			}
 			echo '
 			<tr class="'.$row_class.'">
 				<td class="text-center">'.$order->ID.'</td>
 				<td class="text-center"><input type="checkbox" class="checkboxRow" name="orderList[]" value="'.$order->ID.'" /></td>
-				<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$order->ID.'">AHT'.$order->ID.'</a></td>
-				<td class="text-center">'.$order->webshop_id.'</td>
+				<td class="text-center"><a href="'.get_site_url().'/orders/view?id='.$order->ID.'">CAGT'.$order->ID.'</a></td>
+				<td class="text-center">'.$webshop_link.'</td>
 				<td class="text-center">'.$order_date->format('d/m/Y').'</td>
 				<td>'.$client.'</td>
 				<td class="text-center">'.$order->SwabCount.'</td>
